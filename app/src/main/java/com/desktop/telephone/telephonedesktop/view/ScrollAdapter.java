@@ -9,6 +9,9 @@ import java.util.Set;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.view.LayoutInflater;
@@ -53,26 +56,36 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
 
             Drawable pressed = null;
             Drawable normal = null;
+            if(moveItem.getIconType() == 0) {
+                byte[] app_icon = moveItem.getApp_icon();
+                Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
+                BitmapDrawable bd = new BitmapDrawable(bmp);
+                pressed = bd;
+                normal = bd;
+            }else {
+                SoftReference<Drawable> p = mCache.get(imgUrlDown);
+                if (p != null) {
+                    pressed = p.get();
+                }
 
-            SoftReference<Drawable> p = mCache.get(imgUrlDown);
-            if (p != null) {
-                pressed = p.get();
+                SoftReference<Drawable> n = mCache.get(imgUrl);
+                if (n != null) {
+                    normal = n.get();
+                }
+
+                if (pressed == null) {
+                    pressed = mContext.getResources().getDrawable(imgUrlDown);
+                    mCache.put(imgUrlDown, new SoftReference<Drawable>(pressed));
+                }
+
+                if (normal == null) {
+                    normal = mContext.getResources().getDrawable(imgUrl);
+                    mCache.put(imgUrl, new SoftReference<Drawable>(normal));
+                }
             }
 
-            SoftReference<Drawable> n = mCache.get(imgUrl);
-            if (n != null) {
-                normal = n.get();
-            }
 
-            if (pressed == null) {
-                pressed = mContext.getResources().getDrawable(imgUrlDown);
-                mCache.put(imgUrlDown, new SoftReference<Drawable>(pressed));
-            }
 
-            if (normal == null) {
-                normal = mContext.getResources().getDrawable(imgUrl);
-                mCache.put(imgUrl, new SoftReference<Drawable>(normal));
-            }
 
             states.addState(new int[]{android.R.attr.state_pressed}, pressed);
             states.addState(new int[]{android.R.attr.state_focused}, pressed);

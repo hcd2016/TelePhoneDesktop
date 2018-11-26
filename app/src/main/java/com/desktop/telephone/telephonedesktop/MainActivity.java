@@ -1,14 +1,26 @@
 package com.desktop.telephone.telephonedesktop;
 
+import android.content.ContentValues;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
+import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
+import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.view.ScrollAdapter;
 import com.desktop.telephone.telephonedesktop.view.ScrollLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.greenrobot.greendao.DbUtils;
+import org.greenrobot.greendao.query.QueryBuilder;
+
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import butterknife.BindView;
@@ -26,7 +38,7 @@ public class MainActivity extends BaseActivity {
     // Container中滑动控件列表
     private List<DesktopIconBean> mList;
 
-//    //xUtils中操纵SQLite的助手类
+    //    //xUtils中操纵SQLite的助手类
 //    private DbUtils mDbUtils;
     private List<DesktopIconBean> myList;
     //    @BindView(R.id.viewpager)
@@ -45,32 +57,47 @@ public class MainActivity extends BaseActivity {
         initView();
         //初始化容器Adapter
         loadBackground();
+        EventBus.getDefault().register(this);
     }
 
     private void getDataFromCache() {
 //        mDbUtils = DbUtils.create(this);
 //            //使用xUtils，基于orderId从SQLite数据库中获取滑动控件
 //            mList = mDbUtils.findAll(Selector.from(MoveItem.class).orderBy("orderId", false));
-            mList = DaoUtil.querydata();
+        mList = DaoUtil.querydata();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(AppInfoBean event) {
+        if (event.isShowDesktop) {//是要删除
+            DesktopIconBeanDao desktopIconBeanDao = DaoUtil.getDesktopIconBeanDao();
+            List<DesktopIconBean> personList = desktopIconBeanDao.queryBuilder()
+                    .where(DesktopIconBeanDao.Properties.Title.eq(event.getAppName()))
+                    .build().list();
+            desktopIconBeanDao.delete(personList.get(0));
+            for (int i = 0; i < mList.size(); i++) {
+                if (mList.get(i).getTitle().equals(event.appName)) {
+                    mList.remove(i);
+                }
+            }
+            mContainer.refreView();
+        } else {//是要添加
+            DesktopIconBean desktopIconBean = new DesktopIconBean();
+            desktopIconBean.setTitle(event.getAppName());
+            desktopIconBean.setIconType(0);
+
+            Bitmap bmp = (((BitmapDrawable) event.appIcon).getBitmap());
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
+            desktopIconBean.setApp_icon(os.toByteArray());
+            desktopIconBean.setMid(mList.size());
+            mList.add(desktopIconBean);
+            DaoUtil.getDesktopIconBeanDao().insert(desktopIconBean);
+            mContainer.refreView();
+        }
     }
 
     private void initView() {
-//        //如果没有缓存数据，则手动添加10条
-//        if (mList == null || mList.size() == 0) {
-//            mList = new ArrayList<MoveItem>();
-//            for (int i = 1; i < 11; i++) {
-//                MoveItem item = new MoveItem();
-//                //根据drawable name获取对于的ID
-//                if(i < 5) {
-//                    item.setImgdown(R.mipmap.item1_down);
-//                    item.setImgurl(R.mipmap.item1_normal);
-//                }else {
-//                    item.setImgdown(R.mipmap.item2_dowm);
-//                    item.setImgurl(R.mipmap.item2_normal);
-//                }
-//                mList.add(item);
-//            }
-//        }
         //初始化Container的Adapter
         mItemsAdapter = new ScrollAdapter(this, mList);
         //设置Container添加删除Item的回调
@@ -139,7 +166,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//
+        EventBus.getDefault().unregister(this);
     }
 
     //    private void initView() {

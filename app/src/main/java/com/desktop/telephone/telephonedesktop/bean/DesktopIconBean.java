@@ -1,8 +1,12 @@
 package com.desktop.telephone.telephonedesktop.bean;
 
+import android.graphics.drawable.Drawable;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+
+import java.sql.Blob;
 
 @Entity
 public class DesktopIconBean {
@@ -18,9 +22,29 @@ public class DesktopIconBean {
     private int orderId;
     private String title;
     private int iconType = 0;//图标类型，0为系统应用，1为自定义添加
-    @Generated(hash = 192794647)
+    private byte[] app_icon;
+    public byte[] getApp_icon() {
+        return app_icon;
+    }
+
+    public void setApp_icon(byte[] app_icon) {
+        this.app_icon = app_icon;
+    }
+
     public DesktopIconBean(Long id, int mid, int img_normal, int img_pressed,
             int orderId, String title, int iconType) {
+        this.id = id;
+        this.mid = mid;
+        this.orderId = orderId;
+        this.title = title;
+        this.iconType = iconType;
+    }
+    public DesktopIconBean() {
+    }
+
+    @Generated(hash = 1259285005)
+    public DesktopIconBean(Long id, int mid, int img_normal, int img_pressed,
+            int orderId, String title, int iconType, byte[] app_icon) {
         this.id = id;
         this.mid = mid;
         this.img_normal = img_normal;
@@ -28,9 +52,7 @@ public class DesktopIconBean {
         this.orderId = orderId;
         this.title = title;
         this.iconType = iconType;
-    }
-    @Generated(hash = 1700589037)
-    public DesktopIconBean() {
+        this.app_icon = app_icon;
     }
     public Long getId() {
         return this.id;

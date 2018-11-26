@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/ll_item_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -28,6 +29,7 @@
             android:textSize="16sp" />
 
         <ImageView
+            android:layout_marginRight="20dp"
             android:id="@+id/iv_add_or_remove"
             android:layout_width="25dp"
             android:layout_height="25dp"
