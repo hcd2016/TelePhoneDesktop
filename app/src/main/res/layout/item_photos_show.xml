@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.desktop.telephone.telephonedesktop.view.ResizableImageView
+            android:id="@+id/iv_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/photos" />
+
+        <com.desktop.telephone.telephonedesktop.view.ResizableImageView
+            android:visibility="gone"
+            android:id="@+id/iv_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@color/gray_d5d77"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/iv_selector"
+            android:layout_marginBottom="10dp"
+            android:layout_alignBottom="@+id/iv_img"
+            android:src="@mipmap/unselector_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp" />
+    </RelativeLayout>
+</LinearLayout>
