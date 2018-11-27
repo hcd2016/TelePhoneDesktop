@@ -24,6 +24,7 @@
 
         <!--所有应用-->
         <activity android:name=".desktop.Activity.AllAppsActivity"/>
+        <activity android:name=".desktop.Activity.PhotosActivity"/>
     </application>
 
 </manifest>

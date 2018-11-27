@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.AllAppsActivity;
+import com.desktop.telephone.telephonedesktop.desktop.Activity.PhotosActivity;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
 @SuppressLint("UseSparseArrays")
@@ -101,6 +102,7 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
                             case "电话":
                                 break;
                             case "电子相册":
+                                mContext.startActivity(new Intent(mContext,PhotosActivity.class));
                                 break;
                             case "一键拨号":
                                 break;
