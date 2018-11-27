@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.AllAppsActivity;
+import com.desktop.telephone.telephonedesktop.util.Utils;
 
 @SuppressLint("UseSparseArrays")
 public class ScrollAdapter implements ScrollLayout.SAdapter {
@@ -56,7 +57,7 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
 
             Drawable pressed = null;
             Drawable normal = null;
-            if(moveItem.getIconType() == 0) {
+            if(moveItem.getIconType() == 0 || moveItem.getIconType() == 2) {
                 byte[] app_icon = moveItem.getApp_icon();
                 Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
                 BitmapDrawable bd = new BitmapDrawable(bmp);
@@ -95,24 +96,28 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
             view.findViewById(R.id.rl_item_container).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    switch (moveItem.getTitle()) {
-                        case "电话":
-                            break;
-                        case "电子相册":
-                            break;
-                        case "一键拨号":
-                            break;
-                        case "录音":
-                            break;
-                        case "黑白名单":
-                            break;
-                        case "智能通讯录":
-                            break;
-                        case "通话记录":
-                            break;
-                        case "所有应用":
-                            mContext.startActivity(new Intent(mContext,AllAppsActivity.class));
-                            break;
+                    if(moveItem.getIconType() == 1) {//自定义应用指定跳转
+                        switch (moveItem.getTitle()) {
+                            case "电话":
+                                break;
+                            case "电子相册":
+                                break;
+                            case "一键拨号":
+                                break;
+                            case "录音":
+                                break;
+                            case "黑白名单":
+                                break;
+                            case "智能通讯录":
+                                break;
+                            case "通话记录":
+                                break;
+                            case "所有应用":
+                                mContext.startActivity(new Intent(mContext,AllAppsActivity.class));
+                                break;
+                        }
+                    }else {//系统或用户程序跳转
+                        Utils.startApp(mContext,moveItem.getPackageName());
                     }
                 }
             });

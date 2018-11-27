@@ -107,6 +107,7 @@ public class APP extends Application {
                     break;
             }
             myList.add(moveItem);
+            myList.add(moveItem);
         }
 
         List<DesktopIconBean> list = getDesktopIconBeanDao().loadAll();

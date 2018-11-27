@@ -21,6 +21,7 @@ android {
         daoPackage 'com.desktop.telephone.telephonedesktop.gen'
         targetGenDir 'src/main/java'
     }
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {

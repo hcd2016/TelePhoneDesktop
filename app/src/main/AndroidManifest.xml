@@ -3,6 +3,8 @@
     package="com.desktop.telephone.telephonedesktop">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+
+
     <application
         android:name=".base.APP"
         android:allowBackup="true"

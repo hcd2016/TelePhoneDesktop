@@ -41,4 +41,6 @@ public class GreenDaoManager {
         mDaoSession = mDaoMaster.newSession();
         return mDaoSession;
     }
+
+
 }

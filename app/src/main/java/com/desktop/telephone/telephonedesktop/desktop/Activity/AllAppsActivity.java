@@ -19,8 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.desktop.telephone.telephonedesktop.R;
+import com.desktop.telephone.telephonedesktop.base.APP;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
+import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
+import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -48,9 +51,27 @@ public class AllAppsActivity extends BaseActivity {
 
     private void initView() {
         recycleView.setLayoutManager(new LinearLayoutManager(this));
-        List<AppInfoBean> appInfoList = new ArrayList<>();
-        appInfoList.addAll(getAppInfos(this));
-        myAdapter = new MyAdapter(appInfoList);
+        List<AppInfoBean> isShowDeskList = DaoUtil.getAppInfoBeanDao().loadAll();//数据库记录添加到桌面的应用包名
+//        List<AppInfoBean> appInfoList = new ArrayList<>();
+        List<AppInfoBean> appInfos = getAppInfos(this);
+        if (isShowDeskList != null && isShowDeskList.size() != 0) {
+            for (int i = 0; i < appInfos.size(); i++) {
+                for (int j = 0; j < isShowDeskList.size(); j++) {
+                    if (appInfos.get(i).getPackageName().equals(isShowDeskList.get(j).packageName)) {
+                        appInfos.get(i).setIsShowDesktop(true);
+                    }
+                }
+            }
+        }
+
+//        if(appInfoBeanList == null || appInfoBeanList.size() == 0) {//未加入过数据库
+//            appInfoList.addAll(getAppInfos(this));
+//            DaoUtil.saveAppInfoBeanNLists(appInfoList);
+//        }else {
+//            appInfoList.addAll(appInfoBeanList);
+//        }
+        sortByShowDesktopList(appInfos);
+        myAdapter = new MyAdapter(appInfos);
         recycleView.setAdapter(myAdapter);
     }
 
@@ -83,8 +104,9 @@ public class AllAppsActivity extends BaseActivity {
                     public void onClick(View view) {
                         EventBus.getDefault().post(list.get(i));//通知桌面删除
                         Toast.makeText(AllAppsActivity.this, "移除成功", Toast.LENGTH_SHORT).show();
-                        list.get(i).isShowDesktop = false;
-                        sortShowDesktopList(list);
+                        list.get(i).setIsShowDesktop(false);
+                        DaoUtil.getAppInfoBeanDao().delete(list.get(i));
+                        sortByShowDesktopList(list);
                         notifyDataSetChanged();
                     }
                 });
@@ -95,14 +117,16 @@ public class AllAppsActivity extends BaseActivity {
                     public void onClick(View view) {
                         EventBus.getDefault().post(list.get(i));//通知桌面添加
                         Toast.makeText(AllAppsActivity.this, "添加桌面成功", Toast.LENGTH_SHORT).show();
-                        list.get(i).isShowDesktop = true;
-                        sortShowDesktopList(list);
+                        list.get(i).setIsShowDesktop(true);
+                        DaoUtil.getAppInfoBeanDao().insertOrReplace(list.get(i));//把添加的记录在数据库
+                        sortByShowDesktopList(list);
                         notifyDataSetChanged();
                     }
                 });
             }
             myViewHolder.tvAppName.setText(list.get(i).getAppName());
-            myViewHolder.ivAppIcon.setImageDrawable(list.get(i).getAppIcon());
+            byte[] appIcon = list.get(i).getAppIcon();
+            myViewHolder.ivAppIcon.setImageDrawable(DaoUtil.byteToDrawable(appIcon));
             myViewHolder.ll_item_container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -138,7 +162,11 @@ public class AllAppsActivity extends BaseActivity {
         //所有的安装在系统上的应用程序包信息。
         List<PackageInfo> packInfos = pm.getInstalledPackages(0);
         List<AppInfoBean> appInfos = new ArrayList<AppInfoBean>();
-        for (PackageInfo packInfo : packInfos) {
+
+//        for (PackageInfo packInfo : packInfos) {
+
+        for (int i = 0; i < packInfos.size(); i++) {
+            PackageInfo packInfo = packInfos.get(i);
             boolean notActiveApp = NotActiveApp(context, packInfo.packageName);
             if (notActiveApp)
                 continue;
@@ -156,6 +184,7 @@ public class AllAppsActivity extends BaseActivity {
 
             appInfo.setUid(uid);
             if ((flags & ApplicationInfo.FLAG_SYSTEM) == 0) {//用户程序
+                appInfo.setIconType(2);
                 appInfo.setUserApp(true);
             } else {//系统程序
                 appInfo.setUserApp(false);
@@ -165,9 +194,13 @@ public class AllAppsActivity extends BaseActivity {
             } else {//手机外存储设备
                 appInfo.setInRom(false);
             }
+            if(packname.equals(APP.getContext().getPackageName())) {//本应用不加入应用程序列表
+                continue;
+            }
             appInfo.setPackageName(packname);
-            appInfo.setAppIcon(icon);
+            appInfo.setAppIcon(DaoUtil.drawableToByte(icon));
             appInfo.setAppName(name);
+            appInfo.setId(i);
             appInfos.add(appInfo);
         }
         return appInfos;
@@ -193,8 +226,8 @@ public class AllAppsActivity extends BaseActivity {
         }
     }
 
-    //排序
-    public void sortShowDesktopList(List<AppInfoBean> list) {
+    //根据是否显示桌面排序
+    public void sortByShowDesktopList(List<AppInfoBean> list) {
         List<AppInfoBean> showList = new ArrayList<>();
         List<AppInfoBean> noShowList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {

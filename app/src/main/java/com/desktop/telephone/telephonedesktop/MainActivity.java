@@ -84,13 +84,10 @@ public class MainActivity extends BaseActivity {
         } else {//是要添加
             DesktopIconBean desktopIconBean = new DesktopIconBean();
             desktopIconBean.setTitle(event.getAppName());
-            desktopIconBean.setIconType(0);
-
-            Bitmap bmp = (((BitmapDrawable) event.appIcon).getBitmap());
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
-            desktopIconBean.setApp_icon(os.toByteArray());
+            desktopIconBean.setIconType(event.getIconType());
+            desktopIconBean.setApp_icon(event.getAppIcon());
             desktopIconBean.setMid(mList.size());
+            desktopIconBean.setPackageName(event.getPackageName());
             mList.add(desktopIconBean);
             DaoUtil.getDesktopIconBeanDao().insert(desktopIconBean);
             mContainer.refreView();
