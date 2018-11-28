@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.AllAppsActivity;

@@ -4,9 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
@@ -25,10 +28,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
+import com.desktop.telephone.telephonedesktop.bean.PhotoInfoBean;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.ResizableImageView;
 import com.desktop.telephone.telephonedesktop.view.ViewPagerScroller;
@@ -74,6 +81,7 @@ public class PhotosActivity extends BaseActivity {
     RelativeLayout frameLayout;
     private PhotosAdapter photosAdapter;
     private List<Integer> list;
+    private List<PhotoInfoBean> photoInfoBeanList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,16 +93,18 @@ public class PhotosActivity extends BaseActivity {
 
 
     private void initView() {
-        list = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
-            list.add(R.mipmap.photos);
-        }
+        List<PhotoInfoBean> allPhotos = getAllPhotos();
+
+//        list = new ArrayList<>();
+//        for (int i = 0; i < allPhotos.size(); i++) {
+//            list.add(R.mipmap.photos);
+//        }
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         recycleView.setLayoutManager(gridLayoutManager);
-        photosAdapter = new PhotosAdapter(list);
+        photosAdapter = new PhotosAdapter(allPhotos);
         recycleView.setAdapter(photosAdapter);
 
-        PhotosViewPagerAdapter photosViewPagerAdapter = new PhotosViewPagerAdapter(list);
+        PhotosViewPagerAdapter photosViewPagerAdapter = new PhotosViewPagerAdapter(allPhotos);
         viewpager.setAdapter(photosViewPagerAdapter);
     }
 
@@ -193,18 +203,25 @@ public class PhotosActivity extends BaseActivity {
 
     int perverClick = 0;//点击照片之前的状态
 
-    class PhotosAdapter extends BaseQuickAdapter<Integer, BaseViewHolder> {
+    class PhotosAdapter extends BaseQuickAdapter<PhotoInfoBean, BaseViewHolder> {
         List<Integer> selectorList = new ArrayList<>();//记录选中的图片
 
-        public PhotosAdapter(@Nullable List<Integer> data) {
+        public PhotosAdapter(@Nullable List<PhotoInfoBean> data) {
             super(R.layout.item_photos_show, data);
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, final Integer item) {
+        protected void convert(final BaseViewHolder helper, final PhotoInfoBean item) {
             final ResizableImageView iv_img = helper.getView(R.id.iv_img);
             final ResizableImageView iv_bg = helper.getView(R.id.iv_bg);
             final ImageView iv_selector = helper.getView(R.id.iv_selector);
+            RequestOptions options = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+            Glide.with(PhotosActivity.this).
+                    load(item.fileNmae)
+                    .apply(options)
+                    .into(iv_img);
+//            iv_img.setImageBitmap(BitmapFactory.decodeFile(item.fileNmae));
             iv_bg.setVisibility(View.GONE);
 //            初始化状态
             if (status == 1) {
@@ -213,8 +230,6 @@ public class PhotosActivity extends BaseActivity {
                 iv_selector.setVisibility(View.GONE);
             }
             final int position = helper.getLayoutPosition();
-            final int adapterPosition = helper.getAdapterPosition();
-            Log.i(TAG, "convert: " + adapterPosition + position);
             if (selectorList.contains(position)) {
                 iv_selector.setImageResource(R.mipmap.selector_icon);
                 iv_bg.setVisibility(View.VISIBLE);
@@ -249,8 +264,7 @@ public class PhotosActivity extends BaseActivity {
                             }
                             status = 2;
                         }
-                    },350);
-
+                    }, 350);
 
 
 //                    ImageView imageView = new ResizableImageView(PhotosActivity.this);
@@ -358,9 +372,9 @@ public class PhotosActivity extends BaseActivity {
     }
 
     class PhotosViewPagerAdapter extends PagerAdapter {
-        List<Integer> list;
+        List<PhotoInfoBean> list;
 
-        public PhotosViewPagerAdapter(List<Integer> list) {
+        public PhotosViewPagerAdapter(List<PhotoInfoBean> list) {
             super();
             this.list = list;
         }
@@ -380,7 +394,13 @@ public class PhotosActivity extends BaseActivity {
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             View view = View.inflate(PhotosActivity.this, R.layout.item_photos_viewpager, null);
             ImageView iv_img = view.findViewById(R.id.iv_img);
-            iv_img.setImageResource(list.get(position));
+//            iv_img.setImageBitmap(BitmapFactory.decodeFile(list.get(position).getFileNmae()));
+            RequestOptions options = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+            Glide.with(PhotosActivity.this).
+                    load(list.get(position).fileNmae)
+                    .apply(options)
+                    .into(iv_img);
             container.addView(view);
             return view;
         }
@@ -394,6 +414,30 @@ public class PhotosActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         ivBack.performClick();
+    }
+
+    /**
+     * 获取系统所有图片
+     */
+    public List<PhotoInfoBean> getAllPhotos() {
+        List<PhotoInfoBean> list = new ArrayList<>();
+        Cursor cursor = getContentResolver()
+                .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
+        while (cursor.moveToNext()) {
+            //获取图片的名称
+            String name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
+            //获取图片的生成日期
+            byte[] data = cursor.getBlob(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            //获取图片的详细信息
+            String desc = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DESCRIPTION));
+
+            PhotoInfoBean photoInfoBean = new PhotoInfoBean();
+            photoInfoBean.setName(name);
+            photoInfoBean.setDesc(desc);
+            photoInfoBean.setFileNmae(new String(data, 0, data.length - 1));
+            list.add(photoInfoBean);
+        }
+        return list;
     }
 
     private Animator mCurrentAnimator;
