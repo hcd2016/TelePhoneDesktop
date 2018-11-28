@@ -1,6 +1,6 @@
 package com.desktop.telephone.telephonedesktop.db;
 
-import com.desktop.telephone.telephonedesktop.base.APP;
+import com.desktop.telephone.telephonedesktop.base.App;
 import com.desktop.telephone.telephonedesktop.gen.DaoMaster;
 import com.desktop.telephone.telephonedesktop.gen.DaoSession;
 
@@ -13,7 +13,7 @@ public class GreenDaoManager {
     private GreenDaoManager(){
         if (mInstance == null) {
             DaoMaster.DevOpenHelper devOpenHelper = new
-                    DaoMaster.DevOpenHelper(APP.getContext(), "user1-db", null);//此处为自己需要处理的表
+                    DaoMaster.DevOpenHelper(App.getContext(), "user1-db", null);//此处为自己需要处理的表
             mDaoMaster = new DaoMaster(devOpenHelper.getWritableDatabase());
             mDaoSession = mDaoMaster.newSession();
         }

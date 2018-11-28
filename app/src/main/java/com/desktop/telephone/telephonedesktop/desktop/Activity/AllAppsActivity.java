@@ -19,10 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.desktop.telephone.telephonedesktop.R;
-import com.desktop.telephone.telephonedesktop.base.APP;
+import com.desktop.telephone.telephonedesktop.base.App;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
-import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -194,7 +193,7 @@ public class AllAppsActivity extends BaseActivity {
             } else {//手机外存储设备
                 appInfo.setInRom(false);
             }
-            if(packname.equals(APP.getContext().getPackageName())) {//本应用不加入应用程序列表
+            if(packname.equals(App.getContext().getPackageName())) {//本应用不加入应用程序列表
                 continue;
             }
             appInfo.setPackageName(packname);

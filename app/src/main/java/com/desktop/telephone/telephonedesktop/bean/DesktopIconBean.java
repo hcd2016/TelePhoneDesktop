@@ -1,14 +1,10 @@
 package com.desktop.telephone.telephonedesktop.bean;
 
-import android.graphics.drawable.Drawable;
-
-import com.desktop.telephone.telephonedesktop.base.APP;
+import com.desktop.telephone.telephonedesktop.base.App;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
-
-import java.sql.Blob;
 
 @Entity
 public class DesktopIconBean {
@@ -25,7 +21,7 @@ public class DesktopIconBean {
     private String title;
     private int iconType = 0;//图标类型，0为系统应用，1为自定义添加,2为用户添加应用
     private byte[] app_icon;
-    private String packageName = APP.getContext().getPackageName();//应用包名,默认为本应用包名
+    private String packageName = App.getContext().getPackageName();//应用包名,默认为本应用包名
 
     public String getPackageName() {
         return packageName;

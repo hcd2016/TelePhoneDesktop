@@ -1,9 +1,6 @@
 package com.desktop.telephone.telephonedesktop;
 
-import android.content.ContentValues;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
@@ -17,10 +14,8 @@ import com.desktop.telephone.telephonedesktop.view.ScrollLayout;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.greenrobot.greendao.DbUtils;
-import org.greenrobot.greendao.query.QueryBuilder;
 
-import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -40,7 +35,7 @@ public class MainActivity extends BaseActivity {
 
     //    //xUtils中操纵SQLite的助手类
 //    private DbUtils mDbUtils;
-    private List<DesktopIconBean> myList;
+    private List<DesktopIconBean> defaultList;
     //    @BindView(R.id.viewpager)
 //    ViewPager viewpager;
 //    @BindView(R.id.point_indicatorView)
@@ -51,8 +46,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        // 从缓存中初始化滑动控件列表
-        getDataFromCache();
+        initIconData();
         // 初始化控件
         initView();
         //初始化容器Adapter
@@ -60,11 +54,95 @@ public class MainActivity extends BaseActivity {
         EventBus.getDefault().register(this);
     }
 
-    private void getDataFromCache() {
-//        mDbUtils = DbUtils.create(this);
-//            //使用xUtils，基于orderId从SQLite数据库中获取滑动控件
-//            mList = mDbUtils.findAll(Selector.from(MoveItem.class).orderBy("orderId", false));
+//    private void getDataFromCache() {
+////        mDbUtils = DbUtils.create(this);
+////            //使用xUtils，基于orderId从SQLite数据库中获取滑动控件
+////            mList = mDbUtils.findAll(Selector.from(MoveItem.class).orderBy("orderId", false));
+////        mList = DaoUtil.querydata();
+//    }
+
+    /**
+     * 桌面数据添加
+     */
+    private void initIconData() {
+        defaultList = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            DesktopIconBean moveItem = new DesktopIconBean();
+            moveItem.setMid(i);
+            switch (i) {
+                case 0:
+                    //电话
+                    moveItem.setIconType(1);
+                    moveItem.setTitle("电话");
+                    moveItem.setImg_normal(R.mipmap.phone_icon);
+                    moveItem.setImg_pressed(R.mipmap.phone_icon);
+                    break;
+                case 1:
+                    //智能通讯录
+                    moveItem.setIconType(1);
+                    moveItem.setTitle("智能通讯录");
+                    moveItem.setImg_normal(R.mipmap.call_records_icon);
+                    moveItem.setImg_pressed(R.mipmap.call_records_icon);
+                    break;
+                case 2:
+                    //电子相册
+                    moveItem.setIconType(1);
+                    moveItem.setTitle("电子相册");
+                    moveItem.setImg_normal(R.mipmap.photo_icon);
+                    moveItem.setImg_pressed(R.mipmap.photo_icon);
+                    break;
+                case 3:
+                    //黑白名单
+                    moveItem.setIconType(1);
+                    moveItem.setTitle("黑白名单");
+                    moveItem.setImg_normal(R.mipmap.blacklist_icon);
+                    moveItem.setImg_pressed(R.mipmap.blacklist_icon);
+                    break;
+                case 4:
+                    //一键拨号
+                    moveItem.setIconType(1);
+                    moveItem.setTitle("一键拨号");
+                    moveItem.setImg_normal(R.mipmap.one_key);
+                    moveItem.setImg_pressed(R.mipmap.one_key);
+                    break;
+                case 5:
+                    //录音
+                    moveItem.setIconType(1);
+                    moveItem.setTitle("录音");
+                    moveItem.setImg_normal(R.mipmap.record_icon);
+                    moveItem.setImg_pressed(R.mipmap.record_icon);
+                    break;
+                case 6:
+                    //通话记录
+                    moveItem.setIconType(1);
+                    moveItem.setTitle("通话记录");
+                    moveItem.setImg_normal(R.mipmap.address_list_icon);
+                    moveItem.setImg_pressed(R.mipmap.address_list_icon);
+                    break;
+                case 7:
+                    //sos
+                    moveItem.setIconType(1);
+                    moveItem.setTitle("SOS");
+                    moveItem.setImg_normal(R.mipmap.sos_icon);
+                    moveItem.setImg_pressed(R.mipmap.sos_icon);
+                    break;
+                case 8:
+                    //所有应用
+                    moveItem.setIconType(1);
+                    moveItem.setTitle("所有应用");
+                    moveItem.setImg_normal(R.mipmap.all_apps_icon);
+                    moveItem.setImg_pressed(R.mipmap.all_apps_icon);
+                    break;
+            }
+            defaultList.add(moveItem);
+        }
+
+//        List<DesktopIconBean> list = DaoUtil.getDesktopIconBeanDao().loadAll();
         mList = DaoUtil.querydata();
+        if(mList == null || mList.size() == 0) {//数据库中没有列表(第一次安装)
+            mList.addAll(defaultList);
+            DaoUtil.saveNLists(defaultList);//保存默认的list
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -136,9 +214,9 @@ public class MainActivity extends BaseActivity {
                 R.mipmap.bg, options));
     }
 
-    private int getDrawableId(String name) {
-        return getResources().getIdentifier(name, "drawable", "com.jit.demo");
-    }
+//    private int getDrawableId(String name) {
+//        return getResources().getIdentifier(name, "drawable", "com.jit.demo");
+//    }
 
     @Override
     public void onBackPressed() {

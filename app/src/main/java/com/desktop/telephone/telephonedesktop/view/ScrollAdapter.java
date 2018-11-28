@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.AllAppsActivity;
@@ -32,7 +33,7 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
     private LayoutInflater mInflater;
 
     private List<DesktopIconBean> mList;
-    private HashMap<Integer, SoftReference<Drawable>> mCache;
+//    private HashMap<Integer, SoftReference<Drawable>> mCache;
 
     public ScrollAdapter(Context context, List<DesktopIconBean> list) {
 
@@ -40,7 +41,7 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
         this.mInflater = LayoutInflater.from(context);
 
         this.mList = list;
-        this.mCache = new HashMap<Integer, SoftReference<Drawable>>();
+//        this.mCache = new HashMap<Integer, SoftReference<Drawable>>();
     }
 
     @Override
@@ -51,7 +52,7 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
             view = mInflater.inflate(R.layout.item, null);
             ImageView iv = (ImageView) view.findViewById(R.id.content_iv);
             TextView tv_title = (TextView) view.findViewById(R.id.tv_title);
-            StateListDrawable states = new StateListDrawable();
+//            StateListDrawable states = new StateListDrawable();
             tv_title.setText(moveItem.getTitle());
             int imgUrl = moveItem.getImg_normal();
             int imgUrlDown = moveItem.getImg_pressed();
@@ -64,34 +65,37 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
                 BitmapDrawable bd = new BitmapDrawable(bmp);
                 pressed = bd;
                 normal = bd;
+                iv.setImageDrawable(bd);
             }else {
-                SoftReference<Drawable> p = mCache.get(imgUrlDown);
-                if (p != null) {
-                    pressed = p.get();
-                }
+                iv.setImageResource(imgUrl);
 
-                SoftReference<Drawable> n = mCache.get(imgUrl);
-                if (n != null) {
-                    normal = n.get();
-                }
-
-                if (pressed == null) {
-                    pressed = mContext.getResources().getDrawable(imgUrlDown);
-                    mCache.put(imgUrlDown, new SoftReference<Drawable>(pressed));
-                }
-
-                if (normal == null) {
-                    normal = mContext.getResources().getDrawable(imgUrl);
-                    mCache.put(imgUrl, new SoftReference<Drawable>(normal));
-                }
+//                SoftReference<Drawable> p = mCache.get(imgUrlDown);
+//                if (p != null) {
+//                    pressed = p.get();
+//                }
+//
+//                SoftReference<Drawable> n = mCache.get(imgUrl);
+//                if (n != null) {
+//                    normal = n.get();
+//                }
+//
+//                if (pressed == null) {
+//                    pressed = mContext.getResources().getDrawable(imgUrlDown);
+//                    mCache.put(imgUrlDown, new SoftReference<Drawable>(pressed));
+//                }
+//
+//                if (normal == null) {
+//                    normal = mContext.getResources().getDrawable(imgUrl);
+//                    mCache.put(imgUrl, new SoftReference<Drawable>(normal));
+//                }
             }
 
 
 
 
-            states.addState(new int[]{android.R.attr.state_pressed}, pressed);
-            states.addState(new int[]{android.R.attr.state_focused}, pressed);
-            states.addState(new int[]{}, normal);
+//            states.addState(new int[]{android.R.attr.state_pressed}, pressed);
+//            states.addState(new int[]{android.R.attr.state_focused}, pressed);
+//            states.addState(new int[]{}, normal);
 
             //点击事件
             view.findViewById(R.id.rl_item_container).setOnClickListener(new View.OnClickListener() {
@@ -123,7 +127,7 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
                     }
                 }
             });
-            iv.setImageDrawable(states);
+//            iv.setImageDrawable(states);
             view.setTag(moveItem);
         }
         return view;
@@ -166,19 +170,19 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
         return mList.get(position);
     }
 
-    public void recycleCache() {
-        if (mCache != null) {
-            Set<Integer> keys = mCache.keySet();
-            for (Iterator<Integer> it = keys.iterator(); it.hasNext(); ) {
-                Integer key = it.next();
-                SoftReference<Drawable> reference = mCache.get(key);
-                if (reference != null) {
-                    reference.clear();
-                }
-            }
-            mCache.clear();
-            mCache = null;
-        }
-    }
+//    public void recycleCache() {
+//        if (mCache != null) {
+//            Set<Integer> keys = mCache.keySet();
+//            for (Iterator<Integer> it = keys.iterator(); it.hasNext(); ) {
+//                Integer key = it.next();
+//                SoftReference<Drawable> reference = mCache.get(key);
+//                if (reference != null) {
+//                    reference.clear();
+//                }
+//            }
+//            mCache.clear();
+//            mCache = null;
+//        }
+//    }
 }
 
