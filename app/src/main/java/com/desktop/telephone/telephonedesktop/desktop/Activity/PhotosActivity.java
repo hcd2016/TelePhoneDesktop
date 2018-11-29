@@ -4,8 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -16,17 +17,14 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -38,8 +36,8 @@ import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.PhotoInfoBean;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.ResizableImageView;
-import com.desktop.telephone.telephonedesktop.view.ViewPagerScroller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,9 +77,17 @@ public class PhotosActivity extends BaseActivity {
     RelativeLayout rlTitleContainer;
     @BindView(R.id.frame_layout)
     RelativeLayout frameLayout;
+    @BindView(R.id.iv_add_to_banner_icon)
+    ImageView ivAddToBannerIcon;
+    @BindView(R.id.tv_add_to_banner)
+    TextView tvAddToBanner;
+    @BindView(R.id.ll_add_to_banner_container)
+    LinearLayout llAddToBannerContainer;
+    @BindView(R.id.ll_banner_setting_container)
+    LinearLayout llBannerSettingContainer;
     private PhotosAdapter photosAdapter;
-    private List<Integer> list;
-    private List<PhotoInfoBean> photoInfoBeanList;
+    private List<PhotoInfoBean> allPhotos;
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,15 +99,12 @@ public class PhotosActivity extends BaseActivity {
 
 
     private void initView() {
-        List<PhotoInfoBean> allPhotos = getAllPhotos();
-
-//        list = new ArrayList<>();
-//        for (int i = 0; i < allPhotos.size(); i++) {
-//            list.add(R.mipmap.photos);
-//        }
+        allPhotos = getAllPhotos();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         recycleView.setLayoutManager(gridLayoutManager);
         photosAdapter = new PhotosAdapter(allPhotos);
+        View empty_view = View.inflate(this, R.layout.empty_view, null);
+        photosAdapter.setEmptyView(empty_view);
         recycleView.setAdapter(photosAdapter);
 
         PhotosViewPagerAdapter photosViewPagerAdapter = new PhotosViewPagerAdapter(allPhotos);
@@ -110,7 +113,7 @@ public class PhotosActivity extends BaseActivity {
 
     int status = 0;//0为非编辑状态,1为编辑状态,2为显示全屏照片状态
 
-    @OnClick({R.id.iv_back, R.id.tv_title, R.id.ll_btn_delete, R.id.ll_btn_all_select, R.id.iv_selector_title})
+    @OnClick({R.id.iv_back, R.id.tv_title, R.id.ll_btn_delete, R.id.ll_btn_all_select, R.id.iv_selector_title,R.id.ll_add_to_banner_container, R.id.ll_banner_setting_container})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -139,6 +142,37 @@ public class PhotosActivity extends BaseActivity {
                 }
                 break;
             case R.id.ll_btn_delete://删除
+                alertDialog = new AlertDialog.Builder(this)
+                        .setTitle("确定要永久删除这" + photosAdapter.selectorList.size() + "张图片吗?")
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                alertDialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int j) {
+                                List<PhotoInfoBean> deleteList = new ArrayList<>();
+                                for (int i = 0; i < photosAdapter.selectorList.size(); i++) {//获取要删除的集合
+                                    deleteList.add(allPhotos.get(photosAdapter.selectorList.get(i)));
+                                }
+                                for (PhotoInfoBean photoInfoBean : deleteList) {
+                                    File file = new File(photoInfoBean.getFileNmae());
+                                    getContentResolver().delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MediaStore.Images.Media.DATA + "=?", new String[]{photoInfoBean.getFileNmae()});//删除系统缩略图
+                                    file.delete();//删除SD中图片
+                                    allPhotos.remove(photoInfoBean);
+                                }
+                                photosAdapter.selectorList.clear();
+                                Toast.makeText(PhotosActivity.this, "删除成功!", Toast.LENGTH_SHORT).show();
+                                photosAdapter.notifyDataSetChanged();
+                                if (allPhotos.size() == 0) {//已删完图片,退出编辑状态
+                                    ivBack.performClick();
+                                }
+                            }
+                        })
+                        .create();
+                alertDialog.show();
                 break;
             case R.id.iv_selector_title://标题的勾选框
                 int currentPosition = viewpager.getCurrentItem();
@@ -154,7 +188,7 @@ public class PhotosActivity extends BaseActivity {
                 } else {
                     tvTitle.setText("未选择");
                 }
-                if (photosAdapter.selectorList.size() != list.size()) {//只要不是全选中,按钮设置文案为全选
+                if (photosAdapter.selectorList.size() != allPhotos.size()) {//只要不是全选中,按钮设置文案为全选
                     tvAllSelect.setText("全选");
                     ivAllSelect.setImageResource(R.mipmap.all_select_normal);
                 }
@@ -162,21 +196,25 @@ public class PhotosActivity extends BaseActivity {
                     llBtnDelete.setClickable(true);
                     tvDelete.setTextColor(Utils.getColor(R.color.text_333333));
                     ivDelete.setImageResource(R.mipmap.delete_click_icon);
+                    tvAddToBanner.setTextColor(Utils.getColor(R.color.text_333333));
+                    ivAddToBannerIcon.setImageResource(R.mipmap.add_to_banner);
                 } else {
                     llBtnDelete.setClickable(false);
                     tvDelete.setTextColor(Utils.getColor(R.color.text_999999));
                     ivDelete.setImageResource(R.mipmap.delete_unclick_icon);
+                    tvAddToBanner.setTextColor(Utils.getColor(R.color.text_999999));
+                    ivAddToBannerIcon.setImageResource(R.mipmap.add_to_banner_normal);
                 }
                 photosAdapter.notifyDataSetChanged();
                 break;
             case R.id.ll_btn_all_select://全选
-                if (photosAdapter.selectorList.size() == list.size()) {//已是全选状态,清空
+                if (photosAdapter.selectorList.size() == allPhotos.size()) {//已是全选状态,清空
                     photosAdapter.selectorList.clear();
                     tvAllSelect.setText("全选");
                     ivAllSelect.setImageResource(R.mipmap.all_select_normal);
                 } else {//全选
                     photosAdapter.selectorList.clear();
-                    for (int i = 0; i < list.size(); i++) {
+                    for (int i = 0; i < allPhotos.size(); i++) {
                         photosAdapter.selectorList.add(i);
                     }
                     tvAllSelect.setText("取消全选");
@@ -191,17 +229,27 @@ public class PhotosActivity extends BaseActivity {
                     llBtnDelete.setClickable(true);
                     tvDelete.setTextColor(Utils.getColor(R.color.text_333333));
                     ivDelete.setImageResource(R.mipmap.delete_click_icon);
+                    tvAddToBanner.setTextColor(Utils.getColor(R.color.text_333333));
+                    ivAddToBannerIcon.setImageResource(R.mipmap.add_to_banner);
                 } else {
                     llBtnDelete.setClickable(false);
                     tvDelete.setTextColor(Utils.getColor(R.color.text_999999));
                     ivDelete.setImageResource(R.mipmap.delete_unclick_icon);
+                    tvAddToBanner.setTextColor(Utils.getColor(R.color.text_999999));
+                    ivAddToBannerIcon.setImageResource(R.mipmap.add_to_banner_normal);
                 }
                 photosAdapter.notifyDataSetChanged();
+                break;
+            case R.id.ll_add_to_banner_container://加入到banner
+                break;
+            case R.id.ll_banner_setting_container://banner设置
+                startActivity(BannerSettingActivity.class);
                 break;
         }
     }
 
     int perverClick = 0;//点击照片之前的状态
+
 
     class PhotosAdapter extends BaseQuickAdapter<PhotoInfoBean, BaseViewHolder> {
         List<Integer> selectorList = new ArrayList<>();//记录选中的图片
@@ -352,7 +400,7 @@ public class PhotosActivity extends BaseActivity {
                     } else {
                         tvTitle.setText("未选择");
                     }
-                    if (selectorList.size() != list.size()) {//只要不是全选中,按钮设置文案为全选
+                    if (selectorList.size() != allPhotos.size()) {//只要不是全选中,按钮设置文案为全选
                         tvAllSelect.setText("全选");
                         ivAllSelect.setImageResource(R.mipmap.all_select_normal);
                     }
@@ -360,10 +408,14 @@ public class PhotosActivity extends BaseActivity {
                         llBtnDelete.setClickable(true);
                         tvDelete.setTextColor(Utils.getColor(R.color.text_333333));
                         ivDelete.setImageResource(R.mipmap.delete_click_icon);
+                        tvAddToBanner.setTextColor(Utils.getColor(R.color.text_333333));
+                        ivAddToBannerIcon.setImageResource(R.mipmap.add_to_banner);
                     } else {
                         llBtnDelete.setClickable(false);
                         tvDelete.setTextColor(Utils.getColor(R.color.text_999999));
                         ivDelete.setImageResource(R.mipmap.delete_unclick_icon);
+                        tvAddToBanner.setTextColor(Utils.getColor(R.color.text_999999));
+                        ivAddToBannerIcon.setImageResource(R.mipmap.add_to_banner_normal);
                     }
                     notifyDataSetChanged();
                 }

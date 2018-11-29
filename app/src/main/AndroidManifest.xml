@@ -5,8 +5,9 @@
 
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <!--获取系统图片-->
+    <!--获取系统图片,删除图片-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".base.App"
@@ -28,6 +29,7 @@
         <!--所有应用-->
         <activity android:name=".desktop.Activity.AllAppsActivity"/>
         <activity android:name=".desktop.Activity.PhotosActivity"/>
+        <activity android:name=".desktop.Activity.BannerSettingActivity"/>
     </application>
 
 </manifest>
