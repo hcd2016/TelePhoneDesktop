@@ -2,14 +2,12 @@ package com.desktop.telephone.telephonedesktop.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.LightingColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
-import com.desktop.telephone.telephonedesktop.db.GreenDaoManager;
+import com.desktop.telephone.telephonedesktop.db.DBManager;
 import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 
@@ -21,11 +19,15 @@ import java.util.List;
 
 public class DaoUtil {
     public static DesktopIconBeanDao getDesktopIconBeanDao() {
-        return GreenDaoManager.getInstance().getSession().getDesktopIconBeanDao();
+        return DBManager.getInstance().getNewSession().getDesktopIconBeanDao();
     }
 
     public static AppInfoBeanDao getAppInfoBeanDao() {
-        return GreenDaoManager.getInstance().getSession().getAppInfoBeanDao();
+        return DBManager.getInstance().getNewSession().getAppInfoBeanDao();
+    }
+
+    public static void closeDb() {
+        DBManager.getInstance().closeConnection();
     }
 
     //根据mid排序查询

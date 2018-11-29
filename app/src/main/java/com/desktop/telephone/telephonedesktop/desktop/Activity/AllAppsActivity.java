@@ -240,4 +240,10 @@ public class AllAppsActivity extends BaseActivity {
         list.addAll(showList);
         list.addAll(noShowList);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DaoUtil.closeDb();
+    }
 }

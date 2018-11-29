@@ -1010,6 +1010,7 @@ public class ScrollLayout extends ViewGroup implements OnDataChangeListener {
                                 }
                             }
                             context.unregisterReceiver(deletePackageReceiver);
+                            DaoUtil.closeDb();
                         }
                     };
                     mContext.registerReceiver(deletePackageReceiver, filter);

@@ -34,8 +34,11 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.PhotoInfoBean;
+import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.ResizableImageView;
+
+import org.greenrobot.greendao.DbUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -194,12 +197,14 @@ public class PhotosActivity extends BaseActivity {
                 }
                 if (photosAdapter.selectorList.size() > 0) {//有选中
                     llBtnDelete.setClickable(true);
+                    llAddToBannerContainer.setClickable(true);
                     tvDelete.setTextColor(Utils.getColor(R.color.text_333333));
                     ivDelete.setImageResource(R.mipmap.delete_click_icon);
                     tvAddToBanner.setTextColor(Utils.getColor(R.color.text_333333));
                     ivAddToBannerIcon.setImageResource(R.mipmap.add_to_banner);
                 } else {
                     llBtnDelete.setClickable(false);
+                    llAddToBannerContainer.setClickable(false);
                     tvDelete.setTextColor(Utils.getColor(R.color.text_999999));
                     ivDelete.setImageResource(R.mipmap.delete_unclick_icon);
                     tvAddToBanner.setTextColor(Utils.getColor(R.color.text_999999));
@@ -227,12 +232,14 @@ public class PhotosActivity extends BaseActivity {
                 }
                 if (photosAdapter.selectorList.size() > 0) {//有选中
                     llBtnDelete.setClickable(true);
+                    llAddToBannerContainer.setClickable(true);
                     tvDelete.setTextColor(Utils.getColor(R.color.text_333333));
                     ivDelete.setImageResource(R.mipmap.delete_click_icon);
                     tvAddToBanner.setTextColor(Utils.getColor(R.color.text_333333));
                     ivAddToBannerIcon.setImageResource(R.mipmap.add_to_banner);
                 } else {
                     llBtnDelete.setClickable(false);
+                    llAddToBannerContainer.setClickable(false);
                     tvDelete.setTextColor(Utils.getColor(R.color.text_999999));
                     ivDelete.setImageResource(R.mipmap.delete_unclick_icon);
                     tvAddToBanner.setTextColor(Utils.getColor(R.color.text_999999));
@@ -406,12 +413,14 @@ public class PhotosActivity extends BaseActivity {
                     }
                     if (selectorList.size() > 0) {//有选中
                         llBtnDelete.setClickable(true);
+                        llAddToBannerContainer.setClickable(true);
                         tvDelete.setTextColor(Utils.getColor(R.color.text_333333));
                         ivDelete.setImageResource(R.mipmap.delete_click_icon);
                         tvAddToBanner.setTextColor(Utils.getColor(R.color.text_333333));
                         ivAddToBannerIcon.setImageResource(R.mipmap.add_to_banner);
                     } else {
                         llBtnDelete.setClickable(false);
+                        llAddToBannerContainer.setClickable(false);
                         tvDelete.setTextColor(Utils.getColor(R.color.text_999999));
                         ivDelete.setImageResource(R.mipmap.delete_unclick_icon);
                         tvAddToBanner.setTextColor(Utils.getColor(R.color.text_999999));
@@ -631,6 +640,12 @@ public class PhotosActivity extends BaseActivity {
                 mCurrentAnimator = set;
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DaoUtil.closeDb();
     }
 
     //    /**

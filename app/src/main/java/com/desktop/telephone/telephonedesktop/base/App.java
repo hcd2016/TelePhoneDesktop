@@ -3,13 +3,11 @@ package com.desktop.telephone.telephonedesktop.base;
 import android.app.Application;
 import android.content.Context;
 
-import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 //import com.lidroid.xutils.DbUtils;
-import com.desktop.telephone.telephonedesktop.db.GreenDaoManager;
+import com.desktop.telephone.telephonedesktop.db.DBManager;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class App extends Application {
@@ -20,7 +18,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
-        GreenDaoManager.getInstance();
+        DBManager.getInstance();
     }
 
     /**
@@ -29,7 +27,7 @@ public class App extends Application {
         return context;
     }
     private static DesktopIconBeanDao getDesktopIconBeanDao() {
-        return GreenDaoManager.getInstance().getSession().getDesktopIconBeanDao();
+        return DBManager.getInstance().getNewSession().getDesktopIconBeanDao();
     }
 
     /**
