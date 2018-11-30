@@ -18,15 +18,8 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        init();
     }
 
-    private void init() {
-        long banner_start_time = SPUtil.getInstance().getLong(SPUtil.KEY_BANNER_START_TIME, 1000 * 60 * 5);
-        countTimerView = new CountTimer(banner_start_time, 1000, this);
-        isOpenBanner = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_OPEN_BANNER,true);
-        isBannerRunning = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_BANNER_RUNING,false);
-    }
 
     /**
      * 主要的方法，重写dispatchTouchEvent
@@ -39,6 +32,10 @@ public class BaseActivity extends AppCompatActivity {
         switch (ev.getAction()) {
             //获取触摸动作，如果ACTION_UP，计时开始。
             case MotionEvent.ACTION_UP:
+                long banner_start_time = SPUtil.getInstance().getLong(SPUtil.KEY_BANNER_START_TIME, 1000 * 60 * 5);
+                countTimerView = new CountTimer(banner_start_time, 1000, this);
+                isOpenBanner = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_OPEN_BANNER,true);
+                isBannerRunning = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_BANNER_RUNING,false);
                 if (!isBannerRunning && isOpenBanner) {
                     countTimerView.start();
                 }
@@ -60,6 +57,10 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        long banner_start_time = SPUtil.getInstance().getLong(SPUtil.KEY_BANNER_START_TIME, 1000 * 60 * 5);
+        countTimerView = new CountTimer(banner_start_time, 1000, this);
+        isOpenBanner = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_OPEN_BANNER,true);
+        isBannerRunning = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_BANNER_RUNING,false);
         if (!isBannerRunning && isOpenBanner) {
             timeStart();
         }

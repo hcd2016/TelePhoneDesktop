@@ -159,9 +159,13 @@ public class BannerActivity extends BaseActivity {
 
             }
         });
-        SPUtil.getInstance().
-
-                saveBoolean(SPUtil.KEY_IS_BANNER_RUNING, true);
+        SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_BANNER_RUNING, true);
         banner.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_BANNER_RUNING, false);
     }
 }
