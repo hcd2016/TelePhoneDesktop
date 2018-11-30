@@ -1,5 +1,7 @@
 package com.desktop.telephone.telephonedesktop.desktop.Activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -9,6 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -17,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -26,9 +30,12 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.PhotoInfoBean;
+import com.desktop.telephone.telephonedesktop.util.DaoUtil;
+import com.desktop.telephone.telephonedesktop.util.SPUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.ResizableImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +67,8 @@ public class BannerSettingActivity extends BaseActivity {
     @BindView(R.id.tv_title)
     TextView tvTitle;
     private BannerSetingsAdapter bannerSetingsAdapter;
-    private List<PhotoInfoBean> allPhotos;
+    //    private List<PhotoInfoBean> allPhotos;
+    private List<PhotoInfoBean> bannerList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,36 +79,81 @@ public class BannerSettingActivity extends BaseActivity {
     }
 
     private void initView() {
-        allPhotos = getAllPhotos();
+        bannerList = DaoUtil.getPhotoInfoBeanDao().loadAll();
+        boolean isOpenBanner = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_OPEN_BANNER);
+        long bannerSpeed = SPUtil.getInstance().getLong(SPUtil.KEY_BANNER_SPEED);
+        long bannerBeginTime = SPUtil.getInstance().getLong(SPUtil.KEY_BANNER_START_TIME);
+
+        switchOff.setChecked(isOpenBanner);
+        if(switchOff.isChecked()) {
+            llCloseContainer.setVisibility(View.VISIBLE);
+        }else {
+            llCloseContainer.setVisibility(View.GONE);
+        }
+        etBannerSpeed.setText(bannerSpeed/1000+"");
+        etBannerBeginTime.setText(bannerBeginTime/(1000*60)+"");
+
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         recycleView.setLayoutManager(gridLayoutManager);
-        bannerSetingsAdapter = new BannerSetingsAdapter(allPhotos);
+        bannerSetingsAdapter = new BannerSetingsAdapter(bannerList);
         View empty_view = View.inflate(this, R.layout.empty_view, null);
         bannerSetingsAdapter.setEmptyView(empty_view);
         recycleView.setAdapter(bannerSetingsAdapter);
 
-        PhotosViewPagerAdapter photosViewPagerAdapter = new PhotosViewPagerAdapter(allPhotos);
+        PhotosViewPagerAdapter photosViewPagerAdapter = new PhotosViewPagerAdapter(bannerList);
         viewpager.setAdapter(photosViewPagerAdapter);
+        viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+                if(status == 2) {
+                    if(bannerSetingsAdapter.selectorList.contains(i)) {
+                        ivSelectorTitle.setImageResource(R.mipmap.selector_icon);
+                    }else {
+                        ivSelectorTitle.setImageResource(R.mipmap.unselector_icon);
+                    }
+                }
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
 
     int perverClick = 0;
-    @OnClick({R.id.iv_back, R.id.tv_btn_save})
+
+    @OnClick({R.id.iv_back, R.id.tv_btn_save, R.id.btn_banner, R.id.switch_off,R.id.iv_selector_title})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
                 if (status == 1) {
-                    tvTitle.setText("所有相册");
+                    tvTitle.setText("轮播设置");
                     status = 0;
                     bannerSetingsAdapter.selectorList.clear();//清除选中状态
                     ivBack.setImageResource(R.mipmap.arrow_left_white);
+                    tvBtnSave.setText("保存");
+                    tvBtnSave.setVisibility(View.VISIBLE);
+                    ivSelectorTitle.setVisibility(View.GONE);
                     bannerSetingsAdapter.notifyDataSetChanged();
                 } else if (status == 2) {//返回列表界面
                     if (perverClick == 0) {//之前是非编辑状态
                         status = 0;
                         ivBack.setImageResource(R.mipmap.arrow_left_white);
+                        tvBtnSave.setText("保存");
+                        tvBtnSave.setVisibility(View.VISIBLE);
+                        ivSelectorTitle.setVisibility(View.GONE);
                     } else {
                         ivBack.setImageResource(R.mipmap.close_white_icon);
                         status = 1;
+                        tvBtnSave.setText("移出轮播");
+                        tvBtnSave.setVisibility(View.VISIBLE);
+                        ivSelectorTitle.setVisibility(View.GONE);
                     }
                     viewpager.setVisibility(View.GONE);
                     ivSelectorTitle.setVisibility(View.GONE);
@@ -111,12 +164,111 @@ public class BannerSettingActivity extends BaseActivity {
                     finish();
                 }
                 break;
-            case R.id.tv_btn_save:
+            case R.id.tv_btn_save://保存 or 删除
+                if (status == 0) {
+                    tvBtnSave.setText("保存");
+                    String bannerBeginTime = etBannerBeginTime.getText().toString();
+                    String bannerSpeed = etBannerSpeed.getText().toString();
+                    if (TextUtils.isEmpty(bannerBeginTime)) {
+                        Utils.Toast("轮播开启时间不能为空");
+                        return;
+                    }
+                    if (TextUtils.isEmpty(bannerSpeed)) {
+                        Utils.Toast("轮播速度不能为空");
+                        return;
+                    }
+                    SPUtil.getInstance().saveLong(SPUtil.KEY_BANNER_START_TIME, Long.parseLong(bannerBeginTime) * 60 * 1000);
+                    SPUtil.getInstance().saveLong(SPUtil.KEY_BANNER_SPEED, Long.parseLong(bannerSpeed) * 1000);
+                    Utils.Toast("保存成功");
+                } else {
+                    tvBtnSave.setText("移出轮播");
+                    if(bannerSetingsAdapter.selectorList.size() == 0) {
+                        Utils.Toast("请选择移出图片");
+                        return;
+                    }
+                    AlertDialog alertDialog = new AlertDialog.Builder(this).
+                            setTitle("确定要移出轮播吗?")
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            })
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int j) {
+                                    List<PhotoInfoBean> deleteList = new ArrayList<>();
+                                    for (int i = 0; i < bannerSetingsAdapter.selectorList.size(); i++) {//获取要删除的集合
+                                        PhotoInfoBean photoInfoBean = bannerList.get(bannerSetingsAdapter.selectorList.get(i));
+                                        DaoUtil.getPhotoInfoBeanDao().delete(photoInfoBean);
+                                        deleteList.add(photoInfoBean);
+                                    }
+                                    for (PhotoInfoBean photoInfoBean : deleteList) {
+                                        bannerList.remove(photoInfoBean);
+                                    }
+                                    bannerSetingsAdapter.selectorList.clear();
+                                    bannerSetingsAdapter.notifyDataSetChanged();
+                                    Utils.Toast("移出成功");
+
+//                                    for (PhotoInfoBean photoInfoBean : deleteList) {
+//                                        File file = new File(photoInfoBean.getFileName());
+//                                        getContentResolver().delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MediaStore.Images.Media.DATA + "=?", new String[]{photoInfoBean.getFileName()});//删除系统缩略图
+//                                        file.delete();//删除SD中图片
+//                                        allPhotos.remove(photoInfoBean);
+//                                    }
+//                                    photosAdapter.selectorList.clear();
+//                                    Toast.makeText(PhotosActivity.this, "删除成功!", Toast.LENGTH_SHORT).show();
+//                                    photosAdapter.notifyDataSetChanged();
+//                                    if (allPhotos.size() == 0) {//已删完图片,退出编辑状态
+//                                        ivBack.performClick();
+//                                    }
+                                }
+                            })
+                            .create();
+                    alertDialog.show();
+                }
+                break;
+            case R.id.btn_banner://banner预览
+                if (bannerList == null || bannerList.size() == 0) {
+                    Toast.makeText(this, "请从所有相册中先加入轮播图片", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(!SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_OPEN_BANNER,false)) {
+                    Utils.Toast("请先开启轮播");
+                    return;
+                }
+                startActivity(BannerActivity.class);
+                break;
+            case R.id.switch_off://轮播开关
+                if (switchOff.isChecked()) {
+                    llCloseContainer.setVisibility(View.VISIBLE);
+                    SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_OPEN_BANNER,true);
+                } else {
+                    llCloseContainer.setVisibility(View.GONE);
+                    SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_OPEN_BANNER,false);
+                }
+                break;
+            case R.id.iv_selector_title://
+                int currentPosition = viewpager.getCurrentItem();
+                if (bannerSetingsAdapter.selectorList.contains(currentPosition)) {//之前是已选中
+                    bannerSetingsAdapter.selectorList.remove(new Integer(currentPosition));//注意,要删除的是值是position的项,而不是角标position的项
+                    ivSelectorTitle.setImageResource(R.mipmap.unselector_icon);
+                } else {
+                    bannerSetingsAdapter.selectorList.add(currentPosition);//记录选中position
+                    ivSelectorTitle.setImageResource(R.mipmap.selector_icon);
+                }
+                if (bannerSetingsAdapter.selectorList.size() > 0) {
+                    tvTitle.setText("已选择 (" + bannerSetingsAdapter.selectorList.size() + ")");
+                } else {
+                    tvTitle.setText("未选择");
+                }
+                bannerSetingsAdapter.notifyDataSetChanged();
                 break;
         }
     }
 
     int status = 0;
+
     /**
      * 获取系统所有图片
      */
@@ -135,7 +287,7 @@ public class BannerSettingActivity extends BaseActivity {
             PhotoInfoBean photoInfoBean = new PhotoInfoBean();
             photoInfoBean.setName(name);
             photoInfoBean.setDesc(desc);
-            photoInfoBean.setFileNmae(new String(data, 0, data.length - 1));
+            photoInfoBean.setFileName(new String(data, 0, data.length - 1));
             list.add(photoInfoBean);
         }
         return list;
@@ -157,7 +309,7 @@ public class BannerSettingActivity extends BaseActivity {
             RequestOptions options = new RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
             Glide.with(BannerSettingActivity.this).
-                    load(item.fileNmae)
+                    load(item.fileName)
                     .apply(options)
                     .into(iv_img);
             iv_bg.setVisibility(View.GONE);
@@ -198,6 +350,9 @@ public class BannerSettingActivity extends BaseActivity {
                                 ivSelectorTitle.setImageResource(R.mipmap.unselector_icon);
                             }
                             status = 2;
+
+                            tvBtnSave.setVisibility(View.GONE);
+                            ivSelectorTitle.setVisibility(View.VISIBLE);
                         }
                     }, 350);
                 }
@@ -210,6 +365,10 @@ public class BannerSettingActivity extends BaseActivity {
                     ivBack.setImageResource(R.mipmap.close_white_icon);
                     status = 1;
                     perverClick = status;
+
+                    tvBtnSave.setText("移出轮播");
+                    tvBtnSave.setVisibility(View.VISIBLE);
+                    ivSelectorTitle.setVisibility(View.GONE);
                     notifyDataSetChanged();
                     return false;
                 }
@@ -270,11 +429,11 @@ public class BannerSettingActivity extends BaseActivity {
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             View view = View.inflate(BannerSettingActivity.this, R.layout.item_photos_viewpager, null);
             ImageView iv_img = view.findViewById(R.id.iv_img);
-//            iv_img.setImageBitmap(BitmapFactory.decodeFile(list.get(position).getFileNmae()));
+//            iv_img.setImageBitmap(BitmapFactory.decodeFile(list.get(position).getFileName()));
             RequestOptions options = new RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
             Glide.with(BannerSettingActivity.this).
-                    load(list.get(position).fileNmae)
+                    load(list.get(position).fileName)
                     .apply(options)
                     .into(iv_img);
             container.addView(view);
@@ -285,5 +444,10 @@ public class BannerSettingActivity extends BaseActivity {
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        ivBack.performClick();
     }
 }

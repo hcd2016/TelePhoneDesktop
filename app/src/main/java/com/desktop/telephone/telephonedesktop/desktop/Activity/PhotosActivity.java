@@ -38,8 +38,6 @@ import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.ResizableImageView;
 
-import org.greenrobot.greendao.DbUtils;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +93,7 @@ public class PhotosActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_phone);
+        setContentView(R.layout.activity_photos);
         ButterKnife.bind(this);
         initView();
     }
@@ -112,11 +110,33 @@ public class PhotosActivity extends BaseActivity {
 
         PhotosViewPagerAdapter photosViewPagerAdapter = new PhotosViewPagerAdapter(allPhotos);
         viewpager.setAdapter(photosViewPagerAdapter);
+        viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+                if(status == 2) {
+                    if(photosAdapter.selectorList.contains(i)) {
+                        ivSelectorTitle.setImageResource(R.mipmap.selector_icon);
+                    }else {
+                        ivSelectorTitle.setImageResource(R.mipmap.unselector_icon);
+                    }
+                }
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
 
     int status = 0;//0为非编辑状态,1为编辑状态,2为显示全屏照片状态
 
-    @OnClick({R.id.iv_back, R.id.tv_title, R.id.ll_btn_delete, R.id.ll_btn_all_select, R.id.iv_selector_title,R.id.ll_add_to_banner_container, R.id.ll_banner_setting_container})
+    @OnClick({R.id.iv_back, R.id.tv_title, R.id.ll_btn_delete, R.id.ll_btn_all_select, R.id.iv_selector_title, R.id.ll_add_to_banner_container, R.id.ll_banner_setting_container})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -161,8 +181,8 @@ public class PhotosActivity extends BaseActivity {
                                     deleteList.add(allPhotos.get(photosAdapter.selectorList.get(i)));
                                 }
                                 for (PhotoInfoBean photoInfoBean : deleteList) {
-                                    File file = new File(photoInfoBean.getFileNmae());
-                                    getContentResolver().delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MediaStore.Images.Media.DATA + "=?", new String[]{photoInfoBean.getFileNmae()});//删除系统缩略图
+                                    File file = new File(photoInfoBean.getFileName());
+                                    getContentResolver().delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MediaStore.Images.Media.DATA + "=?", new String[]{photoInfoBean.getFileName()});//删除系统缩略图
                                     file.delete();//删除SD中图片
                                     allPhotos.remove(photoInfoBean);
                                 }
@@ -194,6 +214,9 @@ public class PhotosActivity extends BaseActivity {
                 if (photosAdapter.selectorList.size() != allPhotos.size()) {//只要不是全选中,按钮设置文案为全选
                     tvAllSelect.setText("全选");
                     ivAllSelect.setImageResource(R.mipmap.all_select_normal);
+                }else {
+                    tvAllSelect.setText("取消全选");
+                    ivAllSelect.setImageResource(R.mipmap.all_select_icon);
                 }
                 if (photosAdapter.selectorList.size() > 0) {//有选中
                     llBtnDelete.setClickable(true);
@@ -248,6 +271,16 @@ public class PhotosActivity extends BaseActivity {
                 photosAdapter.notifyDataSetChanged();
                 break;
             case R.id.ll_add_to_banner_container://加入到banner
+//                List<PhotoInfoBean> bannerList = DaoUtil.getPhotoInfoBeanDao().loadAll();
+                for (int i = 0; i < photosAdapter.selectorList.size(); i++) {
+                    PhotoInfoBean photoInfoBean = allPhotos.get(photosAdapter.selectorList.get(i));
+//                    if (bannerList == null || bannerList.size() == 0) {
+                        photoInfoBean.setId(photosAdapter.selectorList.get(i));
+//                        bannerList.add(photoInfoBean);
+                        DaoUtil.getPhotoInfoBeanDao().insertOrReplace(photoInfoBean);
+//                    }
+                }
+                Toast.makeText(this,"加入成功",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.ll_banner_setting_container://banner设置
                 startActivity(BannerSettingActivity.class);
@@ -273,10 +306,10 @@ public class PhotosActivity extends BaseActivity {
             RequestOptions options = new RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
             Glide.with(PhotosActivity.this).
-                    load(item.fileNmae)
+                    load(item.fileName)
                     .apply(options)
                     .into(iv_img);
-//            iv_img.setImageBitmap(BitmapFactory.decodeFile(item.fileNmae));
+//            iv_img.setImageBitmap(BitmapFactory.decodeFile(item.fileName));
             iv_bg.setVisibility(View.GONE);
 //            初始化状态
             if (status == 1) {
@@ -455,11 +488,11 @@ public class PhotosActivity extends BaseActivity {
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             View view = View.inflate(PhotosActivity.this, R.layout.item_photos_viewpager, null);
             ImageView iv_img = view.findViewById(R.id.iv_img);
-//            iv_img.setImageBitmap(BitmapFactory.decodeFile(list.get(position).getFileNmae()));
+//            iv_img.setImageBitmap(BitmapFactory.decodeFile(list.get(position).getFileName()));
             RequestOptions options = new RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
             Glide.with(PhotosActivity.this).
-                    load(list.get(position).fileNmae)
+                    load(list.get(position).fileName)
                     .apply(options)
                     .into(iv_img);
             container.addView(view);
@@ -495,7 +528,7 @@ public class PhotosActivity extends BaseActivity {
             PhotoInfoBean photoInfoBean = new PhotoInfoBean();
             photoInfoBean.setName(name);
             photoInfoBean.setDesc(desc);
-            photoInfoBean.setFileNmae(new String(data, 0, data.length - 1));
+            photoInfoBean.setFileName(new String(data, 0, data.length - 1));
             list.add(photoInfoBean);
         }
         return list;

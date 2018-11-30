@@ -30,6 +30,7 @@
         <activity android:name=".desktop.Activity.AllAppsActivity"/>
         <activity android:name=".desktop.Activity.PhotosActivity"/>
         <activity android:name=".desktop.Activity.BannerSettingActivity"/>
+        <activity android:name=".desktop.Activity.BannerActivity"/>
     </application>
 
 </manifest>

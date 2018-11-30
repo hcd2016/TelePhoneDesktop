@@ -7,9 +7,11 @@ import android.graphics.drawable.Drawable;
 
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
+import com.desktop.telephone.telephonedesktop.bean.PhotoInfoBean;
 import com.desktop.telephone.telephonedesktop.db.DBManager;
 import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
+import com.desktop.telephone.telephonedesktop.gen.PhotoInfoBeanDao;
 
 import org.greenrobot.greendao.query.Query;
 import org.greenrobot.greendao.query.WhereCondition;
@@ -24,6 +26,10 @@ public class DaoUtil {
 
     public static AppInfoBeanDao getAppInfoBeanDao() {
         return DBManager.getInstance().getNewSession().getAppInfoBeanDao();
+    }
+
+    public static PhotoInfoBeanDao getPhotoInfoBeanDao() {
+        return DBManager.getInstance().getNewSession().getPhotoInfoBeanDao();
     }
 
     public static void closeDb() {
@@ -70,6 +76,7 @@ public class DaoUtil {
             }
         });
     }
+
     /**
      * 批量插入或修改用户信息
      *

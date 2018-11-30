@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 import com.desktop.telephone.telephonedesktop.base.App;
 
@@ -25,5 +26,15 @@ public class Utils {
         } else {
             return App.getContext().getResources().getColor(id);
         }
+    }
+
+    private static Toast toast = null;
+    public static void Toast(String text) {
+        if (toast == null) {
+            toast = Toast.makeText(App.getContext(), text, Toast.LENGTH_SHORT);
+        } else {
+            toast.setText(text);
+        }
+        toast.show();
     }
 }
