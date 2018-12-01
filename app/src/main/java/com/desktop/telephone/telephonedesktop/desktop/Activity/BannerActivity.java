@@ -1,5 +1,6 @@
 package com.desktop.telephone.telephonedesktop.desktop.Activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -57,12 +58,20 @@ public class BannerActivity extends BaseActivity {
         //设置图片集合
         banner.setImages(images);
         //设置banner动画效果
-        banner.setBannerAnimation(Transformer.DepthPage);
+//        banner.setBannerAnimation(Transformer.DepthPage);
 //        //设置标题集合（当banner样式有显示title时）
 //        banner.setBannerTitles(titles);
         //设置自动轮播，默认为true
         banner.isAutoPlay(true);
-        long banner_speed = SPUtil.getInstance().getLong(SPUtil.KEY_BANNER_SPEED, 3000);
+        banner.setOffscreenPageLimit(bannerList.size());
+
+        boolean is_preview = getIntent().getBooleanExtra("is_preview",false);
+        long banner_speed = 3000;
+        if(is_preview) {//是预览轮播
+            banner_speed = getIntent().getLongExtra(SPUtil.KEY_BANNER_SPEED,3000);
+        }else {
+            banner_speed = SPUtil.getInstance().getLong(SPUtil.KEY_BANNER_SPEED, 3000);
+        }
         //设置轮播时间
         banner.setDelayTime((int) banner_speed);
 //        //设置指示器位置（当banner模式中有指示器时）
@@ -78,7 +87,7 @@ public class BannerActivity extends BaseActivity {
         banner.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
-                switch (i % 15) {
+                switch (i % 16) {
                     case 0:
                         banner.setBannerAnimation(Transformer.ForegroundToBackground);
                     break;
@@ -89,16 +98,17 @@ public class BannerActivity extends BaseActivity {
                         banner.setBannerAnimation(Transformer.DepthPage);
                     break;
                     case 3:
-                        banner.setBannerAnimation(Transformer.FlipHorizontal);
+//                        banner.setBannerAnimation(Transformer.FlipHorizontal);
+                        banner.setBannerAnimation(Transformer.Default);
                     break;
                     case 4:
-                        banner.setBannerAnimation(Transformer.FlipVertical);
+                        banner.setBannerAnimation(Transformer.RotateUp);
                     break;
                     case 5:
                         banner.setBannerAnimation(Transformer.RotateDown);
                     break;
                     case 6:
-                        banner.setBannerAnimation(Transformer.RotateUp);
+                        banner.setBannerAnimation(Transformer.ScaleInOut);
                     break;
                     case 7:
                         banner.setBannerAnimation(Transformer.Stack);
@@ -127,6 +137,8 @@ public class BannerActivity extends BaseActivity {
                     case 15:
                         banner.setBannerAnimation(Transformer.CubeOut);
                     break;
+                    default:
+                        banner.setBannerAnimation(Transformer.Default);
                 }
 //                    public static Class<? extends PageTransformer> Default = DefaultTransformer.class;
 //                    public static Class<? extends PageTransformer> Accordion = AccordionTransformer.class;
@@ -159,8 +171,8 @@ public class BannerActivity extends BaseActivity {
 
             }
         });
-        SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_BANNER_RUNING, true);
         banner.start();
+        SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_BANNER_RUNING, true);
     }
 
     @Override
@@ -168,4 +180,11 @@ public class BannerActivity extends BaseActivity {
         super.onDestroy();
         SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_BANNER_RUNING, false);
     }
+
+    @Override
+    public void onBackPressed() {
+        SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_BANNER_RUNING, false);
+        finish();
+    }
+
 }

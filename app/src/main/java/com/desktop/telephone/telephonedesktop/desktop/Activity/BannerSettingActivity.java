@@ -2,6 +2,7 @@ package com.desktop.telephone.telephonedesktop.desktop.Activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -80,7 +82,7 @@ public class BannerSettingActivity extends BaseActivity {
 
     private void initView() {
         bannerList = DaoUtil.getPhotoInfoBeanDao().loadAll();
-        boolean isOpenBanner = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_OPEN_BANNER);
+        boolean isOpenBanner = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_OPEN_BANNER,true);
         long bannerSpeed = SPUtil.getInstance().getLong(SPUtil.KEY_BANNER_SPEED);
         long bannerBeginTime = SPUtil.getInstance().getLong(SPUtil.KEY_BANNER_START_TIME);
 
@@ -90,9 +92,22 @@ public class BannerSettingActivity extends BaseActivity {
         }else {
             llCloseContainer.setVisibility(View.GONE);
         }
-        etBannerSpeed.setText(bannerSpeed/1000+"");
-        etBannerBeginTime.setText(bannerBeginTime/(1000*60)+"");
+        switchOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b) {
+                    llCloseContainer.setVisibility(View.VISIBLE);
+                }else {
+                    llCloseContainer.setVisibility(View.GONE);
+                }
+            }
+        });
+        if(bannerSpeed != 0 && bannerBeginTime != 0) {
+            etBannerSpeed.setText(bannerSpeed/1000+"");
+            etBannerBeginTime.setText(bannerBeginTime/(1000*60)+"");
+        }
 
+        etBannerBeginTime.setSelection(etBannerBeginTime.getText().toString().length());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         recycleView.setLayoutManager(gridLayoutManager);
         bannerSetingsAdapter = new BannerSetingsAdapter(bannerList);
@@ -128,7 +143,7 @@ public class BannerSettingActivity extends BaseActivity {
 
     int perverClick = 0;
 
-    @OnClick({R.id.iv_back, R.id.tv_btn_save, R.id.btn_banner, R.id.switch_off,R.id.iv_selector_title})
+    @OnClick({R.id.iv_back, R.id.tv_btn_save, R.id.btn_banner,R.id.iv_selector_title})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -177,8 +192,19 @@ public class BannerSettingActivity extends BaseActivity {
                         Utils.Toast("轮播速度不能为空");
                         return;
                     }
+                    if(bannerBeginTime.equals("0")) {
+                        Utils.Toast("轮播开启时间不能为0");
+                        return;
+                    }
+                    if(bannerSpeed.equals("0")) {
+                        Utils.Toast("轮播速度不能为0");
+                        return;
+                    }
+                    SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_OPEN_BANNER,switchOff.isChecked());
                     SPUtil.getInstance().saveLong(SPUtil.KEY_BANNER_START_TIME, Long.parseLong(bannerBeginTime) * 60 * 1000);
                     SPUtil.getInstance().saveLong(SPUtil.KEY_BANNER_SPEED, Long.parseLong(bannerSpeed) * 1000);
+                    SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_BANNER_RUNING,false);
+                    timeStart();//保存成功重新开启计时
                     Utils.Toast("保存成功");
                 } else {
                     tvBtnSave.setText("移出轮播");
@@ -233,21 +259,28 @@ public class BannerSettingActivity extends BaseActivity {
                     Toast.makeText(this, "请从所有相册中先加入轮播图片", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(!SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_OPEN_BANNER,false)) {
+                if(!switchOff.isChecked()) {
                     Utils.Toast("请先开启轮播");
                     return;
                 }
-                startActivity(BannerActivity.class);
-                break;
-            case R.id.switch_off://轮播开关
-                if (switchOff.isChecked()) {
-                    llCloseContainer.setVisibility(View.VISIBLE);
-                    SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_OPEN_BANNER,true);
-                } else {
-                    llCloseContainer.setVisibility(View.GONE);
-                    SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_OPEN_BANNER,false);
+                if (TextUtils.isEmpty(etBannerSpeed.getText().toString())) {
+                    Utils.Toast("轮播速度不能为空");
+                    return;
                 }
+                Intent intent = new Intent(this,BannerActivity.class);
+                intent.putExtra("is_preview",true);
+                intent.putExtra(SPUtil.KEY_BANNER_SPEED, Long.parseLong(etBannerSpeed.getText().toString()) * 1000);
+                startActivity(intent);
                 break;
+//            case R.id.switch_off://轮播开关
+//                if (switchOff.isChecked()) {
+//                    llCloseContainer.setVisibility(View.VISIBLE);
+////                    SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_OPEN_BANNER,true);
+//                } else {
+//                    llCloseContainer.setVisibility(View.GONE);
+////                    SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_OPEN_BANNER,false);
+//                }
+//                break;
             case R.id.iv_selector_title://
                 int currentPosition = viewpager.getCurrentItem();
                 if (bannerSetingsAdapter.selectorList.contains(currentPosition)) {//之前是已选中

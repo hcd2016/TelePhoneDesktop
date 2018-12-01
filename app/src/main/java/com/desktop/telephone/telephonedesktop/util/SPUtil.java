@@ -14,7 +14,7 @@ public class SPUtil {
     public static final String KEY_BANNER_START_TIME = "banner_start_time";//轮播开始时间
     public static final String KEY_BANNER_SPEED = "banner_speed";//轮播速度
     public static final String KEY_IS_BANNER_RUNING = "is_banner_running";//是否正在轮播
-    public static final String KEY_IS_OPEN_BANNER = "is_banner_running";//是否开启轮播
+    public static final String KEY_IS_OPEN_BANNER = "is_open_banner";//是否开启轮播
 
 
     public static final String SHARED_PREFERENCE_NAME = "sp_file";
