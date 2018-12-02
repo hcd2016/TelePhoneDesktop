@@ -18,7 +18,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
-            android:src="@mipmap/arrow_left_white" />
+            android:src="@drawable/arrow_left_white" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -38,7 +38,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginBottom="10dp"
-            android:src="@mipmap/unselector_icon" />
+            android:src="@drawable/unselector_icon" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -80,7 +80,7 @@
                     android:id="@+id/iv_delete"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@mipmap/delete_unclick_icon" />
+                    android:src="@drawable/delete_unclick_icon" />
 
                 <TextView
                     android:id="@+id/tv_delete"
@@ -105,7 +105,7 @@
                     android:id="@+id/iv_all_select"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@mipmap/all_select_normal" />
+                    android:src="@drawable/all_select_normal" />
 
                 <TextView
                     android:id="@+id/tv_all_select"
@@ -129,7 +129,7 @@
                     android:id="@+id/iv_add_to_banner_icon"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@mipmap/add_to_banner_normal" />
+                    android:src="@drawable/add_to_banner_normal" />
 
                 <TextView
                     android:id="@+id/tv_add_to_banner"
@@ -152,7 +152,7 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@mipmap/banner_setting_icon" />
+                    android:src="@drawable/banner_setting_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"

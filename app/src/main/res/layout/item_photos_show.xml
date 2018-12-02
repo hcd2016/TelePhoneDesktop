@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:scaleType="centerCrop"
-            android:src="@mipmap/photos" />
+            android:src="@drawable/photos" />
 
         <com.desktop.telephone.telephonedesktop.view.ResizableImageView
             android:visibility="gone"
@@ -31,7 +31,7 @@
             android:id="@+id/iv_selector"
             android:layout_marginBottom="10dp"
             android:layout_alignBottom="@+id/iv_img"
-            android:src="@mipmap/unselector_icon"
+            android:src="@drawable/unselector_icon"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignParentRight="true"

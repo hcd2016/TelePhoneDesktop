@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.AllAppsActivity;
+import com.desktop.telephone.telephonedesktop.desktop.Activity.BlacklistActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.PhotosActivity;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
@@ -53,19 +54,14 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
             TextView tv_title = (TextView) view.findViewById(R.id.tv_title);
 //            StateListDrawable states = new StateListDrawable();
             tv_title.setText(moveItem.getTitle());
-            int imgUrl = moveItem.getImg_normal();
-            int imgUrlDown = moveItem.getImg_pressed();
+            int imgUrl = Utils.getAppIconId(moveItem.getImg_id_name());
 
-            Drawable pressed = null;
-            Drawable normal = null;
-            if(moveItem.getIconType() == 0 || moveItem.getIconType() == 2) {
+            if (moveItem.getIconType() == 0 || moveItem.getIconType() == 2) {
                 byte[] app_icon = moveItem.getApp_icon();
                 Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
                 BitmapDrawable bd = new BitmapDrawable(bmp);
-                pressed = bd;
-                normal = bd;
                 iv.setImageDrawable(bd);
-            }else {
+            } else {
                 iv.setImageResource(imgUrl);
 
 //                SoftReference<Drawable> p = mCache.get(imgUrlDown);
@@ -90,8 +86,6 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
             }
 
 
-
-
 //            states.addState(new int[]{android.R.attr.state_pressed}, pressed);
 //            states.addState(new int[]{android.R.attr.state_focused}, pressed);
 //            states.addState(new int[]{}, normal);
@@ -100,30 +94,30 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
             view.findViewById(R.id.rl_item_container).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(moveItem.getIconType() == 1) {//自定义应用指定跳转
+                    if (moveItem.getIconType() == 1) {//自定义应用指定跳转
                         switch (moveItem.getTitle()) {
                             case "电话":
                                 break;
                             case "电子相册":
-                                mContext.startActivity(new Intent(mContext,PhotosActivity.class));
+                                mContext.startActivity(new Intent(mContext, PhotosActivity.class));
                                 break;
                             case "一键拨号":
                                 break;
                             case "录音":
                                 break;
                             case "黑白名单":
-
+                                mContext.startActivity(new Intent(mContext, BlacklistActivity.class));
                                 break;
                             case "智能通讯录":
                                 break;
                             case "通话记录":
                                 break;
                             case "所有应用":
-                                mContext.startActivity(new Intent(mContext,AllAppsActivity.class));
+                                mContext.startActivity(new Intent(mContext, AllAppsActivity.class));
                                 break;
                         }
-                    }else {//系统或用户程序跳转
-                        Utils.startApp(mContext,moveItem.getPackageName());
+                    } else {//系统或用户程序跳转
+                        Utils.startApp(mContext, moveItem.getPackageName());
                     }
                 }
             });

@@ -37,7 +37,6 @@ import com.desktop.telephone.telephonedesktop.util.SPUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.ResizableImageView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,9 +121,9 @@ public class BannerSettingActivity extends BaseActivity {
             public void onPageScrolled(int i, float v, int i1) {
                 if(status == 2) {
                     if(bannerSetingsAdapter.selectorList.contains(i)) {
-                        ivSelectorTitle.setImageResource(R.mipmap.selector_icon);
+                        ivSelectorTitle.setImageResource(R.drawable.selector_icon);
                     }else {
-                        ivSelectorTitle.setImageResource(R.mipmap.unselector_icon);
+                        ivSelectorTitle.setImageResource(R.drawable.unselector_icon);
                     }
                 }
             }
@@ -151,7 +150,7 @@ public class BannerSettingActivity extends BaseActivity {
                     tvTitle.setText("轮播设置");
                     status = 0;
                     bannerSetingsAdapter.selectorList.clear();//清除选中状态
-                    ivBack.setImageResource(R.mipmap.arrow_left_white);
+                    ivBack.setImageResource(R.drawable.arrow_left_white);
                     tvBtnSave.setText("保存");
                     tvBtnSave.setVisibility(View.VISIBLE);
                     ivSelectorTitle.setVisibility(View.GONE);
@@ -159,12 +158,12 @@ public class BannerSettingActivity extends BaseActivity {
                 } else if (status == 2) {//返回列表界面
                     if (perverClick == 0) {//之前是非编辑状态
                         status = 0;
-                        ivBack.setImageResource(R.mipmap.arrow_left_white);
+                        ivBack.setImageResource(R.drawable.arrow_left_white);
                         tvBtnSave.setText("保存");
                         tvBtnSave.setVisibility(View.VISIBLE);
                         ivSelectorTitle.setVisibility(View.GONE);
                     } else {
-                        ivBack.setImageResource(R.mipmap.close_white_icon);
+                        ivBack.setImageResource(R.drawable.close_white_icon);
                         status = 1;
                         tvBtnSave.setText("移出轮播");
                         tvBtnSave.setVisibility(View.VISIBLE);
@@ -285,10 +284,10 @@ public class BannerSettingActivity extends BaseActivity {
                 int currentPosition = viewpager.getCurrentItem();
                 if (bannerSetingsAdapter.selectorList.contains(currentPosition)) {//之前是已选中
                     bannerSetingsAdapter.selectorList.remove(new Integer(currentPosition));//注意,要删除的是值是position的项,而不是角标position的项
-                    ivSelectorTitle.setImageResource(R.mipmap.unselector_icon);
+                    ivSelectorTitle.setImageResource(R.drawable.unselector_icon);
                 } else {
                     bannerSetingsAdapter.selectorList.add(currentPosition);//记录选中position
-                    ivSelectorTitle.setImageResource(R.mipmap.selector_icon);
+                    ivSelectorTitle.setImageResource(R.drawable.selector_icon);
                 }
                 if (bannerSetingsAdapter.selectorList.size() > 0) {
                     tvTitle.setText("已选择 (" + bannerSetingsAdapter.selectorList.size() + ")");
@@ -354,10 +353,10 @@ public class BannerSettingActivity extends BaseActivity {
             }
             final int position = helper.getLayoutPosition();
             if (selectorList.contains(position)) {
-                iv_selector.setImageResource(R.mipmap.selector_icon);
+                iv_selector.setImageResource(R.drawable.selector_icon);
                 iv_bg.setVisibility(View.VISIBLE);
             } else {
-                iv_selector.setImageResource(R.mipmap.unselector_icon);
+                iv_selector.setImageResource(R.drawable.unselector_icon);
                 iv_bg.setVisibility(View.GONE);
             }
             RelativeLayout rl_item_container = helper.getView(R.id.rl_item_container);
@@ -378,9 +377,9 @@ public class BannerSettingActivity extends BaseActivity {
                             ivSelectorTitle.setVisibility(View.VISIBLE);
                             rlTitleContainer.setBackgroundResource(R.color.black);
                             if (selectorList.contains(position)) {
-                                ivSelectorTitle.setImageResource(R.mipmap.selector_icon);
+                                ivSelectorTitle.setImageResource(R.drawable.selector_icon);
                             } else {
-                                ivSelectorTitle.setImageResource(R.mipmap.unselector_icon);
+                                ivSelectorTitle.setImageResource(R.drawable.unselector_icon);
                             }
                             status = 2;
 
@@ -395,7 +394,7 @@ public class BannerSettingActivity extends BaseActivity {
                 @Override
                 public boolean onLongClick(View view) {
                     tvTitle.setText("未选择");
-                    ivBack.setImageResource(R.mipmap.close_white_icon);
+                    ivBack.setImageResource(R.drawable.close_white_icon);
                     status = 1;
                     perverClick = status;
 
@@ -422,16 +421,16 @@ public class BannerSettingActivity extends BaseActivity {
                     }
 //                    if (selectorList.size() != allPhotos.size()) {//只要不是全选中,按钮设置文案为全选
 //                        tvAllSelect.setText("全选");
-//                        ivAllSelect.setImageResource(R.mipmap.all_select_normal);
+//                        ivAllSelect.setImageResource(R.drawable.all_select_normal);
 //                    }
 //                    if (selectorList.size() > 0) {//有选中
 //                        llBtnDelete.setClickable(true);
 //                        tvDelete.setTextColor(Utils.getColor(R.color.text_333333));
-//                        ivDelete.setImageResource(R.mipmap.delete_click_icon);
+//                        ivDelete.setImageResource(R.drawable.delete_click_icon);
 //                    } else {
 //                        llBtnDelete.setClickable(false);
 //                        tvDelete.setTextColor(Utils.getColor(R.color.text_999999));
-//                        ivDelete.setImageResource(R.mipmap.delete_unclick_icon);
+//                        ivDelete.setImageResource(R.drawable.delete_unclick_icon);
 //                    }
                     notifyDataSetChanged();
                 }

@@ -19,7 +19,7 @@
             android:id="@+id/iv_back"
             android:layout_width="50dp"
             android:layout_height="20dp"
-            android:src="@mipmap/arrow_left_white" />
+            android:src="@drawable/arrow_left_white" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -48,7 +48,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:src="@mipmap/unselector_icon"
+            android:src="@drawable/unselector_icon"
             android:visibility="gone" />
     </RelativeLayout>
 

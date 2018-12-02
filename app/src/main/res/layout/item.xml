@@ -21,7 +21,7 @@
             android:layout_height="0dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:src="@mipmap/phone_icon"
+            android:src="@drawable/phone_icon"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -46,7 +46,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:clickable="true"
-        android:src="@mipmap/close"
+        android:src="@drawable/close"
         android:visibility="gone"
         tools:ignore="ContentDescription" />
 

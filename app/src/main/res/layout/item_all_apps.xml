@@ -33,7 +33,7 @@
             android:id="@+id/iv_add_or_remove"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@mipmap/add_icon" />
+            android:src="@drawable/add_icon" />
     </LinearLayout>
 
     <View

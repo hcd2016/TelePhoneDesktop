@@ -8,6 +8,7 @@ import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
+import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.ScrollAdapter;
 import com.desktop.telephone.telephonedesktop.view.ScrollLayout;
 
@@ -74,64 +75,55 @@ public class MainActivity extends BaseActivity {
                     //电话
                     moveItem.setIconType(1);
                     moveItem.setTitle("电话");
-                    moveItem.setImg_normal(R.mipmap.phone_icon);
-                    moveItem.setImg_pressed(R.mipmap.phone_icon);
+                    moveItem.setImg_id_name("phone_icon");
                     break;
                 case 1:
                     //智能通讯录
                     moveItem.setIconType(1);
                     moveItem.setTitle("智能通讯录");
-                    moveItem.setImg_normal(R.mipmap.call_records_icon);
-                    moveItem.setImg_pressed(R.mipmap.call_records_icon);
+                    moveItem.setImg_id_name("call_records_icon");
                     break;
                 case 2:
                     //电子相册
                     moveItem.setIconType(1);
                     moveItem.setTitle("电子相册");
-                    moveItem.setImg_normal(R.mipmap.photo_icon);
-                    moveItem.setImg_pressed(R.mipmap.photo_icon);
+                    moveItem.setImg_id_name("photo_icon");
                     break;
                 case 3:
                     //黑白名单
                     moveItem.setIconType(1);
                     moveItem.setTitle("黑白名单");
-                    moveItem.setImg_normal(R.mipmap.blacklist_icon);
-                    moveItem.setImg_pressed(R.mipmap.blacklist_icon);
+                    moveItem.setImg_id_name("blacklist_icon");
                     break;
                 case 4:
                     //一键拨号
                     moveItem.setIconType(1);
                     moveItem.setTitle("一键拨号");
-                    moveItem.setImg_normal(R.mipmap.one_key);
-                    moveItem.setImg_pressed(R.mipmap.one_key);
+                    moveItem.setImg_id_name("one_key");
                     break;
                 case 5:
                     //录音
                     moveItem.setIconType(1);
                     moveItem.setTitle("录音");
-                    moveItem.setImg_normal(R.mipmap.record_icon);
-                    moveItem.setImg_pressed(R.mipmap.record_icon);
+                    moveItem.setImg_id_name("record_icon");
                     break;
                 case 6:
                     //通话记录
                     moveItem.setIconType(1);
                     moveItem.setTitle("通话记录");
-                    moveItem.setImg_normal(R.mipmap.address_list_icon);
-                    moveItem.setImg_pressed(R.mipmap.address_list_icon);
+                    moveItem.setImg_id_name("address_list_icon");
                     break;
                 case 7:
                     //sos
                     moveItem.setIconType(1);
                     moveItem.setTitle("SOS");
-                    moveItem.setImg_normal(R.mipmap.sos_icon);
-                    moveItem.setImg_pressed(R.mipmap.sos_icon);
+                    moveItem.setImg_id_name("sos_icon");
                     break;
                 case 8:
                     //所有应用
                     moveItem.setIconType(1);
                     moveItem.setTitle("所有应用");
-                    moveItem.setImg_normal(R.mipmap.all_apps_icon);
-                    moveItem.setImg_pressed(R.mipmap.all_apps_icon);
+                    moveItem.setImg_id_name("all_apps_icon");
                     break;
             }
             defaultList.add(moveItem);
@@ -211,7 +203,7 @@ public class MainActivity extends BaseActivity {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
         mContainer.setBackGroud(BitmapFactory.decodeResource(getResources(),
-                R.mipmap.bg, options));
+                R.drawable.bg, options));
     }
 
 //    private int getDrawableId(String name) {

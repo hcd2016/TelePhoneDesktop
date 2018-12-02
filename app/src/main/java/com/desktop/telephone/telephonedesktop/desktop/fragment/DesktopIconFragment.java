@@ -47,7 +47,7 @@ public class DesktopIconFragment extends Fragment {
 //        list = new ArrayList<>();
 //        for (int i = 0; i < 9; i++) {
 //            DesktopIconBean desktopIconBean = new DesktopIconBean();
-//            desktopIconBean.setIcon(R.mipmap.ic_launcher);
+//            desktopIconBean.setIcon(R.drawable.ic_launcher);
 //            desktopIconBean.setTitle("item" + i);
 //            list.add(desktopIconBean);
 //        }

@@ -7,11 +7,12 @@ import android.graphics.drawable.Drawable;
 
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
-import com.desktop.telephone.telephonedesktop.bean.PhotoInfoBean;
 import com.desktop.telephone.telephonedesktop.db.DBManager;
 import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
+import com.desktop.telephone.telephonedesktop.gen.BlackListInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.PhotoInfoBeanDao;
+import com.desktop.telephone.telephonedesktop.gen.SystemStatusBeanDao;
 
 import org.greenrobot.greendao.query.Query;
 import org.greenrobot.greendao.query.WhereCondition;
@@ -30,6 +31,12 @@ public class DaoUtil {
 
     public static PhotoInfoBeanDao getPhotoInfoBeanDao() {
         return DBManager.getInstance().getNewSession().getPhotoInfoBeanDao();
+    }
+    public static BlackListInfoBeanDao getBlackListInfoBeanDao() {
+        return DBManager.getInstance().getNewSession().getBlackListInfoBeanDao();
+    }
+    public static SystemStatusBeanDao getSystemStatusBeanDao() {
+        return DBManager.getInstance().getNewSession().getSystemStatusBeanDao();
     }
 
     public static void closeDb() {

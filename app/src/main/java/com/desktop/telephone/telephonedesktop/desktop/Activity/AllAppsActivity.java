@@ -97,7 +97,7 @@ public class AllAppsActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, final int i) {
             if (list.get(i).isShowDesktop) {
-                myViewHolder.ivAddOrRemove.setImageResource(R.mipmap.delete_icon);
+                myViewHolder.ivAddOrRemove.setImageResource(R.drawable.delete_icon);
                 myViewHolder.ivAddOrRemove.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -110,7 +110,7 @@ public class AllAppsActivity extends BaseActivity {
                     }
                 });
             } else {
-                myViewHolder.ivAddOrRemove.setImageResource(R.mipmap.add_icon);
+                myViewHolder.ivAddOrRemove.setImageResource(R.drawable.add_icon);
                 myViewHolder.ivAddOrRemove.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

@@ -31,6 +31,8 @@
         <activity android:name=".desktop.Activity.PhotosActivity"/>
         <activity android:name=".desktop.Activity.BannerSettingActivity"/>
         <activity android:name=".desktop.Activity.BannerActivity"/>
+        <activity android:name=".desktop.Activity.BlacklistActivity"/>
+        <activity android:name=".desktop.Activity.BlacklistAddActivity"/>s
     </application>
 
 </manifest>

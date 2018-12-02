@@ -12,10 +12,20 @@ public class DesktopIconBean {
     @Id(autoincrement = true)
     private Long id;
     private int mid;
-    //正常模式下的item的Drawable Id
-    private int img_normal;
-    //按下模式下的item的Drawable Id
-    private int img_pressed;
+    private String img_id_name;//获取本地资源文件对应的名称
+
+    public String getImg_id_name() {
+        return img_id_name;
+    }
+
+    public void setImg_id_name(String img_id_name) {
+        this.img_id_name = img_id_name;
+    }
+
+    //    //正常模式下的item的Drawable Id
+//    private int img_normal;
+//    //按下模式下的item的Drawable Id
+//    private int img_pressed;
     //item的排序字段
     private int orderId;
     private String title;
@@ -39,82 +49,58 @@ public class DesktopIconBean {
         this.app_icon = app_icon;
     }
 
-    public DesktopIconBean(Long id, int mid, int img_normal, int img_pressed,
-            int orderId, String title, int iconType) {
-        this.id = id;
-        this.mid = mid;
-        this.orderId = orderId;
-        this.title = title;
-        this.iconType = iconType;
-    }
     public DesktopIconBean() {
     }
 
-    public DesktopIconBean(Long id, int mid, int img_normal, int img_pressed,
-            int orderId, String title, int iconType, byte[] app_icon) {
+    @Generated(hash = 2132011111)
+    public DesktopIconBean(Long id, int mid, String img_id_name, int orderId,
+                           String title, int iconType, byte[] app_icon, String packageName) {
         this.id = id;
         this.mid = mid;
-        this.img_normal = img_normal;
-        this.img_pressed = img_pressed;
-        this.orderId = orderId;
-        this.title = title;
-        this.iconType = iconType;
-        this.app_icon = app_icon;
-    }
-
-    @Generated(hash = 1777396061)
-    public DesktopIconBean(Long id, int mid, int img_normal, int img_pressed,
-            int orderId, String title, int iconType, byte[] app_icon,
-            String packageName) {
-        this.id = id;
-        this.mid = mid;
-        this.img_normal = img_normal;
-        this.img_pressed = img_pressed;
+        this.img_id_name = img_id_name;
         this.orderId = orderId;
         this.title = title;
         this.iconType = iconType;
         this.app_icon = app_icon;
         this.packageName = packageName;
     }
+
     public Long getId() {
         return this.id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public int getMid() {
         return this.mid;
     }
+
     public void setMid(int mid) {
         this.mid = mid;
     }
-    public int getImg_normal() {
-        return this.img_normal;
-    }
-    public void setImg_normal(int img_normal) {
-        this.img_normal = img_normal;
-    }
-    public int getImg_pressed() {
-        return this.img_pressed;
-    }
-    public void setImg_pressed(int img_pressed) {
-        this.img_pressed = img_pressed;
-    }
+
     public int getOrderId() {
         return this.orderId;
     }
+
     public void setOrderId(int orderId) {
         this.orderId = orderId;
     }
+
     public String getTitle() {
         return this.title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
+
     public int getIconType() {
         return this.iconType;
     }
+
     public void setIconType(int iconType) {
         this.iconType = iconType;
     }
