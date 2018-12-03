@@ -165,14 +165,17 @@ public class BlackListFramgent extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(EventBean event) {//添加成功
-        if (event.equals(EventBean.BLACK_LIST_ALL_NOTIFAL)) {
-            if(blackListAdapter != null) {
+    public void onEvent(EventBean event) {//添加成功
+        if (event.getEvent().equals(EventBean.BLACK_LIST_ALL_NOTIFAL)) {
+            if(type == 1) {
+                blackList.clear();
+                initData();
                 blackListAdapter.notifyDataSetChanged();
+            }else {
+                whiteList.clear();
+                initData();
+                whiteListAdapter.notifyDataSetChanged();
             }
-           if(whiteListAdapter != null) {
-               whiteListAdapter.notifyDataSetChanged();
-           }
         }
     }
 

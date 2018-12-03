@@ -61,16 +61,16 @@ public class WordsView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        bgPaint = new Paint();
-        bgPaint.setColor(Utils.getColor(R.color.colorPrimaryDark));
+//        bgPaint = new Paint();
+//        bgPaint.setColor(Utils.getColor(R.color.colorPrimaryDark));
         wordsPaint = new Paint();
         wordsPaint.setTextSize(DensityUtil.dip2px(context,16));
         for (int i = 0; i < words.length; i++) {
             //判断是不是我们按下的当前字母
             if (touchIndex == i) {
                 //绘制文字圆形背景
-                canvas.drawCircle(itemWidth / 2, itemHeight / 2 + i * itemHeight, 35, bgPaint);
-                wordsPaint.setColor(Color.WHITE);
+//                canvas.drawCircle(itemWidth / 2, itemHeight / 2 + i * itemHeight, 35, bgPaint);
+                wordsPaint.setColor(Utils.getColor(R.color.colorPrimaryDark));
             } else {
                 wordsPaint.setColor(Color.GRAY);
             }
@@ -125,5 +125,16 @@ public class WordsView extends View {
 
     public void setOnWordsChangeListener(OnWordsChangeListener onWordsChangeListener) {
         this.onWordsChangeListener = onWordsChangeListener;
+    }
+
+    /*设置当前按下的是那个字母*/
+    public void setTouchIndex(String word) {
+        for (int i = 0; i < words.length; i++) {
+            if (words[i].equals(word)) {
+                touchIndex = i;
+                invalidate();
+                return;
+            }
+        }
     }
 }

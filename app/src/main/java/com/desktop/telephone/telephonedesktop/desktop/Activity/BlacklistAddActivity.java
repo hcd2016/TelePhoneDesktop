@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.BlackListInfoBean;
+import com.desktop.telephone.telephonedesktop.bean.EventBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBlacklistInfoBean;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
@@ -94,27 +95,17 @@ public class BlacklistAddActivity extends BaseActivity {
                 }
                 List<BlackListInfoBean> list = DaoUtil.getBlackListInfoBeanDao().loadAll();
                 if (list != null) {
-//                    if(isUpdate) {//是修改
-//                        for (final BlackListInfoBean blackListInfoBean : list) {
-//                            if(modeStatus == type) {
-//                                if(blackListInfoBean.getPhone().equals(blackListInfoBean.getDate())) {//获取到要修改的bean
-//                                    blackListInfoBean.setPhone();
-//                                }
-//                            }
-//                        }
-//                    }
-
                     boolean isRepetition = false;
                     for (final BlackListInfoBean blackListInfoBean : list) {//判断重复情况
                         if (blackListInfoBean.getPhone().equals(phoneNum)) {//号码在列表中已存在
                             isRepetition = true;
                             if (modeStatus == 1) {//黑名单类型
                                 if (blackListInfoBean.getType() == modeStatus) {
-                                    if(isUpdate) {
-                                        Utils.Toast("保存成功");
-                                    }else {
+//                                    if (isUpdate) {
+//                                        Utils.Toast("保存成功");
+//                                    } else {
                                         Utils.Toast("该号码已存在黑名单列表,请勿重复添加");
-                                    }
+//                                    }
                                     return;
                                 } else {
                                     alertDialog = new AlertDialog.Builder(BlacklistAddActivity.this)
@@ -182,13 +173,35 @@ public class BlacklistAddActivity extends BaseActivity {
                         }
                     }
                     if (!isRepetition) {//不重复才正常添加
-                        BlackListInfoBean blackListInfoBean = new BlackListInfoBean(null, phoneNum, modeStatus, Utils.getFormatDate());
-                        DaoUtil.getBlackListInfoBeanDao().insert(blackListInfoBean);
-                        EventBlacklistInfoBean eventBlacklistInfoBean = new EventBlacklistInfoBean();
-                        eventBlacklistInfoBean.setNeedDelete(false);
-                        eventBlacklistInfoBean.setAddbean(blackListInfoBean);
-                        EventBus.getDefault().post(eventBlacklistInfoBean);
-                        Utils.Toast("添加成功");
+                        if (isUpdate) {
+                            for (int i = 0; i < list.size(); i++) {
+                                BlackListInfoBean blackListInfoBean = list.get(i);
+                                if (blackListInfoBean.getPhone().equals(getIntent().getStringExtra("phoneNum"))) {
+                                    if (modeStatus != blackListInfoBean.getType()) {//修改黑名单选的白名单添加,重设id保证排序
+                                        blackListInfoBean.setId(null);
+                                        blackListInfoBean.setType(modeStatus);
+                                        blackListInfoBean.setPhone(phoneNum);
+                                        blackListInfoBean.setDate(Utils.getFormatDate());
+                                        DaoUtil.getBlackListInfoBeanDao().insert(blackListInfoBean);
+                                        Utils.Toast("添加成功");
+                                    }else {
+                                        blackListInfoBean.setType(modeStatus);
+                                        blackListInfoBean.setPhone(phoneNum);
+                                        DaoUtil.getBlackListInfoBeanDao().update(blackListInfoBean);
+                                        Utils.Toast("修改成功");
+                                    }
+                                    EventBus.getDefault().post(new EventBean(EventBean.BLACK_LIST_ALL_NOTIFAL));
+                                }
+                            }
+                        } else {
+                            BlackListInfoBean blackListInfoBean = new BlackListInfoBean(null, phoneNum, modeStatus, Utils.getFormatDate());
+                            DaoUtil.getBlackListInfoBeanDao().insert(blackListInfoBean);
+                            EventBlacklistInfoBean eventBlacklistInfoBean = new EventBlacklistInfoBean();
+                            eventBlacklistInfoBean.setNeedDelete(false);
+                            eventBlacklistInfoBean.setAddbean(blackListInfoBean);
+                            EventBus.getDefault().post(eventBlacklistInfoBean);
+                            Utils.Toast("添加成功");
+                        }
                     }
                 }
                 break;
