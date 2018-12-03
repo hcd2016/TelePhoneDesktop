@@ -56,6 +56,7 @@ public class BlacklistActivity extends BaseActivity {
         setContentView(R.layout.activity_blacklist);
         ButterKnife.bind(this);
         initView();
+
     }
 
     private void initView() {
@@ -94,7 +95,7 @@ public class BlacklistActivity extends BaseActivity {
                 }
                 break;
             case R.id.ll_btn_add_container://添加
-                BlacklistAddActivity.startActivity(this, viewpager.getCurrentItem()+1);
+                BlacklistAddActivity.startActivity(this, viewpager.getCurrentItem()+1,"");
                 break;
         }
     }
@@ -164,7 +165,7 @@ public class BlacklistActivity extends BaseActivity {
                 }
                 if (systemStatusBeans == null || systemStatusBeans.size() == 0) {
                     SystemStatusBean systemStatusBean = new SystemStatusBean(0, modeStatus);
-                    DaoUtil.getSystemStatusBeanDao().insert(systemStatusBean);
+                    DaoUtil.getSystemStatusBeanDao().insertOrReplace(systemStatusBean);
                 } else {
                     systemStatusBeans.get(0).setBlackListModeType(modeStatus);
                     DaoUtil.getSystemStatusBeanDao().update(systemStatusBeans.get(0));

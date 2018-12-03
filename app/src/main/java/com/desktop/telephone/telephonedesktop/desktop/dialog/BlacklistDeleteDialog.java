@@ -45,7 +45,7 @@ public class BlacklistDeleteDialog extends TBaseDialog {
         }
     }
 
-    @OnClick({R.id.tv_btn_call, R.id.tv_btn_add_to_list, R.id.tv_delete})
+    @OnClick({R.id.tv_btn_call, R.id.tv_btn_add_to_list, R.id.tv_delete,R.id.tv_update})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_btn_call:
@@ -66,6 +66,12 @@ public class BlacklistDeleteDialog extends TBaseDialog {
                 }
                 dismiss();
                 break;
+            case R.id.tv_update:
+                if (btnClickListener != null) {
+                    btnClickListener.updateClick();
+                }
+                dismiss();
+                break;
         }
     }
 
@@ -75,6 +81,8 @@ public class BlacklistDeleteDialog extends TBaseDialog {
         void addToListClick();
 
         void deleteClick();
+
+        void updateClick();
     }
 
 }

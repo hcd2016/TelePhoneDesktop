@@ -1,7 +1,7 @@
 package com.desktop.telephone.telephonedesktop.bean;
 
 public class EventBean {
-    public static String BLACKLIST_ADD_SUCCESS = "blacklist_add_success";//加入黑/白名单成功!
+    public static String BLACK_LIST_ALL_NOTIFAL = "blacklist_notify";//通知双列表刷新
 
     public EventBean(String event) {
 

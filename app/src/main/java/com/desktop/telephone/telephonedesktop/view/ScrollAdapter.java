@@ -23,6 +23,7 @@ import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.AllAppsActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.BlacklistActivity;
+import com.desktop.telephone.telephonedesktop.desktop.Activity.ContactsListActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.PhotosActivity;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
@@ -109,6 +110,7 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
                                 mContext.startActivity(new Intent(mContext, BlacklistActivity.class));
                                 break;
                             case "智能通讯录":
+                                mContext.startActivity(new Intent(mContext, ContactsListActivity.class));
                                 break;
                             case "通话记录":
                                 break;

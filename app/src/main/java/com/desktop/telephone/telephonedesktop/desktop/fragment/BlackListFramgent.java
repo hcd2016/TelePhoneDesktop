@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -18,6 +19,7 @@ import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.bean.BlackListInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBlacklistInfoBean;
+import com.desktop.telephone.telephonedesktop.desktop.Activity.BlacklistAddActivity;
 import com.desktop.telephone.telephonedesktop.desktop.dialog.BlacklistDeleteDialog;
 import com.desktop.telephone.telephonedesktop.gen.BlackListInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
@@ -124,7 +126,7 @@ public class BlackListFramgent extends Fragment {
                 if (event.isNeedDelete()) {
                     if (deletebean.getType() == 1) {//删除黑名单,添加到白名单
                         Iterator<BlackListInfoBean> it = blackList.iterator();
-                        while(it.hasNext()){
+                        while (it.hasNext()) {
                             if (it.next().getPhone().equals(deletebean.getPhone())) {
                                 it.remove();
                             }
@@ -146,7 +148,7 @@ public class BlackListFramgent extends Fragment {
                         whiteList.add(0, addbean);
                     } else {
                         Iterator<BlackListInfoBean> it = whiteList.iterator();
-                        while(it.hasNext()){
+                        while (it.hasNext()) {
                             if (it.next().getPhone().equals(deletebean.getPhone())) {
                                 it.remove();
                             }
@@ -159,6 +161,18 @@ public class BlackListFramgent extends Fragment {
                 }
                 whiteListAdapter.notifyDataSetChanged();
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventBean event) {//添加成功
+        if (event.equals(EventBean.BLACK_LIST_ALL_NOTIFAL)) {
+            if(blackListAdapter != null) {
+                blackListAdapter.notifyDataSetChanged();
+            }
+           if(whiteListAdapter != null) {
+               whiteListAdapter.notifyDataSetChanged();
+           }
         }
     }
 
@@ -181,7 +195,16 @@ public class BlackListFramgent extends Fragment {
     //长按删除dialog
     private void showDeleteDialog(final int position) {
         BlacklistDeleteDialog blacklistDeleteDialog = new BlacklistDeleteDialog(getActivity());
-        final BlackListInfoBean blackListInfoBean = list.get(position);
+        blackList.clear();
+        whiteList.clear();
+        initData();
+//        if (queryList != null && queryList.size() != 0) {
+        final BlackListInfoBean blackListInfoBean;
+        if (type == 1) {
+            blackListInfoBean = blackList.get(position);
+        } else {
+            blackListInfoBean = whiteList.get(position);
+        }
         blacklistDeleteDialog.setData(blackListInfoBean);
         blacklistDeleteDialog.setBtnClickListener(new BlacklistDeleteDialog.BtnClickListener() {
             @Override
@@ -194,15 +217,48 @@ public class BlackListFramgent extends Fragment {
 
             @Override
             public void addToListClick() {//加入黑/白名单
-                if (type == 1) {//加入到白名单
-                    blackListInfoBean.setType(2);
-                    DaoUtil.getBlackListInfoBeanDao().update(blackListInfoBean);
-                } else {
-                    blackListInfoBean.setType(1);
-                    DaoUtil.getBlackListInfoBeanDao().update(blackListInfoBean);
+                if(type == 1) {//加入到白名单
+                    DaoUtil.getBlackListInfoBeanDao().delete(blackListInfoBean);
+
+                    BlackListInfoBean addBlackListInfoBean = new BlackListInfoBean(null, blackListInfoBean.getPhone(), 2, Utils.getFormatDate());
+                    DaoUtil.getBlackListInfoBeanDao().insert(addBlackListInfoBean);
+
+                    EventBlacklistInfoBean eventBlacklistInfoBean = new EventBlacklistInfoBean();
+                    eventBlacklistInfoBean.setNeedDelete(true);
+                    eventBlacklistInfoBean.setDeletebean(blackListInfoBean);
+                    eventBlacklistInfoBean.setAddbean(addBlackListInfoBean);
+                    EventBus.getDefault().post(eventBlacklistInfoBean);
+                    Utils.Toast("操作成功");
+                    return;
+                }else {
+                    DaoUtil.getBlackListInfoBeanDao().delete(blackListInfoBean);
+
+                    BlackListInfoBean addBlackListInfoBean = new BlackListInfoBean(null, blackListInfoBean.getPhone(), 1, Utils.getFormatDate());
+                    DaoUtil.getBlackListInfoBeanDao().insert(addBlackListInfoBean);
+
+                    EventBlacklistInfoBean eventBlacklistInfoBean = new EventBlacklistInfoBean();
+                    eventBlacklistInfoBean.setNeedDelete(true);
+                    eventBlacklistInfoBean.setDeletebean(blackListInfoBean);
+                    eventBlacklistInfoBean.setAddbean(addBlackListInfoBean);
+                    EventBus.getDefault().post(eventBlacklistInfoBean);
+                    Utils.Toast("操作成功");
                 }
-                blackListAdapter.notifyDataSetChanged();
-                whiteListAdapter.notifyDataSetChanged();
+
+
+
+//                if (type == 1) {
+//                    blackList.remove(blackListInfoBean);
+//                    blackListInfoBean.setType(2);
+//                    DaoUtil.getBlackListInfoBeanDao().update(blackListInfoBean);
+//                    blackListAdapter.notifyDataSetChanged();
+//                } else {
+//                    whiteList.remove(blackListInfoBean);
+//                    blackListInfoBean.setType(1);
+//                    DaoUtil.getBlackListInfoBeanDao().update(blackListInfoBean);
+//                    whiteListAdapter.notifyDataSetChanged();
+//                }
+//                EventBus.getDefault().post(new EventBean(EventBean.BLACK_LIST_ALL_NOTIFAL));
+//                Utils.Toast("操作成功");
             }
 
             @Override
@@ -216,6 +272,11 @@ public class BlackListFramgent extends Fragment {
                     whiteListAdapter.notifyDataSetChanged();
                 }
                 Utils.Toast("删除成功");
+            }
+
+            @Override
+            public void updateClick() {
+                BlacklistAddActivity.startActivity(getActivity(),type,blackListInfoBean.getPhone());
             }
         });
         blacklistDeleteDialog.show();

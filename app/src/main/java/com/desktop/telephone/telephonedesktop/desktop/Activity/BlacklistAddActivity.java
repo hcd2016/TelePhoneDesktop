@@ -14,20 +14,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
-import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.BlackListInfoBean;
-import com.desktop.telephone.telephonedesktop.bean.EventBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBlacklistInfoBean;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -51,9 +46,12 @@ public class BlacklistAddActivity extends BaseActivity {
     LinearLayout llModeContainer;
     @BindView(R.id.et_phone_num)
     EditText etPhoneNum;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
     private int type;
     private PopupWindow popupWindow;
     private AlertDialog alertDialog;
+    private boolean isUpdate = false;//默认是修改
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +63,15 @@ public class BlacklistAddActivity extends BaseActivity {
 
     private void initView() {
         type = getIntent().getIntExtra("type", 1);
+        String phoneNum = getIntent().getStringExtra("phoneNum");
+        if (!TextUtils.isEmpty(phoneNum)) {//是修改
+            isUpdate = true;
+            tvTitle.setText("修改");
+            etPhoneNum.setText(phoneNum);
+            etPhoneNum.setSelection(phoneNum.length());
+        } else {
+            tvTitle.setText("添加");
+        }
         modeStatus = type;
         if (modeStatus == 1) {
             tvModeDesc.setText("黑名单");
@@ -87,13 +94,27 @@ public class BlacklistAddActivity extends BaseActivity {
                 }
                 List<BlackListInfoBean> list = DaoUtil.getBlackListInfoBeanDao().loadAll();
                 if (list != null) {
+//                    if(isUpdate) {//是修改
+//                        for (final BlackListInfoBean blackListInfoBean : list) {
+//                            if(modeStatus == type) {
+//                                if(blackListInfoBean.getPhone().equals(blackListInfoBean.getDate())) {//获取到要修改的bean
+//                                    blackListInfoBean.setPhone();
+//                                }
+//                            }
+//                        }
+//                    }
+
                     boolean isRepetition = false;
                     for (final BlackListInfoBean blackListInfoBean : list) {//判断重复情况
                         if (blackListInfoBean.getPhone().equals(phoneNum)) {//号码在列表中已存在
                             isRepetition = true;
                             if (modeStatus == 1) {//黑名单类型
                                 if (blackListInfoBean.getType() == modeStatus) {
-                                    Utils.Toast("该号码已存在黑名单列表,请勿重复添加");
+                                    if(isUpdate) {
+                                        Utils.Toast("保存成功");
+                                    }else {
+                                        Utils.Toast("该号码已存在黑名单列表,请勿重复添加");
+                                    }
                                     return;
                                 } else {
                                     alertDialog = new AlertDialog.Builder(BlacklistAddActivity.this)
@@ -160,7 +181,7 @@ public class BlacklistAddActivity extends BaseActivity {
                             }
                         }
                     }
-                    if(!isRepetition) {//不重复才正常添加
+                    if (!isRepetition) {//不重复才正常添加
                         BlackListInfoBean blackListInfoBean = new BlackListInfoBean(null, phoneNum, modeStatus, Utils.getFormatDate());
                         DaoUtil.getBlackListInfoBeanDao().insert(blackListInfoBean);
                         EventBlacklistInfoBean eventBlacklistInfoBean = new EventBlacklistInfoBean();
@@ -248,9 +269,10 @@ public class BlacklistAddActivity extends BaseActivity {
         ivArrow.setImageResource(R.drawable.arrow_up);
     }
 
-    public static void startActivity(Context context, int type) {
+    public static void startActivity(Context context, int type, String phoneNum) {
         Intent intent = new Intent(context, BlacklistAddActivity.class);
         intent.putExtra("type", type);
+        intent.putExtra("phoneNum", phoneNum);
         context.startActivity(intent);
     }
 }
