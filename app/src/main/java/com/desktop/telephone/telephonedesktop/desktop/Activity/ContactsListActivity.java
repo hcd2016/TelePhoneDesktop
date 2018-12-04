@@ -8,17 +8,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
+import com.desktop.telephone.telephonedesktop.bean.ContactsBean;
+import com.desktop.telephone.telephonedesktop.bean.EventBean;
+import com.desktop.telephone.telephonedesktop.bean.EventBlacklistInfoBean;
+import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.PinYinUtils;
-import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.TopSmoothScroller;
 import com.desktop.telephone.telephonedesktop.view.WordsView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +48,9 @@ public class ContactsListActivity extends BaseActivity {
     TextView tvWord;
     @BindView(R.id.recycleView)
     RecyclerView recycleView;
-    private List<String> list;
+    @BindView(R.id.ll_btn_add_container)
+    LinearLayout llBtnAddContainer;
+    private List<ContactsBean> list;
     private MyAdapter myAdapter;
     private LinearLayoutManager layoutManager;
 
@@ -50,6 +59,7 @@ public class ContactsListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts_list);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         initView();
     }
 
@@ -61,7 +71,7 @@ public class ContactsListActivity extends BaseActivity {
      */
     private void updateListView(String words) {
         for (int i = 0; i < list.size(); i++) {
-            String headerWord = PinYinUtils.getPinyin(list.get(i)).substring(0,1);
+            String headerWord = PinYinUtils.getPinyin(list.get(i).getName()).substring(0, 1);
             //将手指按下的字母与列表中相同字母开头的项找出来
             if (words.equals(headerWord)) {
                 //将列表选中哪一个
@@ -71,6 +81,15 @@ public class ContactsListActivity extends BaseActivity {
                 //找到开头的一个即可
                 return;
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventBean event) {//添加or修改成功
+        if (event.getEvent().equals(EventBean.CONTACTS_ADD_SUCCESS)) {
+            list.clear();
+            list = DaoUtil.getContactsBeanDao().loadAll();
+            myAdapter.notifyDataSetChanged();
         }
     }
 
@@ -92,46 +111,14 @@ public class ContactsListActivity extends BaseActivity {
                 updateListView(words);
             }
         });
-
         list = new ArrayList<>();
-        list.add("张三");
-        list.add("李四");
-        list.add("王三");
-        list.add("啊三");
-        list.add("妈妈");
-        list.add("爸爸");
-        list.add("爷爷");
-        list.add("把奶奶");
-        list.add("外攻");
-        list.add("外婆");
-        list.add("各种");
-        list.add("我");
-        list.add("是");
-        list.add("汉字哦");
-        list.add("啊");
-        list.add("黑");
-        list.add("金");
-        list.add("田");
-        list.add("心");
-        list.add("情");
-        list.add("很");
-        list.add("不");
-        list.add("错");
-        list.add("哦");
-        list.add("是");
-        list.add("吗");
-        list.add("进");
-        list.add("晚");
-        list.add("打");
-        list.add("老");
-        list.add("虎");
-
+        list = DaoUtil.getContactsBeanDao().loadAll();
         //对集合排序
-        Collections.sort(list, new Comparator<String>() {
+        Collections.sort(list, new Comparator<ContactsBean>() {
             @Override
-            public int compare(String lhs, String rhs) {
+            public int compare(ContactsBean lhs, ContactsBean rhs) {
                 //根据拼音进行排序
-                return PinYinUtils.getPinyin(lhs).compareTo(PinYinUtils.getPinyin(rhs));
+                return PinYinUtils.getPinyin(lhs.getName()).compareTo(PinYinUtils.getPinyin(rhs.getName()));
             }
         });
         layoutManager = new LinearLayoutManager(this);
@@ -147,7 +134,9 @@ public class ContactsListActivity extends BaseActivity {
 
                 //当滑动列表的时候，更新右侧字母列表的选中状态
                 int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-                wordsView.setTouchIndex(PinYinUtils.getPinyin(list.get(pastVisiblesItems)).substring(0, 1));
+                if(list.size() != 0) {
+                    wordsView.setTouchIndex(PinYinUtils.getPinyin(list.get(pastVisiblesItems).getName()).substring(0, 1));
+                }
 
             }
         });
@@ -156,31 +145,39 @@ public class ContactsListActivity extends BaseActivity {
         recycleView.setAdapter(myAdapter);
     }
 
-    class MyAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    class MyAdapter extends BaseQuickAdapter<ContactsBean, BaseViewHolder> {
 
-        public MyAdapter(@Nullable List<String> data) {
+        public MyAdapter(@Nullable List<ContactsBean> data) {
             super(R.layout.item_contacts, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, final ContactsBean item) {
             TextView tv_word = helper.getView(R.id.tv_word);
-            helper.setText(R.id.tv_word, PinYinUtils.getPinyin(item).substring(0, 1));
-            helper.setText(R.id.tv_name, item);
+            helper.setText(R.id.tv_word, PinYinUtils.getPinyin(item.getName()).substring(0, 1));
+            helper.setText(R.id.tv_name, item.getName());
             //将相同字母开头的合并在一起
             if (helper.getLayoutPosition() == 0) {
                 //第一个是一定显示的
                 tv_word.setVisibility(View.VISIBLE);
             } else {
                 //后一个与前一个对比,判断首字母是否相同，相同则隐藏
-                String headerWord = getHeaderWord(getData().get(helper.getLayoutPosition() - 1));
-                String word = getHeaderWord(item);
+                String headerWord = getHeaderWord(getData().get(helper.getLayoutPosition() - 1).getName());
+                String word = getHeaderWord(item.getName());
                 if (word.equals(headerWord)) {
                     tv_word.setVisibility(View.GONE);
                 } else {
                     tv_word.setVisibility(View.VISIBLE);
                 }
             }
+            helper.getView(R.id.tv_name).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("constacts_bean", item);
+                    startActivity(ContactsDetailActivity.class, bundle);
+                }
+            });
         }
     }
 
@@ -188,12 +185,22 @@ public class ContactsListActivity extends BaseActivity {
         return PinYinUtils.getPinyin(zhongwen).substring(0, 1);
     }
 
-    @OnClick({R.id.iv_back})
+    @OnClick({R.id.iv_back, R.id.ll_btn_add_container})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
                 finish();
                 break;
+            case R.id.ll_btn_add_container://新建联系人
+                startActivity(AddContactsActivity.class);
+                break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().register(this);
+        DaoUtil.closeDb();
     }
 }

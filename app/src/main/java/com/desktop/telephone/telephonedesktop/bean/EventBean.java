@@ -15,4 +15,5 @@ public class EventBean {
     }
 
     public static String BLACK_LIST_ALL_NOTIFAL = "blacklist_notify";//通知双列表刷新
+    public static String CONTACTS_ADD_SUCCESS = "contacts_add_sucess";//联系人添加成功
 }

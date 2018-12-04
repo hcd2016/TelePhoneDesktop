@@ -6,10 +6,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
+import com.desktop.telephone.telephonedesktop.bean.ContactsBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.db.DBManager;
 import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.BlackListInfoBeanDao;
+import com.desktop.telephone.telephonedesktop.gen.ContactsBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.PhotoInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.SystemStatusBeanDao;
@@ -37,6 +39,9 @@ public class DaoUtil {
     }
     public static SystemStatusBeanDao getSystemStatusBeanDao() {
         return DBManager.getInstance().getNewSession().getSystemStatusBeanDao();
+    }
+    public static ContactsBeanDao getContactsBeanDao() {
+        return DBManager.getInstance().getNewSession().getContactsBeanDao();
     }
 
     public static void closeDb() {

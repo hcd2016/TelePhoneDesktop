@@ -10,12 +10,14 @@ import org.greenrobot.greendao.internal.DaoConfig;
 
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.BlackListInfoBean;
+import com.desktop.telephone.telephonedesktop.bean.ContactsBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.bean.PhotoInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.SystemStatusBean;
 
 import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.BlackListInfoBeanDao;
+import com.desktop.telephone.telephonedesktop.gen.ContactsBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.PhotoInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.SystemStatusBeanDao;
@@ -31,12 +33,14 @@ public class DaoSession extends AbstractDaoSession {
 
     private final DaoConfig appInfoBeanDaoConfig;
     private final DaoConfig blackListInfoBeanDaoConfig;
+    private final DaoConfig contactsBeanDaoConfig;
     private final DaoConfig desktopIconBeanDaoConfig;
     private final DaoConfig photoInfoBeanDaoConfig;
     private final DaoConfig systemStatusBeanDaoConfig;
 
     private final AppInfoBeanDao appInfoBeanDao;
     private final BlackListInfoBeanDao blackListInfoBeanDao;
+    private final ContactsBeanDao contactsBeanDao;
     private final DesktopIconBeanDao desktopIconBeanDao;
     private final PhotoInfoBeanDao photoInfoBeanDao;
     private final SystemStatusBeanDao systemStatusBeanDao;
@@ -51,6 +55,9 @@ public class DaoSession extends AbstractDaoSession {
         blackListInfoBeanDaoConfig = daoConfigMap.get(BlackListInfoBeanDao.class).clone();
         blackListInfoBeanDaoConfig.initIdentityScope(type);
 
+        contactsBeanDaoConfig = daoConfigMap.get(ContactsBeanDao.class).clone();
+        contactsBeanDaoConfig.initIdentityScope(type);
+
         desktopIconBeanDaoConfig = daoConfigMap.get(DesktopIconBeanDao.class).clone();
         desktopIconBeanDaoConfig.initIdentityScope(type);
 
@@ -62,12 +69,14 @@ public class DaoSession extends AbstractDaoSession {
 
         appInfoBeanDao = new AppInfoBeanDao(appInfoBeanDaoConfig, this);
         blackListInfoBeanDao = new BlackListInfoBeanDao(blackListInfoBeanDaoConfig, this);
+        contactsBeanDao = new ContactsBeanDao(contactsBeanDaoConfig, this);
         desktopIconBeanDao = new DesktopIconBeanDao(desktopIconBeanDaoConfig, this);
         photoInfoBeanDao = new PhotoInfoBeanDao(photoInfoBeanDaoConfig, this);
         systemStatusBeanDao = new SystemStatusBeanDao(systemStatusBeanDaoConfig, this);
 
         registerDao(AppInfoBean.class, appInfoBeanDao);
         registerDao(BlackListInfoBean.class, blackListInfoBeanDao);
+        registerDao(ContactsBean.class, contactsBeanDao);
         registerDao(DesktopIconBean.class, desktopIconBeanDao);
         registerDao(PhotoInfoBean.class, photoInfoBeanDao);
         registerDao(SystemStatusBean.class, systemStatusBeanDao);
@@ -76,6 +85,7 @@ public class DaoSession extends AbstractDaoSession {
     public void clear() {
         appInfoBeanDaoConfig.clearIdentityScope();
         blackListInfoBeanDaoConfig.clearIdentityScope();
+        contactsBeanDaoConfig.clearIdentityScope();
         desktopIconBeanDaoConfig.clearIdentityScope();
         photoInfoBeanDaoConfig.clearIdentityScope();
         systemStatusBeanDaoConfig.clearIdentityScope();
@@ -87,6 +97,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public BlackListInfoBeanDao getBlackListInfoBeanDao() {
         return blackListInfoBeanDao;
+    }
+
+    public ContactsBeanDao getContactsBeanDao() {
+        return contactsBeanDao;
     }
 
     public DesktopIconBeanDao getDesktopIconBeanDao() {
