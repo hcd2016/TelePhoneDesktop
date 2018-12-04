@@ -52,19 +52,20 @@ public class AddContactsActivity extends BaseActivity {
     }
 
     private void initView() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            status = bundle.getInt("isEdit", 0);
+            contactsBean = (ContactsBean) bundle.getSerializable("constacts_bean");
+            etName.setText(contactsBean.getName());
+            etName.setSelection(contactsBean.getName().length());
+            etPhone.setText(contactsBean.getPhone());
+            etEmail.setText(contactsBean.getEmail());
+            etDesc.setText(contactsBean.getDesc());
+        }
         if (status == 0) {
             tvTitle.setText("新建联系人");
         } else {
             tvTitle.setText("编辑联系人");
-            Bundle bundle = getIntent().getExtras();
-            if (bundle != null) {
-                contactsBean = (ContactsBean) bundle.getSerializable("constacts_bean");
-                status = bundle.getInt("isEdit", 0);
-                etName.setText(contactsBean.getName());
-                etName.setSelection(contactsBean.getName().length());
-                etEmail.setText(contactsBean.getEmail());
-                etDesc.setText(contactsBean.getDesc());
-            }
         }
     }
 
@@ -96,6 +97,7 @@ public class AddContactsActivity extends BaseActivity {
                     ContactsBean contactsBean = new ContactsBean(id, name, email, desc, phone);
                     DaoUtil.getContactsBeanDao().update(contactsBean);
                     Utils.Toast("修改成功");
+                    EventBus.getDefault().post(contactsBean);
                 }
                 EventBus.getDefault().post(new EventBean(EventBean.CONTACTS_ADD_SUCCESS));
                 finish();
