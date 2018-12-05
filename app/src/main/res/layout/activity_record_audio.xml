@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:src="@drawable/arrow_left_white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="录音"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:background="@drawable/shape_record_circle"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:layout_width="200dp"
+        android:layout_height="200dp">
+        <ImageView
+            android:layout_centerInParent="true"
+            android:src="@drawable/record_audio_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+        <TextView
+            android:textColor="@color/text_333333"
+            android:textSize="24sp"
+            android:layout_centerInParent="true"
+            android:text="00:00:00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:background="@drawable/shape_record_botton"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="50dp"
+        android:layout_height="50dp">
+        <ImageView
+            android:layout_centerInParent="true"
+            android:src="@drawable/start_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"/>
+    </RelativeLayout>
+</LinearLayout>
