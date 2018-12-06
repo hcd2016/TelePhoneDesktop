@@ -40,6 +40,8 @@
         <activity android:name=".desktop.Activity.ContactsListActivity" />
         <activity android:name=".desktop.Activity.ContactsDetailActivity" />
         <activity android:name=".desktop.Activity.AddContactsActivity" />
+        <activity android:name=".desktop.Activity.CallActivity" />
+
 
         <!-- 短信广播 -->
         <receiver android:name=".desktop.recevier.SmsRecevier">

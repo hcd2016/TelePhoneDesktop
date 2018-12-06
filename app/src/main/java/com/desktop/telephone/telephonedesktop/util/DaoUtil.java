@@ -11,6 +11,7 @@ import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.db.DBManager;
 import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.BlackListInfoBeanDao;
+import com.desktop.telephone.telephonedesktop.gen.CallRecordBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.ContactsBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.PhotoInfoBeanDao;
@@ -42,6 +43,9 @@ public class DaoUtil {
     }
     public static ContactsBeanDao getContactsBeanDao() {
         return DBManager.getInstance().getNewSession().getContactsBeanDao();
+    }
+    public static CallRecordBeanDao getCallRecordBeanDao() {
+        return DBManager.getInstance().getNewSession().getCallRecordBeanDao();
     }
 
     public static void closeDb() {

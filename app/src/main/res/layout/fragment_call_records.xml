@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:padding="2dp"
+            android:background="@drawable/shape_half_left_kuang"
+            android:id="@+id/tv_btn_all_calls"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="全部通话"
+            android:textColor="@color/text_333333"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_marginLeft="-1dp"
+            android:padding="2dp"
+            android:background="@drawable/shape_kuang"
+            android:id="@+id/tv_btn_dialed_calls"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="已拨电话"
+            android:textColor="@color/text_333333"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_marginLeft="-1dp"
+            android:padding="2dp"
+            android:background="@drawable/shape_kuang"
+            android:id="@+id/tv_btn_received_calls"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="已接电话"
+            android:textColor="@color/text_333333"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_marginLeft="-1dp"
+            android:padding="2dp"
+            android:background="@drawable/shape_half_right_kuang"
+            android:id="@+id/tv_btn_missed_calls"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="未接电话"
+            android:textColor="@color/text_333333"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <com.desktop.telephone.telephonedesktop.view.ViewPagerSlide
+        android:background="@color/white"
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
