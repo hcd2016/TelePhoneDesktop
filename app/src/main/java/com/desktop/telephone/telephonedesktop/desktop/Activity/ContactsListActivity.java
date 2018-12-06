@@ -1,5 +1,7 @@
 package com.desktop.telephone.telephonedesktop.desktop.Activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -15,11 +17,13 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
+import com.desktop.telephone.telephonedesktop.bean.BlackListInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.ContactsBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBlacklistInfoBean;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.PinYinUtils;
+import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.TopSmoothScroller;
 import com.desktop.telephone.telephonedesktop.view.WordsView;
 
@@ -53,6 +57,7 @@ public class ContactsListActivity extends BaseActivity {
     private List<ContactsBean> list;
     private MyAdapter myAdapter;
     private LinearLayoutManager layoutManager;
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,9 +76,12 @@ public class ContactsListActivity extends BaseActivity {
      */
     private void updateListView(String words) {
         for (int i = 0; i < list.size(); i++) {
-            String headerWord = PinYinUtils.getPinyin(list.get(i).getName()).substring(0, 1);
+            String headerWord = PinYinUtils.getPinyin(list.get(i).getName()).substring(0, 1).toUpperCase();
+            if(!headerWord.matches("[A-Z]")) {
+                headerWord = "#";
+            }
             //将手指按下的字母与列表中相同字母开头的项找出来
-            if (words.equals(headerWord)) {
+            if (words.equals(headerWord.toUpperCase())) {
                 //将列表选中哪一个
                 TopSmoothScroller mScroller = new TopSmoothScroller(ContactsListActivity.this);
                 mScroller.setTargetPosition(i);
@@ -88,7 +96,16 @@ public class ContactsListActivity extends BaseActivity {
     public void onMessageEvent(EventBean event) {//添加or修改成功
         if (event.getEvent().equals(EventBean.CONTACTS_ADD_SUCCESS)) {
             list.clear();
-            list = DaoUtil.getContactsBeanDao().loadAll();
+            List<ContactsBean> contactsBeans = DaoUtil.getContactsBeanDao().loadAll();
+//            对集合排序
+            Collections.sort(contactsBeans, new Comparator<ContactsBean>() {
+                @Override
+                public int compare(ContactsBean lhs, ContactsBean rhs) {
+                    //根据拼音进行排序
+                    return PinYinUtils.getPinyin(lhs.getName()).compareTo(PinYinUtils.getPinyin(rhs.getName()));
+                }
+            });
+            list.addAll(contactsBeans);
             myAdapter.notifyDataSetChanged();
         }
     }
@@ -134,8 +151,12 @@ public class ContactsListActivity extends BaseActivity {
 
                 //当滑动列表的时候，更新右侧字母列表的选中状态
                 int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-                if(list.size() != 0) {
-                    wordsView.setTouchIndex(PinYinUtils.getPinyin(list.get(pastVisiblesItems).getName()).substring(0, 1));
+                if (list.size() != 0 && pastVisiblesItems >= 0) {
+                    String s = PinYinUtils.getPinyin(list.get(pastVisiblesItems).getName()).substring(0, 1).toUpperCase();
+                    if(!s.matches("[A-Z]")) {
+                        s = "#";
+                    }
+                    wordsView.setTouchIndex(s);
                 }
 
             }
@@ -152,9 +173,14 @@ public class ContactsListActivity extends BaseActivity {
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, final ContactsBean item) {
+        protected void convert(final BaseViewHolder helper, final ContactsBean item) {
             TextView tv_word = helper.getView(R.id.tv_word);
-            helper.setText(R.id.tv_word, PinYinUtils.getPinyin(item.getName()).substring(0, 1));
+            String firstWord = PinYinUtils.getPinyin(item.getName()).substring(0, 1).toUpperCase();//小写转大写
+            if (firstWord.matches("[A-Z]")) {//是A到Z
+                helper.setText(R.id.tv_word, firstWord);
+            } else {
+                helper.setText(R.id.tv_word, "#");
+            }
             helper.setText(R.id.tv_name, item.getName());
             //将相同字母开头的合并在一起
             if (helper.getLayoutPosition() == 0) {
@@ -164,7 +190,16 @@ public class ContactsListActivity extends BaseActivity {
                 //后一个与前一个对比,判断首字母是否相同，相同则隐藏
                 String headerWord = getHeaderWord(getData().get(helper.getLayoutPosition() - 1).getName());
                 String word = getHeaderWord(item.getName());
-                if (word.equals(headerWord)) {
+                //首字母不区分大小写,非A-Z当#一类处理
+                String s1 = headerWord.toUpperCase();
+                String s = word.toUpperCase();
+                if (!s1.matches("[A-Z]")) {
+                    s1 = "#";
+                }
+                if (!s.matches("[A-Z]")) {
+                    s = "#";
+                }
+                if (s.equals(s1)) {
                     tv_word.setVisibility(View.GONE);
                 } else {
                     tv_word.setVisibility(View.VISIBLE);
@@ -176,6 +211,31 @@ public class ContactsListActivity extends BaseActivity {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("constacts_bean", item);
                     startActivity(ContactsDetailActivity.class, bundle);
+                }
+            });
+            helper.getView(R.id.tv_name).setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {//删除
+                    alertDialog = new AlertDialog.Builder(ContactsListActivity.this)
+                            .setMessage("确定要删除该联系人吗?")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    DaoUtil.getContactsBeanDao().delete(list.get(helper.getLayoutPosition()));
+                                    list.remove(helper.getLayoutPosition());
+                                    notifyDataSetChanged();
+                                    Utils.Toast("删除成功");
+                                }
+                            })
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    alertDialog.dismiss();
+                                }
+                            })
+                            .create();
+                    alertDialog.show();
+                    return false;
                 }
             });
         }
@@ -200,7 +260,7 @@ public class ContactsListActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().register(this);
+        EventBus.getDefault().unregister(this);
         DaoUtil.closeDb();
     }
 }

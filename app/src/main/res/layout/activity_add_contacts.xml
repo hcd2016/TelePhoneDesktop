@@ -120,7 +120,6 @@
                 android:layout_height="wrap_content" />
             <EditText
                 android:id="@+id/et_email"
-                android:inputType="number"
                 android:background="@null"
                 android:textSize="16sp"
                 android:hint="请输入邮箱地址"
@@ -155,7 +154,6 @@
                 android:layout_height="wrap_content" />
             <EditText
                 android:id="@+id/et_desc"
-                android:inputType="number"
                 android:background="@null"
                 android:textSize="16sp"
                 android:hint="备注内容"
