@@ -26,6 +26,7 @@ import com.desktop.telephone.telephonedesktop.desktop.Activity.BlacklistActivity
 import com.desktop.telephone.telephonedesktop.desktop.Activity.CallActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.ContactsListActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.PhotosActivity;
+import com.desktop.telephone.telephonedesktop.desktop.Activity.RecordAudioActivity;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
 @SuppressLint("UseSparseArrays")
@@ -107,6 +108,7 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
                             case "一键拨号":
                                 break;
                             case "录音":
+                                mContext.startActivity(new Intent(mContext, RecordAudioActivity.class));
                                 break;
                             case "黑白名单":
                                 mContext.startActivity(new Intent(mContext, BlacklistActivity.class));

@@ -8,6 +8,8 @@
     <!-- 获取系统图片,删除图片 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 录音权限 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <!-- 短信权限 -->
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
@@ -41,6 +43,7 @@
         <activity android:name=".desktop.Activity.ContactsDetailActivity" />
         <activity android:name=".desktop.Activity.AddContactsActivity" />
         <activity android:name=".desktop.Activity.CallActivity" />
+        <activity android:name=".desktop.Activity.RecordAudioActivity" />
 
 
         <!-- 短信广播 -->

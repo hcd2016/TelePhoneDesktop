@@ -29,35 +29,117 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:background="@drawable/shape_record_circle"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        android:layout_width="200dp"
-        android:layout_height="200dp">
-        <ImageView
-            android:layout_centerInParent="true"
-            android:src="@drawable/record_audio_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
-        <TextView
-            android:textColor="@color/text_333333"
-            android:textSize="24sp"
-            android:layout_centerInParent="true"
-            android:text="00:00:00"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
-    
-    <RelativeLayout
-        android:background="@drawable/shape_record_botton"
-        android:layout_marginTop="100dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="50dp"
-        android:layout_height="50dp">
-        <ImageView
-            android:layout_centerInParent="true"
-            android:src="@drawable/start_icon"
-            android:layout_width="35dp"
-            android:layout_height="35dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/shape_record_circle">
+
+            <ImageView
+                android:id="@+id/iv_mic_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/record_audio_icon" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/tv_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="00:00:00"
+                android:textColor="@color/text_333333"
+                android:textSize="24sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/rl_btn_container"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/shape_record_botton">
+
+                <ImageView
+                    android:id="@+id/iv_play"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/start_icon" />
+
+                <ImageView
+                    android:id="@+id/iv_pause"
+                    android:visibility="gone"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/record_stop_icon" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_btn_files"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="60dp"
+                android:layout_toLeftOf="@+id/rl_btn_container"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/record_file_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:text="录音文件"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_btn_complete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="60dp"
+                android:layout_toRightOf="@+id/rl_btn_container"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/shape_kuang" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:text="完成录音"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+
     </RelativeLayout>
 </LinearLayout>
