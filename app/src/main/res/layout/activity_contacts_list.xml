@@ -68,8 +68,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
+            <LinearLayout
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
             <ImageView
                 android:src="@drawable/add"
                 android:layout_width="20dp"
@@ -81,6 +86,47 @@
                 android:text="新建联系人"
                 android:textColor="@color/text_333333"
                 android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginLeft="20dp"
+                android:id="@+id/ll_daoru"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/add"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="导入"
+                    android:textColor="@color/text_333333"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_daochu"
+                android:layout_marginLeft="30dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/add"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="导出"
+                    android:textColor="@color/text_333333"
+                    android:textSize="14sp" />
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

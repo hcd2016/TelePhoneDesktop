@@ -17,6 +17,7 @@ import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.ContactsBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBean;
+import com.desktop.telephone.telephonedesktop.util.ContactsUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
@@ -140,7 +141,8 @@ public class ContactsDetailActivity extends BaseActivity {
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                DaoUtil.getContactsBeanDao().delete(constacts_bean);
+                                ContactsUtil.delete(constacts_bean.getId());
+//                                DaoUtil.getContactsBeanDao().delete(constacts_bean);
                                 EventBus.getDefault().post(new EventBean(EventBean.CONTACTS_ADD_SUCCESS));
                                 finish();
                                 Utils.Toast("删除成功");

@@ -1,26 +1,47 @@
 package com.desktop.telephone.telephonedesktop.desktop.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
+import android.content.res.AssetFileDescriptor;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.util.Util;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
-import com.desktop.telephone.telephonedesktop.bean.BlackListInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.ContactsBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBean;
-import com.desktop.telephone.telephonedesktop.bean.EventBlacklistInfoBean;
+import com.desktop.telephone.telephonedesktop.desktop.bluetooth.LeadHintActivity;
+import com.desktop.telephone.telephonedesktop.desktop.bluetooth.android.bluetooth.client.pbap.BluetoothPbapClient;
+import com.desktop.telephone.telephonedesktop.desktop.bluetooth.android.vcard.VCardEntry;
+import com.desktop.telephone.telephonedesktop.desktop.dialog.ProgressBarDialog;
+import com.desktop.telephone.telephonedesktop.desktop.recevier.BluetoothReceiver;
+import com.desktop.telephone.telephonedesktop.util.ContactsUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.PinYinUtils;
 import com.desktop.telephone.telephonedesktop.util.Utils;
@@ -31,10 +52,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,10 +80,17 @@ public class ContactsListActivity extends BaseActivity {
     RecyclerView recycleView;
     @BindView(R.id.ll_btn_add_container)
     LinearLayout llBtnAddContainer;
+    @BindView(R.id.ll_daoru)
+    LinearLayout llDaoru;
+    @BindView(R.id.ll_daochu)
+    LinearLayout llDaochu;
     private List<ContactsBean> list;
     private MyAdapter myAdapter;
     private LinearLayoutManager layoutManager;
     private AlertDialog alertDialog;
+    private BluetoothPbapClient bluetoothPbapClient;
+    private ProgressBarDialog progressBarDilog;
+    private AlertDialog alertDialog1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,7 +110,7 @@ public class ContactsListActivity extends BaseActivity {
     private void updateListView(String words) {
         for (int i = 0; i < list.size(); i++) {
             String headerWord = PinYinUtils.getPinyin(list.get(i).getName()).substring(0, 1).toUpperCase();
-            if(!headerWord.matches("[A-Z]")) {
+            if (!headerWord.matches("[A-Z]")) {
                 headerWord = "#";
             }
             //将手指按下的字母与列表中相同字母开头的项找出来
@@ -96,13 +129,14 @@ public class ContactsListActivity extends BaseActivity {
     public void onMessageEvent(EventBean event) {//添加or修改成功
         if (event.getEvent().equals(EventBean.CONTACTS_ADD_SUCCESS)) {
             list.clear();
-            List<ContactsBean> contactsBeans = DaoUtil.getContactsBeanDao().loadAll();
+//            List<ContactsBean> contactsBeans = DaoUtil.getContactsBeanDao().loadAll();
+            List<ContactsBean> contactsBeans = ContactsUtil.getAllPhoneContacts();
 //            对集合排序
             Collections.sort(contactsBeans, new Comparator<ContactsBean>() {
                 @Override
                 public int compare(ContactsBean lhs, ContactsBean rhs) {
                     //根据拼音进行排序
-                    return PinYinUtils.getPinyin(lhs.getName()).compareTo(PinYinUtils.getPinyin(rhs.getName()));
+                    return PinYinUtils.getPinyin(lhs.getName().toUpperCase()).compareTo(PinYinUtils.getPinyin(rhs.getName()).toUpperCase());
                 }
             });
             list.addAll(contactsBeans);
@@ -129,15 +163,16 @@ public class ContactsListActivity extends BaseActivity {
             }
         });
         list = new ArrayList<>();
-        list = DaoUtil.getContactsBeanDao().loadAll();
+        list = ContactsUtil.getAllPhoneContacts();
         //对集合排序
         Collections.sort(list, new Comparator<ContactsBean>() {
             @Override
             public int compare(ContactsBean lhs, ContactsBean rhs) {
                 //根据拼音进行排序
-                return PinYinUtils.getPinyin(lhs.getName()).compareTo(PinYinUtils.getPinyin(rhs.getName()));
+                return PinYinUtils.getPinyin(lhs.getName().toUpperCase()).compareTo(PinYinUtils.getPinyin(rhs.getName().toUpperCase()));
             }
         });
+
         layoutManager = new LinearLayoutManager(this);
         recycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -153,7 +188,7 @@ public class ContactsListActivity extends BaseActivity {
                 int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
                 if (list.size() != 0 && pastVisiblesItems >= 0) {
                     String s = PinYinUtils.getPinyin(list.get(pastVisiblesItems).getName()).substring(0, 1).toUpperCase();
-                    if(!s.matches("[A-Z]")) {
+                    if (!s.matches("[A-Z]")) {
                         s = "#";
                     }
                     wordsView.setTouchIndex(s);
@@ -165,6 +200,7 @@ public class ContactsListActivity extends BaseActivity {
         myAdapter = new MyAdapter(list);
         recycleView.setAdapter(myAdapter);
     }
+
 
     class MyAdapter extends BaseQuickAdapter<ContactsBean, BaseViewHolder> {
 
@@ -221,7 +257,8 @@ public class ContactsListActivity extends BaseActivity {
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    DaoUtil.getContactsBeanDao().delete(list.get(helper.getLayoutPosition()));
+                                    ContactsUtil.delete(list.get(helper.getLayoutPosition()).getId());
+//                                    DaoUtil.getContactsBeanDao().delete(list.get(helper.getLayoutPosition()));
                                     list.remove(helper.getLayoutPosition());
                                     notifyDataSetChanged();
                                     Utils.Toast("删除成功");
@@ -245,7 +282,7 @@ public class ContactsListActivity extends BaseActivity {
         return PinYinUtils.getPinyin(zhongwen).substring(0, 1);
     }
 
-    @OnClick({R.id.iv_back, R.id.ll_btn_add_container})
+    @OnClick({R.id.iv_back, R.id.ll_btn_add_container, R.id.ll_daoru, R.id.ll_daochu})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -254,8 +291,142 @@ public class ContactsListActivity extends BaseActivity {
             case R.id.ll_btn_add_container://新建联系人
                 startActivity(AddContactsActivity.class);
                 break;
+            case R.id.ll_daoru://导入
+                startActivity(LeadHintActivity.class);
+                break;
+            case R.id.ll_daochu://导出
+                alertDialog1 = new AlertDialog.Builder(this)
+                        .setTitle("导出到存储设备")
+                        .setMessage("是否将联系人列表导出至 " + Environment.getExternalStorageDirectory().getPath() + "/contacts.vcf?" + "导出后,请妥善保管您的联系人信息。")
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                alertDialog1.dismiss();
+                            }
+                        })
+                        .setPositiveButton("导出", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                try {
+                                    exportContacts();
+                                } catch (Exception e) {
+                                    Utils.Toast("导出失败,请稍后重试");
+                                    e.printStackTrace();
+                                }
+                            }
+                        })
+                        .create();
+                alertDialog1.show();
+                break;
         }
     }
+
+    /**
+     * Exporting contacts from the phone
+     */
+    public void exportContacts() throws Exception {
+        String path = Environment.getExternalStorageDirectory().getPath() + "/contacts.vcf";
+
+        ContentResolver cr = getContentResolver();
+        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+        int index = cur.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY);
+        FileOutputStream fout = new FileOutputStream(path);
+        byte[] data = new byte[1024 * 1];
+        while (cur.moveToNext()) {
+            String lookupKey = cur.getString(index);
+            Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_VCARD_URI, lookupKey);
+            AssetFileDescriptor fd = this.getContentResolver().openAssetFileDescriptor(uri, "r");
+            FileInputStream fin = fd.createInputStream();
+            int len = -1;
+            while ((len = fin.read(data)) != -1) {
+                fout.write(data, 0, len);
+            }
+            fin.close();
+        }
+        fout.close();
+        Utils.Toast("导出成功");
+    }
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case BluetoothPbapClient.EVENT_PULL_PHONE_BOOK_DONE:
+                    if (msg.obj != null) {
+                        Utils.Toast("handler");
+                        bluetoothPbapClient.disconnect();
+                        List<VCardEntry> vCardEntryList = (List<VCardEntry>) msg.obj;//获取蓝牙通讯录插入到数据库
+                        for (int i = 0; i < vCardEntryList.size(); i++) {
+                            String name = "";
+                            String number = "";
+                            String email = "";
+                            List<VCardEntry.PhoneData> phoneList = vCardEntryList.get(i).getPhoneList();
+                            if (phoneList != null) {
+                                number = phoneList.get(0).getNumber();
+                                if (number.contains("-")) {
+                                    number.replace("-", "");
+                                }
+                                if (number.contains(" ")) {
+                                    number.replace(" ", "");
+                                }
+                            }
+                            VCardEntry.NameData nameData = vCardEntryList.get(i).getNameData();
+                            if (nameData != null) {
+                                name = nameData.displayName;
+                            }
+                            List<VCardEntry.EmailData> emailList = vCardEntryList.get(i).getEmailList();
+                            if (emailList != null) {
+                                email = emailList.get(0).getAddress();
+                            }
+
+                            //插入raw_contacts表，并获取_id属性
+                            Uri uri = Uri.parse("content://com.android.contacts/raw_contacts");
+                            ContentResolver resolver = getContentResolver();
+                            ContentValues values = new ContentValues();
+                            long contact_id = ContentUris.parseId(resolver.insert(uri, values));
+                            //插入data表
+                            uri = Uri.parse("content://com.android.contacts/data");
+                            //add Name
+                            values.put("raw_contact_id", contact_id);
+                            values.put(ContactsContract.Contacts.Data.MIMETYPE, "vnd.android.cursor.item/name");
+                            values.put("data1", name);
+                            resolver.insert(uri, values);
+                            values.clear();
+                            //add Phone
+                            values.put("raw_contact_id", contact_id);
+                            values.put(ContactsContract.Contacts.Data.MIMETYPE, "vnd.android.cursor.item/phone_v2");
+                            values.put("data2", "2");   //手机
+                            values.put("data1", number);
+                            resolver.insert(uri, values);
+                            values.clear();
+                            //add email
+                            values.put("raw_contact_id", contact_id);
+                            values.put(ContactsContract.Contacts.Data.MIMETYPE, "vnd.android.cursor.item/email_v2");
+                            values.put("data2", "2");   //单位
+                            values.put("data1", email);
+                            resolver.insert(uri, values);
+                        }
+                        progressBarDilog.dismiss();
+
+                        //刷新页面数据
+                        list.clear();
+                        List<ContactsBean> contactsBeans = ContactsUtil.getAllPhoneContacts();
+                        //            对集合排序
+                        Collections.sort(contactsBeans, new Comparator<ContactsBean>() {
+                            @Override
+                            public int compare(ContactsBean lhs, ContactsBean rhs) {
+                                //根据拼音进行排序
+                                return PinYinUtils.getPinyin(lhs.getName().toUpperCase()).compareTo(PinYinUtils.getPinyin(rhs.getName()).toUpperCase());
+                            }
+                        });
+                        list.addAll(contactsBeans);
+                        myAdapter.notifyDataSetChanged();
+                    }
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onDestroy() {

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:src="@drawable/arrow_left_white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="导入联系人"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/text_333333"
+        android:textSize="16sp"
+        android:text="在您将要导入联系人的设备上:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/text_333333"
+        android:textSize="16sp"
+        android:text="1.在设置中开启蓝牙;"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/text_333333"
+        android:textSize="16sp"
+        android:text="2.将设备设置为对其它蓝牙设备可见;"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/text_333333"
+        android:textSize="16sp"
+        android:text="3.完成蓝牙配对;"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_next"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="100dp"
+        android:gravity="center"
+        android:paddingRight="30dp"
+        android:paddingLeft="30dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:background="@drawable/selctor_item_click_gray_white"
+        android:text="下一步"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

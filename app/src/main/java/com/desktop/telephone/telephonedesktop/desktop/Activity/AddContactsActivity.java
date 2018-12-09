@@ -13,6 +13,7 @@ import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.ContactsBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBean;
+import com.desktop.telephone.telephonedesktop.util.ContactsUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
@@ -88,16 +89,23 @@ public class AddContactsActivity extends BaseActivity {
                     if (TextUtils.isEmpty(name)) {
                         name = phone;//未设置姓名phone设为姓名值
                     }
+
                     //不判重复,直接加入数据库
-                    ContactsBean contactsBean = new ContactsBean(null, name, email, desc, phone);
-                    DaoUtil.getContactsBeanDao().insert(contactsBean);
+                    ContactsUtil.insertData(name,phone,email,desc);
+//                    ContactsBean contactsBean = new ContactsBean(null, name, email, desc, phone);
+//                    DaoUtil.getContactsBeanDao().insert(contactsBean);
                     Utils.Toast("添加成功");
                 } else {//修改
                     Long id = contactsBean.getId();
+                    try {
+                        ContactsUtil.updateData(id,phone,name,desc,email);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     ContactsBean contactsBean = new ContactsBean(id, name, email, desc, phone);
-                    DaoUtil.getContactsBeanDao().update(contactsBean);
-                    Utils.Toast("修改成功");
+//                    DaoUtil.getContactsBeanDao().update(contactsBean);
                     EventBus.getDefault().post(contactsBean);
+                    Utils.Toast("修改成功");
                 }
                 EventBus.getDefault().post(new EventBean(EventBean.CONTACTS_ADD_SUCCESS));
                 finish();
