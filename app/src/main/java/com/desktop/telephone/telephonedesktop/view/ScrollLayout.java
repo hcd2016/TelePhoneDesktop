@@ -179,13 +179,21 @@ public class ScrollLayout extends ViewGroup implements OnDataChangeListener {
 
         this.mCurScreen = mDefaultScreen;
 
-        this.rightPadding = DensityUtil.dip2px(mContext, 70);
-        this.leftPadding = DensityUtil.dip2px(mContext, 10);
-        this.topPadding = DensityUtil.dip2px(mContext, 30);
-        this.bottomPadding = DensityUtil.dip2px(mContext, 30);
+//        this.rightPadding = DensityUtil.dip2px(mContext, 70);
+//        this.leftPadding = DensityUtil.dip2px(mContext, 10);
+//        this.topPadding = DensityUtil.dip2px(mContext, 30);
+//        this.bottomPadding = DensityUtil.dip2px(mContext, 30);
+//
+//        this.colSpace = DensityUtil.dip2px(mContext, 15);
+//        this.rowSpace = DensityUtil.dip2px(mContext, 15);
 
-        this.colSpace = DensityUtil.dip2px(mContext, 15);
-        this.rowSpace = DensityUtil.dip2px(mContext, 15);
+        this.rightPadding = DensityUtil.dip2px(mContext, 50);
+        this.leftPadding = DensityUtil.dip2px(mContext, 50);
+        this.topPadding = DensityUtil.dip2px(mContext, 80);
+        this.bottomPadding = DensityUtil.dip2px(mContext, 80);
+
+        this.colSpace = DensityUtil.dip2px(mContext, 20);
+        this.rowSpace = DensityUtil.dip2px(mContext, 20);
 
         if (mAdapter != null)
             refreView();

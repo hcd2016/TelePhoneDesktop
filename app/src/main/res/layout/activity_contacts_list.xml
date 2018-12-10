@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/rl_title_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimaryDark"
@@ -14,6 +15,7 @@
         android:paddingTop="15dp">
 
         <ImageView
+            android:layout_centerVertical="true"
             android:id="@+id/iv_back"
             android:layout_width="50dp"
             android:layout_height="20dp"
@@ -25,7 +27,15 @@
             android:layout_centerInParent="true"
             android:text="智能通讯录"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
+        <ImageView
+            android:id="@+id/iv_menu"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/menu"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -76,6 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             <ImageView
+                android:layout_marginTop="2dp"
                 android:src="@drawable/add"
                 android:layout_width="20dp"
                 android:layout_height="20dp" />
@@ -88,45 +99,6 @@
                 android:textSize="14sp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_marginLeft="20dp"
-                android:id="@+id/ll_daoru"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:src="@drawable/add"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp" />
-                <TextView
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="导入"
-                    android:textColor="@color/text_333333"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_daochu"
-                android:layout_marginLeft="30dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:src="@drawable/add"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp" />
-                <TextView
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="导出"
-                    android:textColor="@color/text_333333"
-                    android:textSize="14sp" />
-            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

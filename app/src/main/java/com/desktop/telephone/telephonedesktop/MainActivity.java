@@ -1,7 +1,13 @@
 package com.desktop.telephone.telephonedesktop;
 
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
@@ -42,9 +48,23 @@ public class MainActivity extends BaseActivity {
 //    @BindView(R.id.point_indicatorView)
 //    PointIndicatorView pointIndicatorView;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //透明状态栏
+        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setNavigationBarColor(Color.TRANSPARENT);
+        }
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initIconData();
@@ -131,7 +151,7 @@ public class MainActivity extends BaseActivity {
 
 //        List<DesktopIconBean> list = DaoUtil.getDesktopIconBeanDao().loadAll();
         mList = DaoUtil.querydata();
-        if(mList == null || mList.size() == 0) {//数据库中没有列表(第一次安装)
+        if (mList == null || mList.size() == 0) {//数据库中没有列表(第一次安装)
             mList.addAll(defaultList);
             DaoUtil.saveNLists(defaultList);//保存默认的list
         }
@@ -191,9 +211,9 @@ public class MainActivity extends BaseActivity {
         //设置Adapter
         mContainer.setSaAdapter(mItemsAdapter);
         //动态设置Container每页的列数为2行
-        mContainer.setColCount(3);
+        mContainer.setColCount(4);
         //动态设置Container每页的行数为4行
-        mContainer.setRowCount(3);
+        mContainer.setRowCount(5);
         //调用refreView绘制所有的Item
         mContainer.refreView();
     }
@@ -203,7 +223,7 @@ public class MainActivity extends BaseActivity {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
         mContainer.setBackGroud(BitmapFactory.decodeResource(getResources(),
-                R.drawable.bg, options));
+                R.drawable.bg2, options));
     }
 
 //    private int getDrawableId(String name) {

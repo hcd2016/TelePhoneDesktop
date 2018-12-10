@@ -55,6 +55,8 @@ public class MissedCallFragment extends Fragment {
         list = DaoUtil.getCallRecordBeanDao().queryBuilder().where(CallRecordBeanDao.Properties.CallStatus.eq(2)).orderDesc(CallRecordBeanDao.Properties.Id).list();
         recycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         MyAdapter myAdapter = new MyAdapter(list);
+        View view = View.inflate(getActivity(),R.layout.empty_view,null);
+        myAdapter.setEmptyView(view);
         recycleView.setAdapter(myAdapter);
     }
 

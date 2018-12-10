@@ -96,7 +96,7 @@ public class DesktopIconFragment extends Fragment {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
         mContainer.setBackGroud(BitmapFactory.decodeResource(getResources(),
-                R.drawable.bg, options));
+                R.drawable.bg2, options));
     }
 
     /**

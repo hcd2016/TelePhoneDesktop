@@ -2,16 +2,15 @@ package com.desktop.telephone.telephonedesktop.desktop.Activity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.IntentFilter;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -19,17 +18,17 @@ import android.os.Message;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.util.Util;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.desktop.telephone.telephonedesktop.R;
@@ -40,9 +39,9 @@ import com.desktop.telephone.telephonedesktop.desktop.bluetooth.LeadHintActivity
 import com.desktop.telephone.telephonedesktop.desktop.bluetooth.android.bluetooth.client.pbap.BluetoothPbapClient;
 import com.desktop.telephone.telephonedesktop.desktop.bluetooth.android.vcard.VCardEntry;
 import com.desktop.telephone.telephonedesktop.desktop.dialog.ProgressBarDialog;
-import com.desktop.telephone.telephonedesktop.desktop.recevier.BluetoothReceiver;
 import com.desktop.telephone.telephonedesktop.util.ContactsUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
+import com.desktop.telephone.telephonedesktop.util.DensityUtil;
 import com.desktop.telephone.telephonedesktop.util.PinYinUtils;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.TopSmoothScroller;
@@ -57,10 +56,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,10 +76,14 @@ public class ContactsListActivity extends BaseActivity {
     RecyclerView recycleView;
     @BindView(R.id.ll_btn_add_container)
     LinearLayout llBtnAddContainer;
-    @BindView(R.id.ll_daoru)
-    LinearLayout llDaoru;
-    @BindView(R.id.ll_daochu)
-    LinearLayout llDaochu;
+    //    @BindView(R.id.ll_daoru)
+//    LinearLayout llDaoru;
+//    @BindView(R.id.ll_daochu)
+//    LinearLayout llDaochu;
+    @BindView(R.id.iv_menu)
+    ImageView ivMenu;
+    @BindView(R.id.rl_title_container)
+    RelativeLayout rlTitleContainer;
     private List<ContactsBean> list;
     private MyAdapter myAdapter;
     private LinearLayoutManager layoutManager;
@@ -91,6 +91,7 @@ public class ContactsListActivity extends BaseActivity {
     private BluetoothPbapClient bluetoothPbapClient;
     private ProgressBarDialog progressBarDilog;
     private AlertDialog alertDialog1;
+    private PopupWindow popupWindow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -282,7 +283,8 @@ public class ContactsListActivity extends BaseActivity {
         return PinYinUtils.getPinyin(zhongwen).substring(0, 1);
     }
 
-    @OnClick({R.id.iv_back, R.id.ll_btn_add_container, R.id.ll_daoru, R.id.ll_daochu})
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @OnClick({R.id.iv_back, R.id.ll_btn_add_container, R.id.iv_menu})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -291,33 +293,77 @@ public class ContactsListActivity extends BaseActivity {
             case R.id.ll_btn_add_container://新建联系人
                 startActivity(AddContactsActivity.class);
                 break;
-            case R.id.ll_daoru://导入
-                startActivity(LeadHintActivity.class);
-                break;
-            case R.id.ll_daochu://导出
-                alertDialog1 = new AlertDialog.Builder(this)
-                        .setTitle("导出到存储设备")
-                        .setMessage("是否将联系人列表导出至 " + Environment.getExternalStorageDirectory().getPath() + "/contacts.vcf?" + "导出后,请妥善保管您的联系人信息。")
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                alertDialog1.dismiss();
-                            }
-                        })
-                        .setPositiveButton("导出", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                try {
-                                    exportContacts();
-                                } catch (Exception e) {
-                                    Utils.Toast("导出失败,请稍后重试");
-                                    e.printStackTrace();
-                                }
-                            }
-                        })
-                        .create();
-                alertDialog1.show();
-                break;
+//            case R.id.ll_daoru://导入
+//                startActivity(LeadHintActivity.class);
+//                break;
+//            case R.id.ll_daochu://导出
+//                alertDialog1 = new AlertDialog.Builder(this)
+//                        .setTitle("导出到存储设备")
+//                        .setMessage("是否将联系人列表导出至 " + Environment.getExternalStorageDirectory().getPath() + "/contacts.vcf?" + "导出后,请妥善保管您的联系人信息。")
+//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                alertDialog1.dismiss();
+//                            }
+//                        })
+//                        .setPositiveButton("导出", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                try {
+//                                    exportContacts();
+//                                } catch (Exception e) {
+//                                    Utils.Toast("导出失败,请稍后重试");
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        })
+//                        .create();
+//                alertDialog1.show();
+            case R.id.iv_menu://菜单
+                if (popupWindow != null && popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                } else {
+                    View popView = View.inflate(this, R.layout.pop_contacts_menu, null);
+                    popView.findViewById(R.id.tv_daoru).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {//导入
+                            startActivity(LeadHintActivity.class);
+                            popupWindow.dismiss();
+                        }
+                    });
+                    popView.findViewById(R.id.tv_daochu).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {//导出
+                            alertDialog1 = new AlertDialog.Builder(ContactsListActivity.this)
+                                    .setTitle("导出到存储设备")
+                                    .setMessage("是否将联系人列表导出至 " + Environment.getExternalStorageDirectory().getPath() + "/contacts.vcf?" + "导出后,请妥善保管您的联系人信息。")
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            alertDialog1.dismiss();
+                                        }
+                                    })
+                                    .setPositiveButton("导出", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            try {
+                                                exportContacts();
+                                            } catch (Exception e) {
+                                                Utils.Toast("导出失败,请稍后重试");
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    })
+                                    .create();
+                            alertDialog1.show();
+                            popupWindow.dismiss();
+                        }
+                    });
+                    popupWindow = new PopupWindow(popView, DensityUtil.dip2px(this,150), LinearLayout.LayoutParams.WRAP_CONTENT);
+                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                    popupWindow.showAsDropDown(rlTitleContainer,0,0, Gravity.RIGHT);
+                    break;
+                }
         }
     }
 

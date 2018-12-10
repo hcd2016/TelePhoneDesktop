@@ -15,12 +15,10 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_weight="1"
+            android:layout_gravity="center"
             android:id="@+id/content_iv"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/phone_icon"
             tools:ignore="ContentDescription" />
 
@@ -34,7 +32,7 @@
             android:layout_centerHorizontal="true"
             tools:text="电话"
             android:textColor="@color/white"
-            android:textSize="30sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <ImageView

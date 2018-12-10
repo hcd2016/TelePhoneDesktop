@@ -48,6 +48,8 @@ public class AllCallsFragment extends Fragment {
         list = DaoUtil.getCallRecordBeanDao().loadAll();
         recycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         MyAdapter myAdapter = new MyAdapter(list);
+        View view = View.inflate(getActivity(),R.layout.empty_view,null);
+        myAdapter.setEmptyView(view);
         recycleView.setAdapter(myAdapter);
     }
 

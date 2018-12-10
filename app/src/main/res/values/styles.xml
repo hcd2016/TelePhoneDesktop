@@ -27,7 +27,7 @@
     <style name="CollapsedTitleStyle" >
         <item name="android:textSize">14sp</item>
     </style>
-    <style name="TablayoutTextSize16" >
-        <item name="android:textSize">16sp</item>
+    <style name="TablayoutTextSize20" >
+        <item name="android:textSize">20sp</item>
     </style>
 </resources>
