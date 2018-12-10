@@ -56,6 +56,7 @@ public class RecordAudioActivity extends BaseActivity {
     private MyRunnable mRunnable;
     private MediaRecorder recorder;
     private AudioRecorder audioRecorder;
+    private AudioRecordDialog audioRecordDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,8 +67,8 @@ public class RecordAudioActivity extends BaseActivity {
     }
 
     private void initView() {
-        audioRecorder = new AudioRecorder();
-        audioRecorder.createDefaultAudio(getCurrentTime());
+//        audioRecorder = new AudioRecorder();
+//        audioRecorder.createDefaultAudio(getCurrentTime());
     }
 
     //创建保存录音的目录
@@ -90,6 +91,7 @@ public class RecordAudioActivity extends BaseActivity {
 
     private boolean isPlaying = false;//是否正在录音
     private MyRunnable myRunnable;
+
     @OnClick({R.id.iv_back, R.id.rl_btn_container, R.id.ll_btn_files, R.id.ll_btn_complete})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -109,6 +111,10 @@ public class RecordAudioActivity extends BaseActivity {
                     tvTimer.setVisibility(View.VISIBLE);
                     ivPlay.setVisibility(View.GONE);
                     ivPause.setVisibility(View.VISIBLE);
+                    if (audioRecorder == null) {
+                        audioRecorder = new AudioRecorder();
+                        audioRecorder.createDefaultAudio(getCurrentTime());
+                    }
                     startRecord();
                     isPause = false;
                     if (myRunnable == null) {
@@ -119,39 +125,59 @@ public class RecordAudioActivity extends BaseActivity {
                 isPlaying = !isPlaying;
                 break;
             case R.id.ll_btn_files:
+                startActivity(AudioRecordListActivity.class);
                 break;
             case R.id.ll_btn_complete://完成
-                if(isPlaying) {//点击完成时如正在播放就暂停.
-                    tvTimer.setVisibility(View.VISIBLE);
-                    ivPlay.setVisibility(View.VISIBLE);
-                    ivPause.setVisibility(View.GONE);
-                    isPause = true;//暂停播放
-                    myRunnable = null;
-                    pauseRecord();
-                }
-                AudioRecordDialog audioRecordDialog = new AudioRecordDialog(this);
+                audioRecordDialog = new AudioRecordDialog(this);
                 audioRecordDialog.setOnAudioRecordDialogClickListener(new AudioRecordDialog.OnAudioRecordDialogClickListener() {
                     @Override
                     public void saveClick() {//保存
                         stopRecord();
+                        //重置
+                        audioRecorder = null;
+                        isPause = true;
+                        currentSecond = 0;
+                        myRunnable = null;
+                        isPlaying = false;
+                        ivMicIcon.setVisibility(View.VISIBLE);
+                        tvTimer.setVisibility(View.GONE);
+                        ivPlay.setVisibility(View.VISIBLE);
+                        ivPause.setVisibility(View.GONE);
+                        audioRecordDialog.dismiss();
                     }
 
                     @Override
                     public void backClick() {//返回
-
+                        audioRecordDialog.dismiss();
                     }
 
                     @Override
                     public void deleteClick() {//删除
-                        List<File> wavFiles = AudioFileUtils.getWavFiles();
-                        Iterator<File> it = wavFiles.iterator();
+//                        String fileName = audioRecorder.getFileName()+".wav";
+                        //停止录音,删除文件,重置计时
+                        audioRecorder.canel();
+//                        List<File> wavFiles = AudioFileUtils.getWavFiles();
+//                        Iterator<File> it = wavFiles.iterator();
 //                        while (it.hasNext()) {
-//                            if () {
+//                            String name = it.next().getName();
+//                            if (name.equals(fileName)) {
 //                                it.remove();
 //                            }
 //                        }
+                        //重置
+                        audioRecorder = null;
+                        isPause = true;
+                        currentSecond = 0;
+                        myRunnable = null;
+                        isPlaying = false;
+                        ivMicIcon.setVisibility(View.VISIBLE);
+                        tvTimer.setVisibility(View.GONE);
+                        ivPlay.setVisibility(View.VISIBLE);
+                        ivPause.setVisibility(View.GONE);
+                        audioRecordDialog.dismiss();
                     }
                 });
+                audioRecordDialog.show();
                 break;
         }
     }

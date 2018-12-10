@@ -2,8 +2,10 @@ package com.desktop.telephone.telephonedesktop.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -11,9 +13,16 @@ import android.widget.Toast;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.App;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Utils {
@@ -49,6 +58,7 @@ public class Utils {
 
 
     private static Map<String, Integer> appIconIdMap = new HashMap<>();
+
     static {
         appIconIdMap.put("phone_icon", R.drawable.phone_icon);//电话
         appIconIdMap.put("call_records_icon", R.drawable.call_records_icon);//智能通讯录
@@ -100,5 +110,119 @@ public class Utils {
     public static String getFormatDate() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return simpleDateFormat.format(new Date(System.currentTimeMillis()));
+    }
+
+    /**
+     * 读取文件创建时间
+     */
+    public static String getCreateTime(String filePath) {
+        File f = new File(filePath);
+        if (f.exists()) {
+            try {
+                return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                        .format(new Date(f.lastModified()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return "";
+    }
+
+    private static final String DATA_TYPE_AUDIO = "audio/*";
+    /**
+     * 打开文件
+     * @param filePath 文件的全路径，包括到文件名
+     */
+    public static void openFile(String filePath,Context context) {
+        File file = new File(filePath);
+        if (!file.exists()){
+            //如果文件不存在
+            Toast.makeText(context, "打开失败，原因：文件已经被移动或者删除", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        /* 取得扩展名 */
+        String end = file.getName().substring(file.getName().lastIndexOf(".") + 1, file.getName().length()).toLowerCase(Locale.getDefault());
+        /* 依扩展名的类型决定MimeType */
+        Intent intent = null;
+        if (end.equals("m4a") || end.equals("mp3") || end.equals("mid") || end.equals("xmf") || end.equals("ogg") || end.equals("wav")) {
+            intent = generateVideoAudioIntent(filePath, DATA_TYPE_AUDIO);
+        }
+//        } else if (end.equals("3gp") || end.equals("mp4")) {
+//            intent = generateVideoAudioIntent(filePath,DATA_TYPE_VIDEO);
+//        } else if (end.equals("jpg") || end.equals("gif") || end.equals("png") || end.equals("jpeg") || end.equals("bmp")) {
+//            intent = generateCommonIntent(filePath,DATA_TYPE_IMAGE);
+//        } else if (end.equals("apk")) {
+//            intent = generateCommonIntent(filePath,DATA_TYPE_APK);
+//        }else if (end.equals("html") || end.equals("htm")){
+//            intent = getHtmlFileIntent(filePath);
+//        } else if (end.equals("ppt")) {
+//            intent = generateCommonIntent(filePath,DATA_TYPE_PPT);
+//        } else if (end.equals("xls")) {
+//            intent = generateCommonIntent(filePath,DATA_TYPE_EXCEL);
+//        } else if (end.equals("doc")) {
+//            intent = generateCommonIntent(filePath,DATA_TYPE_WORD);
+//        } else if (end.equals("pdf")) {
+//            intent = generateCommonIntent(filePath,DATA_TYPE_PDF);
+//        } else if (end.equals("chm")) {
+//            intent = generateCommonIntent(filePath,DATA_TYPE_CHM);
+//        } else if (end.equals("txt")) {
+//            intent = generateCommonIntent(filePath, DATA_TYPE_TXT);
+//        } else {
+//            intent = generateCommonIntent(filePath,DATA_TYPE_ALL);
+//        }
+        context.startActivity(intent);
+    }
+
+    /**
+     * 产生打开视频或音频的Intent
+     * @param filePath 文件路径
+     * @param dataType 文件类型
+     * @return
+     */
+    private static Intent generateVideoAudioIntent(String filePath, String dataType){
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("oneshot", 0);
+        intent.putExtra("configchange", 0);
+        File file = new File(filePath);
+        intent.setDataAndType(getUri(intent,file), dataType);
+        return intent;
+    }
+
+    /**
+     * 获取对应文件的Uri
+     * @param intent 相应的Intent
+     * @param file 文件对象
+     * @return
+     */
+    private static Uri getUri(Intent intent, File file) {
+        Uri uri = null;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            //判断版本是否在7.0以上
+//            uri =
+//                    FileProvider.getUriForFile(App.getContext(),
+//                            App.getContext().getPackageName() + ".fileprovider",
+//                            file);
+//            //添加这一句表示对目标应用临时授权该Uri所代表的文件
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//        } else {
+            uri = Uri.fromFile(file);
+//        }
+        return uri;
+    }
+
+    public static void removeFile(String filePath) {
+        if(filePath == null || filePath.length() == 0){
+            return;
+        }
+        try {
+            File file = new File(filePath);
+            if(file.exists()){
+//                removeFile(filePath);
+                file.delete();
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 }

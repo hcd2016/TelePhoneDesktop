@@ -77,6 +77,9 @@ public class AudioRecorder {
         status = Status.STATUS_READY;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
 
     /**
      * 开始录音
@@ -190,7 +193,6 @@ public class AudioRecorder {
         status = Status.STATUS_NO_READY;
     }
 
-
     /**
      * 将音频信息写入文件
      */
@@ -214,16 +216,18 @@ public class AudioRecorder {
 
         }
         while (status == Status.STATUS_START) {
-            readsize = audioRecord.read(audiodata, 0, bufferSizeInBytes);
-            if (AudioRecord.ERROR_INVALID_OPERATION != readsize && fos != null) {
-                try {
-                    fos.write(audiodata);
-                    if (listener != null) {
-                        //用于拓展业务
-                        listener.onRecording(audiodata, 0, audiodata.length);
+            if(audioRecord != null) {
+                readsize = audioRecord.read(audiodata, 0, bufferSizeInBytes);
+                if (AudioRecord.ERROR_INVALID_OPERATION != readsize && fos != null) {
+                    try {
+                        fos.write(audiodata);
+                        if (listener != null) {
+                            //用于拓展业务
+                            listener.onRecording(audiodata, 0, audiodata.length);
+                        }
+                    } catch (IOException e) {
+                        Log.e("AudioRecorder", e.getMessage());
                     }
-                } catch (IOException e) {
-                    Log.e("AudioRecorder", e.getMessage());
                 }
             }
         }

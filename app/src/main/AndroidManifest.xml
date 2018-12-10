@@ -33,6 +33,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
+        <!--<activity android:name=".view.NewMainActivity">-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -56,6 +57,7 @@
         <activity android:name=".desktop.bluetooth.LeadHintActivity" />
         <activity android:name=".desktop.bluetooth.ChiosePairedActivity" />
         <activity android:name=".desktop.Activity.RecordAudioActivity" />
+        <activity android:name=".desktop.Activity.AudioRecordListActivity" />
 
 
         <!-- 短信广播 -->
