@@ -1,6 +1,7 @@
 package com.desktop.telephone.telephonedesktop.desktop.fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -146,6 +147,8 @@ public class CallFragment extends Fragment {
                 startActivity(new Intent(getActivity(), ContactsListActivity.class));
                 break;
             case R.id.ll_call_container://拨出
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + tvPhoneNum.getText().toString()));
+                startActivity(intent);
                 break;
             case R.id.rl_delete_container://回退
                 String string = tvPhoneNum.getText().toString();
