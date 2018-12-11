@@ -24,7 +24,7 @@ public class AppInfoBeanDao extends AbstractDao<AppInfoBean, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, long.class, "id", true, "_id");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property SortId = new Property(1, int.class, "sortId", false, "SORT_ID");
         public final static Property AppName = new Property(2, String.class, "appName", false, "APP_NAME");
         public final static Property AppIcon = new Property(3, byte[].class, "appIcon", false, "APP_ICON");
@@ -34,6 +34,7 @@ public class AppInfoBeanDao extends AbstractDao<AppInfoBean, Long> {
         public final static Property InRom = new Property(7, boolean.class, "inRom", false, "IN_ROM");
         public final static Property IsShowDesktop = new Property(8, boolean.class, "isShowDesktop", false, "IS_SHOW_DESKTOP");
         public final static Property IconType = new Property(9, int.class, "iconType", false, "ICON_TYPE");
+        public final static Property PhoneNum = new Property(10, String.class, "phoneNum", false, "PHONE_NUM");
     }
 
 
@@ -49,7 +50,7 @@ public class AppInfoBeanDao extends AbstractDao<AppInfoBean, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"APP_INFO_BEAN\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," + // 0: id
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"SORT_ID\" INTEGER NOT NULL ," + // 1: sortId
                 "\"APP_NAME\" TEXT," + // 2: appName
                 "\"APP_ICON\" BLOB," + // 3: appIcon
@@ -58,7 +59,8 @@ public class AppInfoBeanDao extends AbstractDao<AppInfoBean, Long> {
                 "\"USER_APP\" INTEGER NOT NULL ," + // 6: userApp
                 "\"IN_ROM\" INTEGER NOT NULL ," + // 7: inRom
                 "\"IS_SHOW_DESKTOP\" INTEGER NOT NULL ," + // 8: isShowDesktop
-                "\"ICON_TYPE\" INTEGER NOT NULL );"); // 9: iconType
+                "\"ICON_TYPE\" INTEGER NOT NULL ," + // 9: iconType
+                "\"PHONE_NUM\" TEXT);"); // 10: phoneNum
     }
 
     /** Drops the underlying database table. */
@@ -70,7 +72,11 @@ public class AppInfoBeanDao extends AbstractDao<AppInfoBean, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, AppInfoBean entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
         stmt.bindLong(2, entity.getSortId());
  
         String appName = entity.getAppName();
@@ -92,12 +98,21 @@ public class AppInfoBeanDao extends AbstractDao<AppInfoBean, Long> {
         stmt.bindLong(8, entity.getInRom() ? 1L: 0L);
         stmt.bindLong(9, entity.getIsShowDesktop() ? 1L: 0L);
         stmt.bindLong(10, entity.getIconType());
+ 
+        String phoneNum = entity.getPhoneNum();
+        if (phoneNum != null) {
+            stmt.bindString(11, phoneNum);
+        }
     }
 
     @Override
     protected final void bindValues(SQLiteStatement stmt, AppInfoBean entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
         stmt.bindLong(2, entity.getSortId());
  
         String appName = entity.getAppName();
@@ -119,17 +134,22 @@ public class AppInfoBeanDao extends AbstractDao<AppInfoBean, Long> {
         stmt.bindLong(8, entity.getInRom() ? 1L: 0L);
         stmt.bindLong(9, entity.getIsShowDesktop() ? 1L: 0L);
         stmt.bindLong(10, entity.getIconType());
+ 
+        String phoneNum = entity.getPhoneNum();
+        if (phoneNum != null) {
+            stmt.bindString(11, phoneNum);
+        }
     }
 
     @Override
     public Long readKey(Cursor cursor, int offset) {
-        return cursor.getLong(offset + 0);
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public AppInfoBean readEntity(Cursor cursor, int offset) {
         AppInfoBean entity = new AppInfoBean( //
-            cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getInt(offset + 1), // sortId
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // appName
             cursor.isNull(offset + 3) ? null : cursor.getBlob(offset + 3), // appIcon
@@ -138,14 +158,15 @@ public class AppInfoBeanDao extends AbstractDao<AppInfoBean, Long> {
             cursor.getShort(offset + 6) != 0, // userApp
             cursor.getShort(offset + 7) != 0, // inRom
             cursor.getShort(offset + 8) != 0, // isShowDesktop
-            cursor.getInt(offset + 9) // iconType
+            cursor.getInt(offset + 9), // iconType
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10) // phoneNum
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, AppInfoBean entity, int offset) {
-        entity.setId(cursor.getLong(offset + 0));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setSortId(cursor.getInt(offset + 1));
         entity.setAppName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setAppIcon(cursor.isNull(offset + 3) ? null : cursor.getBlob(offset + 3));
@@ -155,6 +176,7 @@ public class AppInfoBeanDao extends AbstractDao<AppInfoBean, Long> {
         entity.setInRom(cursor.getShort(offset + 7) != 0);
         entity.setIsShowDesktop(cursor.getShort(offset + 8) != 0);
         entity.setIconType(cursor.getInt(offset + 9));
+        entity.setPhoneNum(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
      }
     
     @Override
@@ -174,7 +196,7 @@ public class AppInfoBeanDao extends AbstractDao<AppInfoBean, Long> {
 
     @Override
     public boolean hasKey(AppInfoBean entity) {
-        throw new UnsupportedOperationException("Unsupported for entities with a non-null key");
+        return entity.getId() != null;
     }
 
     @Override

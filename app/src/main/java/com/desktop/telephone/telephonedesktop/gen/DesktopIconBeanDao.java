@@ -32,6 +32,7 @@ public class DesktopIconBeanDao extends AbstractDao<DesktopIconBean, Long> {
         public final static Property IconType = new Property(5, int.class, "iconType", false, "ICON_TYPE");
         public final static Property App_icon = new Property(6, byte[].class, "app_icon", false, "APP_ICON");
         public final static Property PackageName = new Property(7, String.class, "packageName", false, "PACKAGE_NAME");
+        public final static Property PhoneNum = new Property(8, String.class, "phoneNum", false, "PHONE_NUM");
     }
 
 
@@ -54,7 +55,8 @@ public class DesktopIconBeanDao extends AbstractDao<DesktopIconBean, Long> {
                 "\"TITLE\" TEXT," + // 4: title
                 "\"ICON_TYPE\" INTEGER NOT NULL ," + // 5: iconType
                 "\"APP_ICON\" BLOB," + // 6: app_icon
-                "\"PACKAGE_NAME\" TEXT);"); // 7: packageName
+                "\"PACKAGE_NAME\" TEXT," + // 7: packageName
+                "\"PHONE_NUM\" TEXT);"); // 8: phoneNum
     }
 
     /** Drops the underlying database table. */
@@ -94,6 +96,11 @@ public class DesktopIconBeanDao extends AbstractDao<DesktopIconBean, Long> {
         if (packageName != null) {
             stmt.bindString(8, packageName);
         }
+ 
+        String phoneNum = entity.getPhoneNum();
+        if (phoneNum != null) {
+            stmt.bindString(9, phoneNum);
+        }
     }
 
     @Override
@@ -127,6 +134,11 @@ public class DesktopIconBeanDao extends AbstractDao<DesktopIconBean, Long> {
         if (packageName != null) {
             stmt.bindString(8, packageName);
         }
+ 
+        String phoneNum = entity.getPhoneNum();
+        if (phoneNum != null) {
+            stmt.bindString(9, phoneNum);
+        }
     }
 
     @Override
@@ -144,7 +156,8 @@ public class DesktopIconBeanDao extends AbstractDao<DesktopIconBean, Long> {
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // title
             cursor.getInt(offset + 5), // iconType
             cursor.isNull(offset + 6) ? null : cursor.getBlob(offset + 6), // app_icon
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // packageName
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // packageName
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // phoneNum
         );
         return entity;
     }
@@ -159,6 +172,7 @@ public class DesktopIconBeanDao extends AbstractDao<DesktopIconBean, Long> {
         entity.setIconType(cursor.getInt(offset + 5));
         entity.setApp_icon(cursor.isNull(offset + 6) ? null : cursor.getBlob(offset + 6));
         entity.setPackageName(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setPhoneNum(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
      }
     
     @Override

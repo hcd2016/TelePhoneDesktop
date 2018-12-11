@@ -199,7 +199,7 @@ public class ContactsUtil {
 
 
     public static List<ContactsBean> testGetAllContact() throws Throwable {
-            List<ContactsBean> list = new ArrayList<>();
+        List<ContactsBean> list = new ArrayList<>();
         //获取联系人信息的Uri
         Uri uri = ContactsContract.Contacts.CONTENT_URI;
         //获取ContentResolver
@@ -221,7 +221,7 @@ public class ContactsUtil {
 //            sb.append("contactId=").append(contactId).append(",Name=").append(name);
 //            map.put("name", name);
             id = Long.parseLong(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)));//联系人ID
-            ContactsBean contactsBean = new ContactsBean(id,name,"","","");
+            ContactsBean contactsBean = new ContactsBean(id, name, "", "", "");
             list.add(contactsBean);
         }
 
@@ -320,7 +320,7 @@ public class ContactsUtil {
             while (cursor.moveToNext()) {
                 contactsId = cursor.getColumnName(0);
                 name = cursor.getString(1);
-                ContactsBean contactsBean = new ContactsBean(Long.parseLong(contactsId),name,"","","");
+                ContactsBean contactsBean = new ContactsBean(Long.parseLong(contactsId), name, "", "", "");
                 listContacts.add(contactsBean);
             }
         }
@@ -423,5 +423,92 @@ public class ContactsUtil {
         }
         cursor.close();
         return listContacts;
+    }
+
+    public static List<ContactsBean> getContactsName(Context context) {
+        //定义常量，节省重复引用的时间
+        Uri CONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        String CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
+        String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
+        String ID = ContactsContract.Contacts._ID;
+        String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
+        String HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER;
+        //临时变量
+        String contactId;
+        String displayName;
+        //生成ContentResolver对象
+        ContentResolver contentResolver = context.getContentResolver();
+        // 获取手机联系人
+        Cursor cursor = contentResolver.query(Uri.parse("content://com.android.contacts/contacts"), null, null, null, null);
+        List<ContactsBean> list = new ArrayList<>();
+        // 无联系人直接返回
+        if (!cursor.moveToFirst()) {//moveToFirst定位到第一行
+            return list;
+        }
+        do {
+            // 获得联系人的ID：String类型  列名--》列数--》列内容
+            contactId = cursor.getString(cursor.getColumnIndex(ID));
+            // 获得联系人姓名：String类型
+            displayName = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
+//            // 查看联系人有多少个号码，如果没有号码，返回0
+//            int phoneCount = cursor.getInt(cursor.getColumnIndex(HAS_PHONE_NUMBER));
+            ContactsBean contactsBean = new ContactsBean(Long.parseLong(contactId), displayName, "", "", "");
+            list.add(contactsBean);
+        } while (cursor.moveToNext());
+        cursor.close();
+        return list;
+    }
+
+    //根据cotact_id来获取该联系人的手机号
+    public static ContactsBean getDetailFromContactID(Context context, ContactsBean item) {
+        Uri CONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        String CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
+        String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
+
+        Cursor phoneCursor;
+        ContentResolver contentResolver = context.getContentResolver();
+        if (item.getId() == null) {
+            return item;
+        }
+        phoneCursor = contentResolver.query(CONTENT_URI, null, CONTACT_ID + "=" + item.getId(), null, null);
+        if (!phoneCursor.moveToFirst()) {
+            return item;
+        }
+        do {
+            String phoneNum = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
+            // 对手机号码进行预处理（去掉号码前的+86、首尾空格、“-”号等）
+            phoneNum = phoneNum.replaceAll("^(\\+86)", "");
+            phoneNum = phoneNum.replaceAll("^(86)", "");
+            phoneNum = phoneNum.replaceAll("-", "");
+            phoneNum = phoneNum.replaceAll(" ", "");
+            phoneNum = phoneNum.trim();
+            item.setPhone(phoneNum);
+        } while (phoneCursor.moveToNext());
+        phoneCursor.close();
+
+        //查询Email类型的数据操作
+        Cursor emails = contentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                null,
+                ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + item.getId(),
+                null, null);
+        while (emails.moveToNext()) {
+            String emailAddress = emails.getString(emails.getColumnIndex(
+                    ContactsContract.CommonDataKinds.Email.DATA));
+            item.setEmail(emailAddress);
+        }
+        emails.close();
+
+        //查询==地址==类型的数据操作.StructuredPostal.TYPE_WORK
+        Cursor address = contentResolver.query(ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI,
+                null,
+                ContactsContract.CommonDataKinds.StructuredPostal.CONTACT_ID + " = " + item.getId(),
+                null, null);
+        while (address.moveToNext()) {
+            String workAddress = address.getString(address.getColumnIndex(
+                    ContactsContract.CommonDataKinds.StructuredPostal.DATA));
+            item.setDesc(workAddress);
+        }
+        address.close();
+        return item;
     }
 }

@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
@@ -27,6 +28,7 @@ import com.desktop.telephone.telephonedesktop.desktop.Activity.CallActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.ContactsListActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.PhotosActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.RecordAudioActivity;
+import com.desktop.telephone.telephonedesktop.desktop.Activity.SosActivity;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
 @SuppressLint("UseSparseArrays")
@@ -64,6 +66,8 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
                 Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
                 BitmapDrawable bd = new BitmapDrawable(bmp);
                 iv.setImageDrawable(bd);
+            } else if (moveItem.getIconType() == 3) {//一键拨号
+                iv.setImageResource(R.drawable.one_key);
             } else {
                 iv.setImageResource(imgUrl);
 
@@ -100,12 +104,15 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
                     if (moveItem.getIconType() == 1) {//自定义应用指定跳转
                         switch (moveItem.getTitle()) {
                             case "电话":
-                                mContext.startActivity(new Intent(mContext,CallActivity.class));
+                                CallActivity.startActivity(0,mContext);
                                 break;
                             case "电子相册":
                                 mContext.startActivity(new Intent(mContext, PhotosActivity.class));
                                 break;
-                            case "一键拨号":
+//                            case "一键拨号":
+//                                break;
+                            case "SOS":
+                                mContext.startActivity(new Intent(mContext, SosActivity.class));
                                 break;
                             case "录音":
                                 mContext.startActivity(new Intent(mContext, RecordAudioActivity.class));
@@ -117,11 +124,17 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
                                 mContext.startActivity(new Intent(mContext, ContactsListActivity.class));
                                 break;
                             case "通话记录":
+                                CallActivity.startActivity(1,mContext);
                                 break;
                             case "所有应用":
                                 mContext.startActivity(new Intent(mContext, AllAppsActivity.class));
                                 break;
                         }
+                    } else if (moveItem.getIconType() == 3) {//一键拨号
+                        String phoneNum = moveItem.getPhoneNum();
+                        String name = moveItem.getTitle();
+                        //todo
+                        Utils.Toast("一键拨号点击");
                     } else {//系统或用户程序跳转
                         Utils.startApp(mContext, moveItem.getPackageName());
                     }

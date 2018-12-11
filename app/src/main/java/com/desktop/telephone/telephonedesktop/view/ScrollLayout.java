@@ -40,6 +40,7 @@ import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.DensityUtil;
+import com.desktop.telephone.telephonedesktop.util.Utils;
 
 public class ScrollLayout extends ViewGroup implements OnDataChangeListener {
 
@@ -980,9 +981,19 @@ public class ScrollLayout extends ViewGroup implements OnDataChangeListener {
 
                 }
                 final DesktopIconBean item = (DesktopIconBean) v.getTag();
-                if (item.getIconType() != 2) {
+                if (item.getIconType() == 0 || item.getIconType() == 1) {
                     Toast.makeText(mContext, "该应用为系统应用，不能卸载", Toast.LENGTH_SHORT).show();
                     return;
+                } else if (item.getIconType() == 3) {//是一键拨号
+                    removeView((ViewGroup) (v.getParent()));
+                    mAdapter.delete(deletePostion);
+                    DaoUtil.getDesktopIconBeanDao().delete(item);
+                    //如果删除后少了一屏，则移动到前一屏，并进行页面刷新
+                    if (getChildCount() % itemPerPage == 0) {
+                        snapToScreen(totalPage - 1);
+                    }
+                    showEdit(false);
+                    Utils.Toast("删除成功");
                 } else {
                     Uri uri = Uri.fromParts("package", item.getPackageName(), null);
                     Intent intent = new Intent(Intent.ACTION_DELETE, uri);
@@ -1005,12 +1016,12 @@ public class ScrollLayout extends ViewGroup implements OnDataChangeListener {
                                 DaoUtil.getDesktopIconBeanDao().delete(item);
 
                                 AppInfoBean appInfoBean = DaoUtil.querydataByWhere(AppInfoBeanDao.Properties.PackageName.eq(item.getPackageName()));
-                                if(appInfoBean != null) {
+                                if (appInfoBean != null) {
                                     DaoUtil.getAppInfoBeanDao().delete(appInfoBean);
                                 }
 
                                 showEdit(false);
-                                showEdit(true);
+//                                showEdit(true);
 
                                 //如果删除后少了一屏，则移动到前一屏，并进行页面刷新
                                 if (getChildCount() % itemPerPage == 0) {

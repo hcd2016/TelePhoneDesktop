@@ -15,6 +15,7 @@ import com.desktop.telephone.telephonedesktop.gen.CallRecordBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.ContactsBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.PhotoInfoBeanDao;
+import com.desktop.telephone.telephonedesktop.gen.SosBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.SystemStatusBeanDao;
 
 import org.greenrobot.greendao.query.Query;
@@ -46,6 +47,10 @@ public class DaoUtil {
     }
     public static CallRecordBeanDao getCallRecordBeanDao() {
         return DBManager.getInstance().getNewSession().getCallRecordBeanDao();
+    }
+
+    public static SosBeanDao getSosBeanDao() {
+        return DBManager.getInstance().getNewSession().getSosBeanDao();
     }
 
     public static void closeDb() {
@@ -107,7 +112,7 @@ public class DaoUtil {
             public void run() {
                 for (int i = 0; i < list.size(); i++) {
                     AppInfoBean appInfoBean = list.get(i);
-                    appInfoBean.setId(i);
+                    appInfoBean.setId(null);
                     appInfoBean.setSortId(i);
                     getAppInfoBeanDao().insertOrReplace(appInfoBean);
                 }

@@ -64,7 +64,7 @@ public class Utils {
         appIconIdMap.put("call_records_icon", R.drawable.call_records_icon);//智能通讯录
         appIconIdMap.put("photo_icon", R.drawable.photo_icon);//电子相册
         appIconIdMap.put("blacklist_icon", R.drawable.blacklist_icon);//黑白名单
-        appIconIdMap.put("one_key", R.drawable.one_key);//一键拨号
+//        appIconIdMap.put("one_key", R.drawable.one_key);//一键拨号
         appIconIdMap.put("record_icon", R.drawable.record_icon);//录音
         appIconIdMap.put("address_list_icon", R.drawable.address_list_icon);//通话记录
         appIconIdMap.put("sos_icon", R.drawable.sos_icon);//sos

@@ -29,9 +29,19 @@ public class DesktopIconBean {
     //item的排序字段
     private int orderId;
     private String title;
-    private int iconType = 0;//图标类型，0为系统应用，1为自定义添加,2为用户添加应用
+    private int iconType = 0;//图标类型，0为系统应用，1为自定义添加,2为用户添加应用,3为一键拨号
     private byte[] app_icon;
     private String packageName = App.getContext().getPackageName();//应用包名,默认为本应用包名
+    private String phoneNum;//一键拨号时的号码,一键拨号时姓名存为,title存联系人名称
+
+    public String getPhoneNum() {
+        return phoneNum;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
+    }
+
 
     public String getPackageName() {
         return packageName;
@@ -52,9 +62,9 @@ public class DesktopIconBean {
     public DesktopIconBean() {
     }
 
-    @Generated(hash = 2132011111)
-    public DesktopIconBean(Long id, int mid, String img_id_name, int orderId,
-                           String title, int iconType, byte[] app_icon, String packageName) {
+    @Generated(hash = 1504493481)
+    public DesktopIconBean(Long id, int mid, String img_id_name, int orderId, String title,
+            int iconType, byte[] app_icon, String packageName, String phoneNum) {
         this.id = id;
         this.mid = mid;
         this.img_id_name = img_id_name;
@@ -63,6 +73,7 @@ public class DesktopIconBean {
         this.iconType = iconType;
         this.app_icon = app_icon;
         this.packageName = packageName;
+        this.phoneNum = phoneNum;
     }
 
     public Long getId() {

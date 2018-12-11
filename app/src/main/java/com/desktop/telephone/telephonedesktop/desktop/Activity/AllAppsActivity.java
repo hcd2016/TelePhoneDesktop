@@ -199,7 +199,7 @@ public class AllAppsActivity extends BaseActivity {
             appInfo.setPackageName(packname);
             appInfo.setAppIcon(DaoUtil.drawableToByte(icon));
             appInfo.setAppName(name);
-            appInfo.setId(i);
+            appInfo.setId(null);
             appInfos.add(appInfo);
         }
         return appInfos;

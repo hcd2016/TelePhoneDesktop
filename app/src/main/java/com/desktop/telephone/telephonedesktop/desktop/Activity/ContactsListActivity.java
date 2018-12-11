@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
@@ -33,11 +34,13 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
+import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.ContactsBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBean;
 import com.desktop.telephone.telephonedesktop.desktop.bluetooth.LeadHintActivity;
 import com.desktop.telephone.telephonedesktop.desktop.bluetooth.android.bluetooth.client.pbap.BluetoothPbapClient;
 import com.desktop.telephone.telephonedesktop.desktop.bluetooth.android.vcard.VCardEntry;
+import com.desktop.telephone.telephonedesktop.desktop.dialog.ContactsDeleteDialog;
 import com.desktop.telephone.telephonedesktop.desktop.dialog.ProgressBarDialog;
 import com.desktop.telephone.telephonedesktop.util.ContactsUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
@@ -131,7 +134,7 @@ public class ContactsListActivity extends BaseActivity {
         if (event.getEvent().equals(EventBean.CONTACTS_ADD_SUCCESS)) {
             list.clear();
 //            List<ContactsBean> contactsBeans = DaoUtil.getContactsBeanDao().loadAll();
-            List<ContactsBean> contactsBeans = ContactsUtil.getAllPhoneContacts();
+            List<ContactsBean> contactsBeans = ContactsUtil.getContactsName(this);
 //            对集合排序
             Collections.sort(contactsBeans, new Comparator<ContactsBean>() {
                 @Override
@@ -164,7 +167,7 @@ public class ContactsListActivity extends BaseActivity {
             }
         });
         list = new ArrayList<>();
-        list = ContactsUtil.getAllPhoneContacts();
+        list = ContactsUtil.getContactsName(this);
         //对集合排序
         Collections.sort(list, new Comparator<ContactsBean>() {
             @Override
@@ -253,26 +256,56 @@ public class ContactsListActivity extends BaseActivity {
             helper.getView(R.id.tv_name).setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {//删除
-                    alertDialog = new AlertDialog.Builder(ContactsListActivity.this)
-                            .setMessage("确定要删除该联系人吗?")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    ContactsUtil.delete(list.get(helper.getLayoutPosition()).getId());
+                    ContactsDeleteDialog contactsDeleteDialog = new ContactsDeleteDialog(ContactsListActivity.this);
+                    contactsDeleteDialog.setBtnClickListener(new ContactsDeleteDialog.BtnClickListener() {
+                        @Override
+                        public void onKeyCallClick() {//生成一键拨号
+                            alertDialog = new AlertDialog.Builder(ContactsListActivity.this)
+                                    .setMessage("确定要将该联系人生成桌面一键拨号吗?")
+                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            ContactsBean contactsBean = ContactsUtil.getDetailFromContactID(ContactsListActivity.this, item);
+                                            AppInfoBean appInfoBean = new AppInfoBean(null,0,contactsBean.getName(),null,"",0,false,false,false,3,contactsBean.getPhone());
+                                            EventBus.getDefault().post(appInfoBean);
+                                            Utils.Toast("生成成功");
+                                        }
+                                    })
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            alertDialog.dismiss();
+                                        }
+                                    })
+                                    .create();
+                            alertDialog.show();
+                        }
+
+                        @Override
+                        public void deleteClick() {//删除
+                            alertDialog = new AlertDialog.Builder(ContactsListActivity.this)
+                                    .setMessage("确定要删除该联系人吗?")
+                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            ContactsUtil.delete(list.get(helper.getLayoutPosition()).getId());
 //                                    DaoUtil.getContactsBeanDao().delete(list.get(helper.getLayoutPosition()));
-                                    list.remove(helper.getLayoutPosition());
-                                    notifyDataSetChanged();
-                                    Utils.Toast("删除成功");
-                                }
-                            })
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    alertDialog.dismiss();
-                                }
-                            })
-                            .create();
-                    alertDialog.show();
+                                            list.remove(helper.getLayoutPosition());
+                                            notifyDataSetChanged();
+                                            Utils.Toast("删除成功");
+                                        }
+                                    })
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            alertDialog.dismiss();
+                                        }
+                                    })
+                                    .create();
+                            alertDialog.show();
+                        }
+                    });
+                    contactsDeleteDialog.show();
                     return false;
                 }
             });
@@ -457,7 +490,7 @@ public class ContactsListActivity extends BaseActivity {
 
                         //刷新页面数据
                         list.clear();
-                        List<ContactsBean> contactsBeans = ContactsUtil.getAllPhoneContacts();
+                        List<ContactsBean> contactsBeans = ContactsUtil.getContactsName(ContactsListActivity.this);
                         //            对集合排序
                         Collections.sort(contactsBeans, new Comparator<ContactsBean>() {
                             @Override
@@ -473,6 +506,7 @@ public class ContactsListActivity extends BaseActivity {
             }
         }
     };
+
 
     @Override
     protected void onDestroy() {

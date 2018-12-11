@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="150dp"
-    android:layout_height="wrap_content"
+    android:layout_height="100dp"
     android:background="@color/bg_gray"
     android:orientation="vertical">
     <TextView
@@ -11,8 +11,9 @@
         android:textColor="@color/text_333333"
         android:textSize="16sp"
         android:text="导入"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dp" />
     <View
         android:background="@color/white"
         android:layout_width="match_parent"
@@ -24,6 +25,7 @@
         android:textSize="16sp"
         android:textColor="@color/text_333333"
         android:text="导出"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dp" />
 </LinearLayout>

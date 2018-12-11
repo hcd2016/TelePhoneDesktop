@@ -9,7 +9,7 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class AppInfoBean {
     @Id(autoincrement = true)
-    public long id;
+    public Long id;
     public int sortId;
     public String appName;
     public byte[] appIcon;
@@ -19,6 +19,16 @@ public class AppInfoBean {
     public boolean inRom;
     public boolean isShowDesktop;//是否显示在桌面
     public int iconType;////图标类型，0为系统应用，1为自定义添加,2为用户添加应用
+    public String phoneNum;
+
+    public String getPhoneNum() {
+        return phoneNum;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
+    }
+
 
     public int getIconType() {
         return iconType;
@@ -28,28 +38,22 @@ public class AppInfoBean {
         this.iconType = iconType;
     }
 
-    public AppInfoBean(long id, int sortId, String appName, byte[] appIcon,
-            String packageName, int uid, boolean userApp, boolean inRom,
-            boolean isShowDesktop) {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
-        this.sortId = sortId;
-        this.appName = appName;
-        this.appIcon = appIcon;
-        this.packageName = packageName;
-        this.uid = uid;
-        this.userApp = userApp;
-        this.inRom = inRom;
-        this.isShowDesktop = isShowDesktop;
     }
 
     @Generated(hash = 1252385361)
     public AppInfoBean() {
     }
 
-    @Generated(hash = 1137472885)
-    public AppInfoBean(long id, int sortId, String appName, byte[] appIcon,
+    @Generated(hash = 1356607411)
+    public AppInfoBean(Long id, int sortId, String appName, byte[] appIcon,
             String packageName, int uid, boolean userApp, boolean inRom,
-            boolean isShowDesktop, int iconType) {
+            boolean isShowDesktop, int iconType, String phoneNum) {
         this.id = id;
         this.sortId = sortId;
         this.appName = appName;
@@ -60,6 +64,7 @@ public class AppInfoBean {
         this.inRom = inRom;
         this.isShowDesktop = isShowDesktop;
         this.iconType = iconType;
+        this.phoneNum = phoneNum;
     }
 
     public boolean isShowDesktop() {
@@ -115,14 +120,6 @@ public class AppInfoBean {
 
     public void setPackageName(String packageName) {
         this.packageName = packageName;
-    }
-
-    public long getId() {
-        return this.id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public int getSortId() {

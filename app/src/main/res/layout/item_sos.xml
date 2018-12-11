@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_margin="10dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="姓名: 王大锤"
+            android:textColor="@color/text_333333"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/bg_gray" />
+
+        <TextView
+            android:id="@+id/tv_phone_num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="号码:15888888888"
+            android:textColor="@color/text_333333"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/bg_gray" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="发送内容: help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!help me!"
+            android:textColor="@color/text_333333"
+            android:textSize="20sp" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

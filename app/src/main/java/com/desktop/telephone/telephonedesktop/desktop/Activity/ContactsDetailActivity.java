@@ -85,7 +85,8 @@ public class ContactsDetailActivity extends BaseActivity {
         });
 
         Bundle bundle = getIntent().getExtras();
-        constacts_bean = (ContactsBean) bundle.getSerializable("constacts_bean");
+        ContactsBean bean = (ContactsBean) bundle.getSerializable("constacts_bean");
+        constacts_bean = ContactsUtil.getDetailFromContactID(this, bean);
         setData(constacts_bean);
 
         llPhoneContainer.setOnClickListener(new View.OnClickListener() {//拨打电话

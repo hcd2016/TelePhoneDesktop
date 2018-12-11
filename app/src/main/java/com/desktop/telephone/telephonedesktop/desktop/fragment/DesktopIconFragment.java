@@ -132,31 +132,31 @@ public class DesktopIconFragment extends Fragment {
                     moveItem.setTitle("黑白名单");
                     moveItem.setImg_id_name("blacklist_icon");
                     break;
+//                case 4:
+//                    //一键拨号
+//                    moveItem.setIconType(1);
+//                    moveItem.setTitle("一键拨号");
+//                    moveItem.setImg_id_name("one_key");
+//                    break;
                 case 4:
-                    //一键拨号
-                    moveItem.setIconType(1);
-                    moveItem.setTitle("一键拨号");
-                    moveItem.setImg_id_name("one_key");
-                    break;
-                case 5:
                     //录音
                     moveItem.setIconType(1);
                     moveItem.setTitle("录音");
                     moveItem.setImg_id_name("record_icon");
                     break;
-                case 6:
+                case 5:
                     //通话记录
                     moveItem.setIconType(1);
                     moveItem.setTitle("通话记录");
                     moveItem.setImg_id_name("address_list_icon");
                     break;
-                case 7:
+                case 6:
                     //sos
                     moveItem.setIconType(1);
                     moveItem.setTitle("SOS");
                     moveItem.setImg_id_name("sos_icon");
                     break;
-                case 8:
+                case 7:
                     //所有应用
                     moveItem.setIconType(1);
                     moveItem.setTitle("所有应用");

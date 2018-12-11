@@ -1,5 +1,7 @@
 package com.desktop.telephone.telephonedesktop.desktop.Activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -44,6 +46,9 @@ public class CallActivity extends BaseActivity {
         CallAdapter callAdapter = new CallAdapter(getSupportFragmentManager());
         viewpager.setAdapter(callAdapter);
         tablayout.setupWithViewPager(viewpager);
+
+        int type = getIntent().getIntExtra("type", 0);//0为拨号,1为通话记录,2为联系人
+        viewpager.setCurrentItem(type);
     }
 
     class CallAdapter extends FragmentPagerAdapter {
@@ -73,5 +78,11 @@ public class CallActivity extends BaseActivity {
         public CharSequence getPageTitle(int position) {
             return tabs.get(position);
         }
+    }
+
+    public static void startActivity(int type, Context context) {
+        Intent intent = new Intent(context, CallActivity.class);
+        intent.putExtra("type", type);
+        context.startActivity(intent);
     }
 }

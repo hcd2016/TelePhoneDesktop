@@ -23,22 +23,24 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void createAllTables(Database db, boolean ifNotExists) {
         AppInfoBeanDao.createTable(db, ifNotExists);
         BlackListInfoBeanDao.createTable(db, ifNotExists);
+        CallRecordBeanDao.createTable(db, ifNotExists);
+        ContactsBeanDao.createTable(db, ifNotExists);
         DesktopIconBeanDao.createTable(db, ifNotExists);
         PhotoInfoBeanDao.createTable(db, ifNotExists);
         SystemStatusBeanDao.createTable(db, ifNotExists);
-        ContactsBeanDao.createTable(db, ifNotExists);
-        CallRecordBeanDao.createTable(db, ifNotExists);
+        SosBeanDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
         AppInfoBeanDao.dropTable(db, ifExists);
         BlackListInfoBeanDao.dropTable(db, ifExists);
+        CallRecordBeanDao.dropTable(db, ifExists);
+        ContactsBeanDao.dropTable(db, ifExists);
         DesktopIconBeanDao.dropTable(db, ifExists);
         PhotoInfoBeanDao.dropTable(db, ifExists);
         SystemStatusBeanDao.dropTable(db, ifExists);
-        ContactsBeanDao.dropTable(db, ifExists);
-        CallRecordBeanDao.dropTable(db, ifExists);
+        SosBeanDao.dropTable(db, ifExists);
     }
 
     /**
@@ -59,11 +61,12 @@ public class DaoMaster extends AbstractDaoMaster {
         super(db, SCHEMA_VERSION);
         registerDaoClass(AppInfoBeanDao.class);
         registerDaoClass(BlackListInfoBeanDao.class);
+        registerDaoClass(CallRecordBeanDao.class);
+        registerDaoClass(ContactsBeanDao.class);
         registerDaoClass(DesktopIconBeanDao.class);
         registerDaoClass(PhotoInfoBeanDao.class);
         registerDaoClass(SystemStatusBeanDao.class);
-        registerDaoClass(ContactsBeanDao.class);
-        registerDaoClass(CallRecordBeanDao.class);
+        registerDaoClass(SosBeanDao.class);
     }
 
     public DaoSession newSession() {

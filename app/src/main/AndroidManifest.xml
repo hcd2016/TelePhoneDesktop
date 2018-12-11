@@ -58,6 +58,7 @@
         <activity android:name=".desktop.bluetooth.ChiosePairedActivity" />
         <activity android:name=".desktop.Activity.RecordAudioActivity" />
         <activity android:name=".desktop.Activity.AudioRecordListActivity" />
+        <activity android:name=".desktop.Activity.SosActivity" />
 
 
         <!-- 短信广播 -->
