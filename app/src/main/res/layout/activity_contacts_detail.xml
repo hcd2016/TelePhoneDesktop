@@ -50,8 +50,8 @@
                     android:padding="20dp">
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:src="@drawable/phone_icon_gray" />
 
                     <LinearLayout
@@ -66,7 +66,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_333333"
-                            android:textSize="16sp"
+                            android:textSize="24sp"
                             tools:text="15889479929" />
 
                         <TextView
@@ -75,7 +75,7 @@
                             android:layout_marginTop="5dp"
                             android:text="手机号"
                             android:textColor="@color/text_666666"
-                            android:textSize="14sp" />
+                            android:textSize="24sp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -100,8 +100,8 @@
                         android:padding="20dp">
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:src="@drawable/email" />
 
                         <LinearLayout
@@ -115,7 +115,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/text_333333"
-                                android:textSize="16sp"
+                                android:textSize="24sp"
                                 tools:text="zhangsan@163.com" />
 
                             <TextView
@@ -124,7 +124,7 @@
                                 android:layout_marginTop="5dp"
                                 android:text="邮箱"
                                 android:textColor="@color/text_666666"
-                                android:textSize="14sp" />
+                                android:textSize="24sp" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -149,8 +149,8 @@
                         android:padding="20dp">
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:src="@drawable/desc" />
 
                         <LinearLayout
@@ -164,7 +164,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/text_333333"
-                                android:textSize="16sp"
+                                android:textSize="24sp"
                                 tools:text="今晚打老虎" />
 
                             <TextView
@@ -173,7 +173,7 @@
                                 android:layout_marginTop="5dp"
                                 android:text="备注"
                                 android:textColor="@color/text_666666"
-                                android:textSize="14sp" />
+                                android:textSize="24sp" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -199,11 +199,12 @@
         android:background="@drawable/shape_radus50_white"
         android:orientation="horizontal"
         android:paddingBottom="2dp"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
         android:paddingTop="2dp">
 
         <LinearLayout
+            android:padding="10dp"
             android:id="@+id/ll_btn_edit_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -211,8 +212,8 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/edit_icon" />
 
             <TextView
@@ -221,11 +222,12 @@
                 android:layout_marginTop="5dp"
                 android:text="编辑"
                 android:textColor="@color/text_333333"
-                android:textSize="14sp" />
+                android:textSize="24sp" />
         </LinearLayout>
 
 
         <LinearLayout
+            android:padding="10dp"
             android:id="@+id/ll_btn_delete_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -234,8 +236,8 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/delete_click_icon" />
 
             <TextView
@@ -244,7 +246,7 @@
                 android:layout_marginTop="5dp"
                 android:text="删除"
                 android:textColor="@color/text_333333"
-                android:textSize="14sp" />
+                android:textSize="24sp" />
         </LinearLayout>
     </LinearLayout>
 
