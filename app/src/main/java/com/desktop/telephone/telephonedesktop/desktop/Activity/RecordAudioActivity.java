@@ -13,11 +13,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.BlackListInfoBean;
 import com.desktop.telephone.telephonedesktop.desktop.dialog.AudioRecordDialog;
+import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.record.AudioFileUtils;
 import com.desktop.telephone.telephonedesktop.view.record.AudioRecorder;
 import com.desktop.telephone.telephonedesktop.view.record.AudioRecorder.Status;
@@ -128,6 +130,12 @@ public class RecordAudioActivity extends BaseActivity {
                 startActivity(AudioRecordListActivity.class);
                 break;
             case R.id.ll_btn_complete://完成
+                if(audioRecorder == null || audioRecorder.getStatus().equals(Status.STATUS_NO_READY )
+                        || audioRecorder.getStatus().equals(Status.STATUS_READY )) {
+                    Utils.Toast("你还没有开始录音");
+                    return;
+                }
+
                 audioRecordDialog = new AudioRecordDialog(this);
                 audioRecordDialog.setOnAudioRecordDialogClickListener(new AudioRecordDialog.OnAudioRecordDialogClickListener() {
                     @Override

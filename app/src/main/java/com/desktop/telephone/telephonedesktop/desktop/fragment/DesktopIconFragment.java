@@ -91,13 +91,13 @@ public class DesktopIconFragment extends Fragment {
         mContainer.refreView();
     }
 
-    // 设置Container滑动背景图片
-    private void loadBackground() {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 2;
-        mContainer.setBackGroud(BitmapFactory.decodeResource(getResources(),
-                R.drawable.bg2, options));
-    }
+//    // 设置Container滑动背景图片
+//    private void loadBackground() {
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inSampleSize = 2;
+//        mContainer.setBackGroud(BitmapFactory.decodeResource(getResources(),
+//                R.drawable.bg2, options));
+//    }
 
     /**
      * 桌面数据添加

@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -64,7 +65,9 @@ public class WordsView extends View {
 //        bgPaint = new Paint();
 //        bgPaint.setColor(Utils.getColor(R.color.colorPrimaryDark));
         wordsPaint = new Paint();
-        wordsPaint.setTextSize(DensityUtil.dip2px(context,16));
+        wordsPaint.setTextSize(DensityUtil.dip2px(context,28));
+        wordsPaint.setFakeBoldText(true);
+        wordsPaint.setColor(Utils.getColor(R.color.text_333333));
         for (int i = 0; i < words.length; i++) {
             //判断是不是我们按下的当前字母
             if (touchIndex == i) {

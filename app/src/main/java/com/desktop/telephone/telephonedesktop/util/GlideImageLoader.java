@@ -23,7 +23,7 @@ public class GlideImageLoader extends ImageLoader {
 
         //Glide 加载图片简单用法
         RequestOptions requestOptions = new RequestOptions();
-        requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
+        requestOptions.diskCacheStrategy(DiskCacheStrategy.DATA);
 
         Glide.with(context).load(path).apply(requestOptions).into(imageView);
 

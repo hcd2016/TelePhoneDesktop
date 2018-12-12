@@ -12,7 +12,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:padding="5dp"
+            android:padding="10dp"
             android:background="@drawable/shape_half_left_kuang"
             android:id="@+id/tv_btn_all_calls"
             android:layout_width="0dp"
@@ -21,11 +21,11 @@
             android:gravity="center"
             android:text="全部通话"
             android:textColor="@color/text_333333"
-            android:textSize="16sp" />
+            android:textSize="30sp" />
 
         <TextView
             android:layout_marginLeft="-1dp"
-            android:padding="5dp"
+            android:padding="10dp"
             android:background="@drawable/shape_kuang"
             android:id="@+id/tv_btn_dialed_calls"
             android:layout_width="0dp"
@@ -34,11 +34,11 @@
             android:gravity="center"
             android:text="已拨电话"
             android:textColor="@color/text_333333"
-            android:textSize="16sp" />
+            android:textSize="30sp" />
 
         <TextView
             android:layout_marginLeft="-1dp"
-            android:padding="5dp"
+            android:padding="10dp"
             android:background="@drawable/shape_kuang"
             android:id="@+id/tv_btn_received_calls"
             android:layout_width="0dp"
@@ -47,11 +47,11 @@
             android:gravity="center"
             android:text="已接电话"
             android:textColor="@color/text_333333"
-            android:textSize="16sp" />
+            android:textSize="30sp" />
 
         <TextView
             android:layout_marginLeft="-1dp"
-            android:padding="5dp"
+            android:padding="10dp"
             android:background="@drawable/shape_half_right_kuang"
             android:id="@+id/tv_btn_missed_calls"
             android:layout_width="0dp"
@@ -60,7 +60,7 @@
             android:gravity="center"
             android:text="未接电话"
             android:textColor="@color/text_333333"
-            android:textSize="16sp" />
+            android:textSize="30sp" />
     </LinearLayout>
 
     <com.desktop.telephone.telephonedesktop.view.ViewPagerSlide

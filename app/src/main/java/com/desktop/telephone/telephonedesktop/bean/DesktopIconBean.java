@@ -21,6 +21,14 @@ public class DesktopIconBean {
     public void setImg_id_name(String img_id_name) {
         this.img_id_name = img_id_name;
     }
+    public int iconBgColor;//桌面背景
+    public int getIconBgColor() {
+        return iconBgColor;
+    }
+
+    public void setIconBgColor(int iconBgColor) {
+        this.iconBgColor = iconBgColor;
+    }
 
     //    //正常模式下的item的Drawable Id
 //    private int img_normal;
@@ -62,12 +70,14 @@ public class DesktopIconBean {
     public DesktopIconBean() {
     }
 
-    @Generated(hash = 1504493481)
-    public DesktopIconBean(Long id, int mid, String img_id_name, int orderId, String title,
-            int iconType, byte[] app_icon, String packageName, String phoneNum) {
+    @Generated(hash = 495355149)
+    public DesktopIconBean(Long id, int mid, String img_id_name, int iconBgColor, int orderId,
+            String title, int iconType, byte[] app_icon, String packageName,
+            String phoneNum) {
         this.id = id;
         this.mid = mid;
         this.img_id_name = img_id_name;
+        this.iconBgColor = iconBgColor;
         this.orderId = orderId;
         this.title = title;
         this.iconType = iconType;

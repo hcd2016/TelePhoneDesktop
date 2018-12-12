@@ -13,9 +13,10 @@
         android:paddingTop="15dp">
 
         <ImageView
+            android:layout_centerVertical="true"
             android:id="@+id/iv_back"
             android:layout_width="50dp"
-            android:layout_height="20dp"
+            android:layout_height="35dp"
             android:src="@drawable/arrow_left_white" />
 
         <TextView
@@ -25,23 +26,23 @@
             android:layout_centerInParent="true"
             android:text="添加"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="28sp" />
         <TextView
             android:layout_centerVertical="true"
             android:id="@+id/tv_btn_save"
             android:layout_marginRight="15dp"
             android:layout_alignParentRight="true"
             android:textColor="@color/white"
-            android:textSize="14sp"
+            android:textSize="24sp"
             android:text="保存"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
 
     <TextView
-        android:padding="15dp"
+        android:padding="20dp"
         android:background="@color/bg_gray"
-        android:textSize="14sp"
+        android:textSize="24sp"
         android:textColor="@color/text_333333"
         android:text="添加名单类型"
         android:layout_width="match_parent"
@@ -53,10 +54,7 @@
         android:background="@color/white"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp">
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/tv_mode_desc"
@@ -65,7 +63,7 @@
             android:layout_weight="1"
             android:text="黑名单"
             android:textColor="@color/text_333333"
-            android:textSize="14sp" />
+            android:textSize="24sp" />
 
         <ImageView
             android:id="@+id/iv_arrow"
@@ -79,25 +77,23 @@
         android:layout_height="1px"/>
 
     <LinearLayout
+        android:padding="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp">
+        >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="号码 :"
             android:textColor="@color/text_333333"
-            android:textSize="14sp" />
+            android:textSize="24sp" />
         <EditText
             android:id="@+id/et_phone_num"
-            android:textSize="14sp"
+            android:textSize="24sp"
             android:hint="请输入号码"
             android:inputType="number"
             android:lines="1"

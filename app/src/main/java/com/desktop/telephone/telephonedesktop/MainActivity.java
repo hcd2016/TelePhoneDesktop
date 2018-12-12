@@ -1,7 +1,12 @@
 package com.desktop.telephone.telephonedesktop;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -9,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.desktop.telephone.telephonedesktop.base.App;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
@@ -71,7 +77,7 @@ public class MainActivity extends BaseActivity {
         // 初始化控件
         initView();
         //初始化容器Adapter
-        loadBackground();
+//        loadBackground();
         EventBus.getDefault().register(this);
     }
 
@@ -87,7 +93,7 @@ public class MainActivity extends BaseActivity {
      */
     private void initIconData() {
         defaultList = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 10; i++) {
             DesktopIconBean moveItem = new DesktopIconBean();
             moveItem.setMid(i);
             switch (i) {
@@ -145,7 +151,38 @@ public class MainActivity extends BaseActivity {
                     moveItem.setTitle("所有应用");
                     moveItem.setImg_id_name("all_apps_icon");
                     break;
+                case 8://设置
+                    PackageManager pm = getPackageManager();
+                    //所有的安装在系统上的应用程序包信息。
+                    List<PackageInfo> packInfos = pm.getInstalledPackages(0);
+                    for (int j = 0; j < packInfos.size(); j++) {
+                        PackageInfo packInfo = packInfos.get(j);
+                        if(packInfo.packageName.equals("com.android.settings")) {
+                            moveItem.setIconType(2);
+                            moveItem.setTitle("设置");
+                            moveItem.setPackageName(packInfo.packageName);
+                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+                        }
+                    }
+                    break;
+                case 9://相机
+                    PackageManager pm1 = getPackageManager();
+                    //所有的安装在系统上的应用程序包信息。
+                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
+                    for (int j = 0; j < packInfos1.size(); j++) {
+                        PackageInfo packInfo = packInfos1.get(j);
+                        if(packInfo.packageName.equals("com.android.camera2")) {
+                            moveItem.setIconType(2);
+                            moveItem.setTitle("相机");
+                            moveItem.setPackageName(packInfo.packageName);
+                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
+                        }
+                    }
+                    break;
             }
+
+            moveItem.setIconBgColor(Utils.getColorBgFromPosition(i));
+
             defaultList.add(moveItem);
         }
 
@@ -156,6 +193,7 @@ public class MainActivity extends BaseActivity {
             DaoUtil.saveNLists(defaultList);//保存默认的list
         }
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(AppInfoBean event) {
@@ -173,12 +211,14 @@ public class MainActivity extends BaseActivity {
             mContainer.refreView();
         } else {//是要添加
             DesktopIconBean desktopIconBean = new DesktopIconBean();
+            desktopIconBean.setId(null);
             desktopIconBean.setTitle(event.getAppName());
             desktopIconBean.setIconType(event.getIconType());
             if (event.getIconType() != 3) {
                 desktopIconBean.setApp_icon(event.getAppIcon());
             }
             desktopIconBean.setMid(mList.size());
+            desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(mList.size()));
             desktopIconBean.setPackageName(event.getPackageName());
             mList.add(desktopIconBean);
             DaoUtil.getDesktopIconBeanDao().insert(desktopIconBean);
@@ -213,9 +253,9 @@ public class MainActivity extends BaseActivity {
         //设置Adapter
         mContainer.setSaAdapter(mItemsAdapter);
         //动态设置Container每页的列数为2行
-        mContainer.setColCount(4);
+        mContainer.setColCount(3);
         //动态设置Container每页的行数为4行
-        mContainer.setRowCount(5);
+        mContainer.setRowCount(4);
         //调用refreView绘制所有的Item
         mContainer.refreView();
     }

@@ -17,8 +17,8 @@
         <ImageView
             android:layout_centerVertical="true"
             android:id="@+id/iv_back"
-            android:layout_width="50dp"
-            android:layout_height="20dp"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
             android:src="@drawable/arrow_left_white" />
 
         <TextView
@@ -27,15 +27,15 @@
             android:layout_centerInParent="true"
             android:text="智能通讯录"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="28sp" />
         <ImageView
             android:id="@+id/iv_menu"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/menu"
-            android:layout_width="20dp"
-            android:layout_height="20dp" />
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -49,7 +49,7 @@
 
         <com.desktop.telephone.telephonedesktop.view.WordsView
             android:id="@+id/wordsView"
-            android:layout_width="20dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_gravity="right"
@@ -64,17 +64,17 @@
             android:layout_centerInParent="true"
             android:text="A"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="30sp" />
+            android:textSize="60sp" />
         <LinearLayout
             android:id="@+id/ll_btn_add_container"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:layout_marginBottom="10dp"
             android:paddingRight="50dp"
             android:paddingLeft="50dp"
             android:gravity="center_horizontal"
-            android:background="@drawable/shape_radus30_white"
-            android:layout_width="wrap_content"
+            android:background="@drawable/shape_radus50_white"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
@@ -88,15 +88,15 @@
             <ImageView
                 android:layout_marginTop="2dp"
                 android:src="@drawable/add"
-                android:layout_width="20dp"
-                android:layout_height="20dp" />
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
             <TextView
                 android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="新建联系人"
                 android:textColor="@color/text_333333"
-                android:textSize="14sp" />
+                android:textSize="28sp" />
             </LinearLayout>
 
         </LinearLayout>

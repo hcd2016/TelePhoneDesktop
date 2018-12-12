@@ -73,6 +73,7 @@ public class BaseActivity extends AppCompatActivity {
      * 跳轉廣告
      */
     public void timeStart() {
+
         if(countTimerView != null) {
             countTimerView.cancel();
         }

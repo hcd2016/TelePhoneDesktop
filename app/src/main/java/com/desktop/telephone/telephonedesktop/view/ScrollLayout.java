@@ -188,10 +188,10 @@ public class ScrollLayout extends ViewGroup implements OnDataChangeListener {
 //        this.colSpace = DensityUtil.dip2px(mContext, 15);
 //        this.rowSpace = DensityUtil.dip2px(mContext, 15);
 
-        this.rightPadding = DensityUtil.dip2px(mContext, 50);
-        this.leftPadding = DensityUtil.dip2px(mContext, 50);
-        this.topPadding = DensityUtil.dip2px(mContext, 80);
-        this.bottomPadding = DensityUtil.dip2px(mContext, 80);
+        this.rightPadding = DensityUtil.dip2px(mContext, 20);
+        this.leftPadding = DensityUtil.dip2px(mContext, 20);
+        this.topPadding = DensityUtil.dip2px(mContext, 20);
+        this.bottomPadding = DensityUtil.dip2px(mContext, 50);
 
         this.colSpace = DensityUtil.dip2px(mContext, 20);
         this.rowSpace = DensityUtil.dip2px(mContext, 20);
@@ -711,7 +711,7 @@ public class ScrollLayout extends ViewGroup implements OnDataChangeListener {
             showEdit(true);
             v.setVisibility(View.GONE);
             startDrag(bm, (int) (mLastMotionX), (int) (mLastMotionY), v);
-            return true;
+//            return true;
         }
         return false;
 

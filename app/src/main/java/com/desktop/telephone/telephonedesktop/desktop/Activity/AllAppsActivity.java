@@ -23,6 +23,7 @@ import com.desktop.telephone.telephonedesktop.base.App;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
+import com.desktop.telephone.telephonedesktop.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -51,17 +52,24 @@ public class AllAppsActivity extends BaseActivity {
     private void initView() {
         recycleView.setLayoutManager(new LinearLayoutManager(this));
         List<AppInfoBean> isShowDeskList = DaoUtil.getAppInfoBeanDao().loadAll();//数据库记录添加到桌面的应用包名
-//        List<AppInfoBean> appInfoList = new ArrayList<>();
         List<AppInfoBean> appInfos = getAppInfos(this);
-        if (isShowDeskList != null && isShowDeskList.size() != 0) {
+        if(isShowDeskList == null || isShowDeskList.size() == 0) {
             for (int i = 0; i < appInfos.size(); i++) {
-                for (int j = 0; j < isShowDeskList.size(); j++) {
-                    if (appInfos.get(i).getPackageName().equals(isShowDeskList.get(j).packageName)) {
-                        appInfos.get(i).setIsShowDesktop(true);
-                    }
-                }
+                DaoUtil.getAppInfoBeanDao().insert(appInfos.get(i));
+                isShowDeskList.add(appInfos.get(i));
             }
         }
+//        List<AppInfoBean> appInfoList = new ArrayList<>();
+
+//        if (isShowDeskList != null && isShowDeskList.size() != 0) {
+//            for (int i = 0; i < appInfos.size(); i++) {
+//                for (int j = 0; j < isShowDeskList.size(); j++) {
+//                    if (appInfos.get(i).getPackageName().equals(isShowDeskList.get(j).packageName)) {
+//                        appInfos.get(i).setIsShowDesktop(true);
+//                    }
+//                }
+//            }
+//        }
 
 //        if(appInfoBeanList == null || appInfoBeanList.size() == 0) {//未加入过数据库
 //            appInfoList.addAll(getAppInfos(this));
@@ -69,8 +77,8 @@ public class AllAppsActivity extends BaseActivity {
 //        }else {
 //            appInfoList.addAll(appInfoBeanList);
 //        }
-        sortByShowDesktopList(appInfos);
-        myAdapter = new MyAdapter(appInfos);
+        sortByShowDesktopList(isShowDeskList);
+        myAdapter = new MyAdapter(isShowDeskList);
         recycleView.setAdapter(myAdapter);
     }
 
@@ -104,7 +112,7 @@ public class AllAppsActivity extends BaseActivity {
                         EventBus.getDefault().post(list.get(i));//通知桌面删除
                         Toast.makeText(AllAppsActivity.this, "移除成功", Toast.LENGTH_SHORT).show();
                         list.get(i).setIsShowDesktop(false);
-                        DaoUtil.getAppInfoBeanDao().delete(list.get(i));
+                        DaoUtil.getAppInfoBeanDao().update(list.get(i));
                         sortByShowDesktopList(list);
                         notifyDataSetChanged();
                     }
@@ -117,7 +125,7 @@ public class AllAppsActivity extends BaseActivity {
                         EventBus.getDefault().post(list.get(i));//通知桌面添加
                         Toast.makeText(AllAppsActivity.this, "添加桌面成功", Toast.LENGTH_SHORT).show();
                         list.get(i).setIsShowDesktop(true);
-                        DaoUtil.getAppInfoBeanDao().insertOrReplace(list.get(i));//把添加的记录在数据库
+                        DaoUtil.getAppInfoBeanDao().update(list.get(i));//把添加的记录在数据库
                         sortByShowDesktopList(list);
                         notifyDataSetChanged();
                     }
@@ -175,6 +183,10 @@ public class AllAppsActivity extends BaseActivity {
             String packname = packInfo.packageName;
             Drawable icon = packInfo.applicationInfo.loadIcon(pm);
             String name = packInfo.applicationInfo.loadLabel(pm).toString();
+
+            if(packname.equals("com.android.settings") || packname.equals("com.android.camera2")) {//去除相机和设置
+                continue;
+            }
 
             //应用程序信息的标记 相当于用户提交的答卷
             int flags = packInfo.applicationInfo.flags;

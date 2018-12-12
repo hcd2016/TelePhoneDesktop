@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/iv_back"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:src="@drawable/arrow_left_white" />
 
@@ -27,13 +27,13 @@
             android:layout_centerInParent="true"
             android:text="全部相册"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="28sp" />
 
         <ImageView
             android:visibility="gone"
             android:id="@+id/iv_selector_title"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignBottom="@+id/iv_img"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -53,8 +53,8 @@
             android:layout_marginRight="5dp" />
 
         <LinearLayout
-            android:layout_marginRight="100dp"
-            android:layout_marginLeft="100dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="50dp"
             android:paddingRight="20dp"
             android:paddingLeft="20dp"
             android:id="@+id/ll_delete_container"
@@ -64,8 +64,8 @@
             android:background="@drawable/shape_radus10_white"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:visibility="gone">
 
             <LinearLayout
@@ -78,8 +78,8 @@
 
                 <ImageView
                     android:id="@+id/iv_delete"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:src="@drawable/delete_unclick_icon" />
 
                 <TextView
@@ -89,7 +89,7 @@
                     android:layout_marginTop="5dp"
                     android:text="删除"
                     android:textColor="@color/text_999999"
-                    android:textSize="12sp" />
+                    android:textSize="24sp" />
 
             </LinearLayout>
 
@@ -103,8 +103,8 @@
 
                 <ImageView
                     android:id="@+id/iv_all_select"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:src="@drawable/all_select_normal" />
 
                 <TextView
@@ -114,21 +114,21 @@
                     android:layout_marginTop="5dp"
                     android:text="全选"
                     android:textColor="@color/text_333333"
-                    android:textSize="14sp" />
+                    android:textSize="24sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_add_to_banner_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.2"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/iv_add_to_banner_icon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:src="@drawable/add_to_banner_normal" />
 
                 <TextView
@@ -138,20 +138,20 @@
                     android:layout_marginTop="5dp"
                     android:text="加入轮播"
                     android:textColor="@color/text_999999"
-                    android:textSize="14sp" />
+                    android:textSize="24sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_banner_setting_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.2"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:src="@drawable/banner_setting_icon" />
 
                 <TextView
@@ -160,7 +160,7 @@
                     android:layout_marginTop="5dp"
                     android:text="轮播设置"
                     android:textColor="@color/text_333333"
-                    android:textSize="14sp" />
+                    android:textSize="24sp" />
             </LinearLayout>
 
         </LinearLayout>

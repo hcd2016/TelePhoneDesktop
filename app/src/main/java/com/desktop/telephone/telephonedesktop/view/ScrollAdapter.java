@@ -17,6 +17,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,9 +58,11 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
             view = mInflater.inflate(R.layout.item, null);
             ImageView iv = (ImageView) view.findViewById(R.id.content_iv);
             TextView tv_title = (TextView) view.findViewById(R.id.tv_title);
+            RelativeLayout rl_item_container = (RelativeLayout) view.findViewById(R.id.rl_item_container);
 //            StateListDrawable states = new StateListDrawable();
             tv_title.setText(moveItem.getTitle());
             int imgUrl = Utils.getAppIconId(moveItem.getImg_id_name());
+            rl_item_container.setBackgroundColor(moveItem.getIconBgColor());
 
             if (moveItem.getIconType() == 0 || moveItem.getIconType() == 2) {
                 byte[] app_icon = moveItem.getApp_icon();
@@ -98,7 +101,7 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
 //            states.addState(new int[]{}, normal);
 
             //点击事件
-            view.findViewById(R.id.rl_item_container).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.ll_item_container).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (moveItem.getIconType() == 1) {//自定义应用指定跳转
@@ -140,6 +143,13 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
                     }
                 }
             });
+//            view.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View view) {
+//
+//                    return oni;
+//                }
+//            });
 //            iv.setImageDrawable(states);
             view.setTag(moveItem);
         }

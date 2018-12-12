@@ -71,6 +71,35 @@ public class Utils {
         appIconIdMap.put("all_apps_icon", R.drawable.all_apps_icon);//所有应用
     }
 
+
+    public static int getColorBgFromPosition(int position) {
+        switch (position % 10) {
+            case 0:
+                return Utils.getColor(R.color.limegreen);
+            case 1:
+                return Utils.getColor(R.color.steelblue);
+            case 2:
+                return Utils.getColor(R.color.slateblue);
+            case 3:
+                return Utils.getColor(R.color.dimgray);
+            case 4:
+                return Utils.getColor(R.color.coral);
+            case 5:
+                return Utils.getColor(R.color.orchid);
+            case 6:
+                return Utils.getColor(R.color.darkkhaki);
+            case 8:
+                return Utils.getColor(R.color.steelblue);
+            case 7:
+                return Utils.getColor(R.color.crimson);
+            case 9:
+                return Utils.getColor(R.color.darkgreen);
+            default:
+                return Utils.getColor(R.color.darkorange);
+        }
+    }
+
+
     /**
      * 我的应用
      * 根据appName动态获取app的iconId
@@ -129,13 +158,15 @@ public class Utils {
     }
 
     private static final String DATA_TYPE_AUDIO = "audio/*";
+
     /**
      * 打开文件
+     *
      * @param filePath 文件的全路径，包括到文件名
      */
-    public static void openFile(String filePath,Context context) {
+    public static void openFile(String filePath, Context context) {
         File file = new File(filePath);
-        if (!file.exists()){
+        if (!file.exists()) {
             //如果文件不存在
             Toast.makeText(context, "打开失败，原因：文件已经被移动或者删除", Toast.LENGTH_SHORT).show();
             return;
@@ -175,24 +206,26 @@ public class Utils {
 
     /**
      * 产生打开视频或音频的Intent
+     *
      * @param filePath 文件路径
      * @param dataType 文件类型
      * @return
      */
-    private static Intent generateVideoAudioIntent(String filePath, String dataType){
+    private static Intent generateVideoAudioIntent(String filePath, String dataType) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("oneshot", 0);
         intent.putExtra("configchange", 0);
         File file = new File(filePath);
-        intent.setDataAndType(getUri(intent,file), dataType);
+        intent.setDataAndType(getUri(intent, file), dataType);
         return intent;
     }
 
     /**
      * 获取对应文件的Uri
+     *
      * @param intent 相应的Intent
-     * @param file 文件对象
+     * @param file   文件对象
      * @return
      */
     private static Uri getUri(Intent intent, File file) {
@@ -206,22 +239,22 @@ public class Utils {
 //            //添加这一句表示对目标应用临时授权该Uri所代表的文件
 //            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 //        } else {
-            uri = Uri.fromFile(file);
+        uri = Uri.fromFile(file);
 //        }
         return uri;
     }
 
     public static void removeFile(String filePath) {
-        if(filePath == null || filePath.length() == 0){
+        if (filePath == null || filePath.length() == 0) {
             return;
         }
         try {
             File file = new File(filePath);
-            if(file.exists()){
+            if (file.exists()) {
 //                removeFile(filePath);
                 file.delete();
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

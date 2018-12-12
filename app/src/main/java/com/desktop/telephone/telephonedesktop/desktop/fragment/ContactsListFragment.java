@@ -370,14 +370,14 @@ public class ContactsListFragment extends Fragment {
                             popupWindow.dismiss();
                         }
                     });
-                    popupWindow = new PopupWindow(popView, DensityUtil.dip2px(getActivity(), 150), DensityUtil.dip2px(getActivity(), 100));
+                    popupWindow = new PopupWindow(popView, DensityUtil.dip2px(getActivity(), 250), DensityUtil.dip2px(getActivity(), 120));
                     popupWindow.setBackgroundDrawable(new BitmapDrawable());
 
                     int[] ints = new int[2];
                     llMenuContainer.getLocationInWindow(ints);
                     int x = ints[0];
                     int y = ints[1];
-                    popupWindow.showAtLocation(llMenuContainer, Gravity.NO_GRAVITY, x, y - popupWindow.getHeight() + 10);
+                    popupWindow.showAtLocation(llMenuContainer, Gravity.NO_GRAVITY, x, y - popupWindow.getHeight() -10);
                     break;
                 }
         }

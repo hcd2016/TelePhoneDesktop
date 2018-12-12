@@ -27,8 +27,8 @@ public class DaoMaster extends AbstractDaoMaster {
         ContactsBeanDao.createTable(db, ifNotExists);
         DesktopIconBeanDao.createTable(db, ifNotExists);
         PhotoInfoBeanDao.createTable(db, ifNotExists);
-        SystemStatusBeanDao.createTable(db, ifNotExists);
         SosBeanDao.createTable(db, ifNotExists);
+        SystemStatusBeanDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
@@ -39,8 +39,8 @@ public class DaoMaster extends AbstractDaoMaster {
         ContactsBeanDao.dropTable(db, ifExists);
         DesktopIconBeanDao.dropTable(db, ifExists);
         PhotoInfoBeanDao.dropTable(db, ifExists);
-        SystemStatusBeanDao.dropTable(db, ifExists);
         SosBeanDao.dropTable(db, ifExists);
+        SystemStatusBeanDao.dropTable(db, ifExists);
     }
 
     /**
@@ -65,8 +65,8 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(ContactsBeanDao.class);
         registerDaoClass(DesktopIconBeanDao.class);
         registerDaoClass(PhotoInfoBeanDao.class);
-        registerDaoClass(SystemStatusBeanDao.class);
         registerDaoClass(SosBeanDao.class);
+        registerDaoClass(SystemStatusBeanDao.class);
     }
 
     public DaoSession newSession() {

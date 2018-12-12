@@ -2,6 +2,7 @@ package com.desktop.telephone.telephonedesktop.desktop.Activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -113,9 +114,10 @@ public class SosActivity extends BaseActivity {
 
         @Override
         protected void convert(BaseViewHolder helper, SosBean item) {
-            helper.setText(R.id.tv_name, "姓名: " + item.getName());
-            helper.setText(R.id.tv_phone_num, "号码: " + item.getPhoneNum());
-            helper.setText(R.id.tv_content, "发送内容: " + item.getSmsContent());
+            helper.getView(R.id.carview).setBackgroundColor(Utils.getColorBgFromPosition(helper.getLayoutPosition()));
+            helper.setText(R.id.tv_name, item.getName());
+            helper.setText(R.id.tv_phone_num, item.getPhoneNum());
+            helper.setText(R.id.tv_content, item.getSmsContent());
         }
     }
 

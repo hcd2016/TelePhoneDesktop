@@ -89,6 +89,7 @@ public class PhotosActivity extends BaseActivity {
     private PhotosAdapter photosAdapter;
     private List<PhotoInfoBean> allPhotos;
     private AlertDialog alertDialog;
+    private PhotosViewPagerAdapter photosViewPagerAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,7 +109,7 @@ public class PhotosActivity extends BaseActivity {
         photosAdapter.setEmptyView(empty_view);
         recycleView.setAdapter(photosAdapter);
 
-        PhotosViewPagerAdapter photosViewPagerAdapter = new PhotosViewPagerAdapter(allPhotos);
+        photosViewPagerAdapter = new PhotosViewPagerAdapter(allPhotos);
         viewpager.setAdapter(photosViewPagerAdapter);
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -146,6 +147,7 @@ public class PhotosActivity extends BaseActivity {
                     photosAdapter.selectorList.clear();//清除选中状态
                     ivBack.setImageResource(R.drawable.arrow_left_white);
                     llDeleteContainer.setVisibility(View.GONE);
+                    perverClick = 0;
                     photosAdapter.notifyDataSetChanged();
                 } else if (status == 2) {//返回列表界面
                     if (perverClick == 0) {//之前是非编辑状态
@@ -189,6 +191,7 @@ public class PhotosActivity extends BaseActivity {
                                 photosAdapter.selectorList.clear();
                                 Toast.makeText(PhotosActivity.this, "删除成功!", Toast.LENGTH_SHORT).show();
                                 photosAdapter.notifyDataSetChanged();
+                                photosViewPagerAdapter.notifyDataSetChanged();
                                 if (allPhotos.size() == 0) {//已删完图片,退出编辑状态
                                     ivBack.performClick();
                                 }

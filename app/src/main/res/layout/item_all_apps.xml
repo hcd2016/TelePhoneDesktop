@@ -10,29 +10,29 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="15dp">
+        android:padding="30dp">
 
         <ImageView
             android:id="@+id/iv_app_icon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/tv_app_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="40dp"
             android:layout_weight="1"
             android:text="应用程序"
             android:textColor="@color/text_333333"
-            android:textSize="16sp" />
+            android:textSize="26sp" />
 
         <ImageView
             android:layout_marginRight="20dp"
             android:id="@+id/iv_add_or_remove"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/add_icon" />
     </LinearLayout>
 

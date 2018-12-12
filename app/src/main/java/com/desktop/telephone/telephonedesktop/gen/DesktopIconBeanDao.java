@@ -27,12 +27,13 @@ public class DesktopIconBeanDao extends AbstractDao<DesktopIconBean, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Mid = new Property(1, int.class, "mid", false, "MID");
         public final static Property Img_id_name = new Property(2, String.class, "img_id_name", false, "IMG_ID_NAME");
-        public final static Property OrderId = new Property(3, int.class, "orderId", false, "ORDER_ID");
-        public final static Property Title = new Property(4, String.class, "title", false, "TITLE");
-        public final static Property IconType = new Property(5, int.class, "iconType", false, "ICON_TYPE");
-        public final static Property App_icon = new Property(6, byte[].class, "app_icon", false, "APP_ICON");
-        public final static Property PackageName = new Property(7, String.class, "packageName", false, "PACKAGE_NAME");
-        public final static Property PhoneNum = new Property(8, String.class, "phoneNum", false, "PHONE_NUM");
+        public final static Property IconBgColor = new Property(3, int.class, "iconBgColor", false, "ICON_BG_COLOR");
+        public final static Property OrderId = new Property(4, int.class, "orderId", false, "ORDER_ID");
+        public final static Property Title = new Property(5, String.class, "title", false, "TITLE");
+        public final static Property IconType = new Property(6, int.class, "iconType", false, "ICON_TYPE");
+        public final static Property App_icon = new Property(7, byte[].class, "app_icon", false, "APP_ICON");
+        public final static Property PackageName = new Property(8, String.class, "packageName", false, "PACKAGE_NAME");
+        public final static Property PhoneNum = new Property(9, String.class, "phoneNum", false, "PHONE_NUM");
     }
 
 
@@ -51,12 +52,13 @@ public class DesktopIconBeanDao extends AbstractDao<DesktopIconBean, Long> {
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"MID\" INTEGER NOT NULL ," + // 1: mid
                 "\"IMG_ID_NAME\" TEXT," + // 2: img_id_name
-                "\"ORDER_ID\" INTEGER NOT NULL ," + // 3: orderId
-                "\"TITLE\" TEXT," + // 4: title
-                "\"ICON_TYPE\" INTEGER NOT NULL ," + // 5: iconType
-                "\"APP_ICON\" BLOB," + // 6: app_icon
-                "\"PACKAGE_NAME\" TEXT," + // 7: packageName
-                "\"PHONE_NUM\" TEXT);"); // 8: phoneNum
+                "\"ICON_BG_COLOR\" INTEGER NOT NULL ," + // 3: iconBgColor
+                "\"ORDER_ID\" INTEGER NOT NULL ," + // 4: orderId
+                "\"TITLE\" TEXT," + // 5: title
+                "\"ICON_TYPE\" INTEGER NOT NULL ," + // 6: iconType
+                "\"APP_ICON\" BLOB," + // 7: app_icon
+                "\"PACKAGE_NAME\" TEXT," + // 8: packageName
+                "\"PHONE_NUM\" TEXT);"); // 9: phoneNum
     }
 
     /** Drops the underlying database table. */
@@ -79,27 +81,28 @@ public class DesktopIconBeanDao extends AbstractDao<DesktopIconBean, Long> {
         if (img_id_name != null) {
             stmt.bindString(3, img_id_name);
         }
-        stmt.bindLong(4, entity.getOrderId());
+        stmt.bindLong(4, entity.getIconBgColor());
+        stmt.bindLong(5, entity.getOrderId());
  
         String title = entity.getTitle();
         if (title != null) {
-            stmt.bindString(5, title);
+            stmt.bindString(6, title);
         }
-        stmt.bindLong(6, entity.getIconType());
+        stmt.bindLong(7, entity.getIconType());
  
         byte[] app_icon = entity.getApp_icon();
         if (app_icon != null) {
-            stmt.bindBlob(7, app_icon);
+            stmt.bindBlob(8, app_icon);
         }
  
         String packageName = entity.getPackageName();
         if (packageName != null) {
-            stmt.bindString(8, packageName);
+            stmt.bindString(9, packageName);
         }
  
         String phoneNum = entity.getPhoneNum();
         if (phoneNum != null) {
-            stmt.bindString(9, phoneNum);
+            stmt.bindString(10, phoneNum);
         }
     }
 
@@ -117,27 +120,28 @@ public class DesktopIconBeanDao extends AbstractDao<DesktopIconBean, Long> {
         if (img_id_name != null) {
             stmt.bindString(3, img_id_name);
         }
-        stmt.bindLong(4, entity.getOrderId());
+        stmt.bindLong(4, entity.getIconBgColor());
+        stmt.bindLong(5, entity.getOrderId());
  
         String title = entity.getTitle();
         if (title != null) {
-            stmt.bindString(5, title);
+            stmt.bindString(6, title);
         }
-        stmt.bindLong(6, entity.getIconType());
+        stmt.bindLong(7, entity.getIconType());
  
         byte[] app_icon = entity.getApp_icon();
         if (app_icon != null) {
-            stmt.bindBlob(7, app_icon);
+            stmt.bindBlob(8, app_icon);
         }
  
         String packageName = entity.getPackageName();
         if (packageName != null) {
-            stmt.bindString(8, packageName);
+            stmt.bindString(9, packageName);
         }
  
         String phoneNum = entity.getPhoneNum();
         if (phoneNum != null) {
-            stmt.bindString(9, phoneNum);
+            stmt.bindString(10, phoneNum);
         }
     }
 
@@ -152,12 +156,13 @@ public class DesktopIconBeanDao extends AbstractDao<DesktopIconBean, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getInt(offset + 1), // mid
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // img_id_name
-            cursor.getInt(offset + 3), // orderId
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // title
-            cursor.getInt(offset + 5), // iconType
-            cursor.isNull(offset + 6) ? null : cursor.getBlob(offset + 6), // app_icon
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // packageName
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // phoneNum
+            cursor.getInt(offset + 3), // iconBgColor
+            cursor.getInt(offset + 4), // orderId
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // title
+            cursor.getInt(offset + 6), // iconType
+            cursor.isNull(offset + 7) ? null : cursor.getBlob(offset + 7), // app_icon
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // packageName
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9) // phoneNum
         );
         return entity;
     }
@@ -167,12 +172,13 @@ public class DesktopIconBeanDao extends AbstractDao<DesktopIconBean, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setMid(cursor.getInt(offset + 1));
         entity.setImg_id_name(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setOrderId(cursor.getInt(offset + 3));
-        entity.setTitle(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setIconType(cursor.getInt(offset + 5));
-        entity.setApp_icon(cursor.isNull(offset + 6) ? null : cursor.getBlob(offset + 6));
-        entity.setPackageName(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setPhoneNum(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setIconBgColor(cursor.getInt(offset + 3));
+        entity.setOrderId(cursor.getInt(offset + 4));
+        entity.setTitle(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setIconType(cursor.getInt(offset + 6));
+        entity.setApp_icon(cursor.isNull(offset + 7) ? null : cursor.getBlob(offset + 7));
+        entity.setPackageName(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setPhoneNum(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
      }
     
     @Override

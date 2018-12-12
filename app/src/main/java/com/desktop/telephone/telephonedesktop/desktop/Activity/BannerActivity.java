@@ -179,6 +179,7 @@ public class BannerActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_BANNER_RUNING, false);
+        DaoUtil.closeDb();
     }
 
     @Override
