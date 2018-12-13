@@ -165,13 +165,14 @@ public class MainActivity extends BaseActivity {
                         }
                     }
                     break;
-                case 9://相机
+                case 9://相机 记得改上面size
                     PackageManager pm1 = getPackageManager();
                     //所有的安装在系统上的应用程序包信息。
                     List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
                     for (int j = 0; j < packInfos1.size(); j++) {
                         PackageInfo packInfo = packInfos1.get(j);
-                        if(packInfo.packageName.equals("com.android.camera2")) {
+//                        if(packInfo.packageName.equals("com.android.camera2")) {
+                        if(packInfo.packageName.equals("com.android.camera")) {
                             moveItem.setIconType(2);
                             moveItem.setTitle("相机");
                             moveItem.setPackageName(packInfo.packageName);

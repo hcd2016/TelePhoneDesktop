@@ -511,4 +511,32 @@ public class ContactsUtil {
         address.close();
         return item;
     }
+
+
+    public static String getDisplayNameByNumber(Context context, String number) {
+        String displayName = null;
+        Cursor cursor = null;
+        String CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
+        String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
+
+        try {
+            ContentResolver resolver = context.getContentResolver();
+            Uri uri = ContactsContract.PhoneLookup.CONTENT_FILTER_URI.buildUpon().appendPath(number).build();
+            String[] projection = new String[] { CONTACT_ID, DISPLAY_NAME };
+            cursor = resolver.query(uri, projection, null, null, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndexName = cursor.getColumnIndex(DISPLAY_NAME);
+                displayName = cursor.getString(columnIndexName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return displayName;
+    }
 }

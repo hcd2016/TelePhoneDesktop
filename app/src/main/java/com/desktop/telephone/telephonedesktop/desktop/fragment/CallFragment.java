@@ -21,6 +21,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.bean.CallNumBean;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.ContactsListActivity;
+import com.desktop.telephone.telephonedesktop.util.CallUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,8 +148,7 @@ public class CallFragment extends Fragment {
                 startActivity(new Intent(getActivity(), ContactsListActivity.class));
                 break;
             case R.id.ll_call_container://拨出
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + tvPhoneNum.getText().toString()));
-                startActivity(intent);
+                CallUtil.call(getActivity(),tvPhoneNum.getText().toString());
                 break;
             case R.id.rl_delete_container://回退
                 String string = tvPhoneNum.getText().toString();
