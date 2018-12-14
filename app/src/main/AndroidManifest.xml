@@ -73,6 +73,21 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+
+        <!-- 手柄放下 -->
+        <receiver android:name=".desktop.recevier.HandOffReceiver">
+            <intent-filter>
+                <action android:name="com.tongen.action.handle.off" />
+            </intent-filter>
+        </receiver>
+        <!-- 手柄抬起 -->
+        <receiver android:name=".desktop.recevier.HandOnReceiver">
+            <intent-filter>
+                <action android:name="com.tongen.action.handle.on" />
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>

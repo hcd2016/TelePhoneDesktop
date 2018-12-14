@@ -149,6 +149,8 @@ public class CallFragment extends Fragment {
                 break;
             case R.id.ll_call_container://拨出
                 CallUtil.call(getActivity(),tvPhoneNum.getText().toString());
+                phoneString = "";
+                tvPhoneNum.setText(phoneString);
                 break;
             case R.id.rl_delete_container://回退
                 String string = tvPhoneNum.getText().toString();

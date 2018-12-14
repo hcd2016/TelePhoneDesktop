@@ -26,6 +26,7 @@ import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.AllAppsActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.BlacklistActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.CallActivity;
+import com.desktop.telephone.telephonedesktop.desktop.Activity.CallingActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.ContactsListActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.PhotosActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.RecordAudioActivity;

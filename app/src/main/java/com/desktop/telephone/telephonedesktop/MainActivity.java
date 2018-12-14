@@ -94,6 +94,7 @@ public class MainActivity extends BaseActivity {
     private void initIconData() {
         defaultList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
+//        for (int i = 0; i < 8; i++) {
             DesktopIconBean moveItem = new DesktopIconBean();
             moveItem.setMid(i);
             switch (i) {
