@@ -17,6 +17,7 @@ public class HandOnReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         boolean isShowCallingActivity = SPUtil.getInstance().getBoolean("isShowCallingActivity", false);
+        SPUtil.getInstance().saveInteger(SPUtil.KEY_HAND_STATUS,1);
         if(!isShowCallingActivity) {//不是通话界面,显示拨号界面
             Intent intent1 = new Intent(context,CallActivity.class);
             intent1.putExtra("type",0);

@@ -172,8 +172,8 @@ public class MainActivity extends BaseActivity {
                     List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
                     for (int j = 0; j < packInfos1.size(); j++) {
                         PackageInfo packInfo = packInfos1.get(j);
-//                        if(packInfo.packageName.equals("com.android.camera2")) {
-                        if(packInfo.packageName.equals("com.android.camera")) {
+                        if(packInfo.packageName.equals("com.android.camera2")) {
+//                        if(packInfo.packageName.equals("com.android.camera")) {
                             moveItem.setIconType(2);
                             moveItem.setTitle("相机");
                             moveItem.setPackageName(packInfo.packageName);

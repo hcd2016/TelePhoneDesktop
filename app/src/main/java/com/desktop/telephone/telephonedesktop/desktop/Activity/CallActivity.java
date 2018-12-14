@@ -16,6 +16,10 @@ import com.desktop.telephone.telephonedesktop.desktop.fragment.CallFragment;
 import com.desktop.telephone.telephonedesktop.desktop.fragment.CallRecordsFragment;
 import com.desktop.telephone.telephonedesktop.desktop.fragment.ContactsListFragment;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +32,15 @@ public class CallActivity extends BaseActivity {
     @BindView(R.id.viewpager)
     ViewPager viewpager;
     private List<String> tabs;
+    public static final String HAND_OFF = "com.tongen.action.handle.off";//手柄放下
+    public static final String HAND_ON = "com.tongen.action.handle.on";//手柄抬起
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         initView();
     }
 
@@ -46,9 +53,48 @@ public class CallActivity extends BaseActivity {
         CallAdapter callAdapter = new CallAdapter(getSupportFragmentManager());
         viewpager.setAdapter(callAdapter);
         tablayout.setupWithViewPager(viewpager);
-
         int type = getIntent().getIntExtra("type", 0);//0为拨号,1为通话记录,2为联系人
         viewpager.setCurrentItem(type);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent != null) {
+            int type = intent.getIntExtra("type", 0);
+            viewpager.setCurrentItem(type);
+        }
+    }
+
+    private boolean isShowing = false;//当前activity是否在前台
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Intent event) {
+        switch (event.getAction()) {
+            case HAND_OFF://手柄放下
+                if (isShowing) {
+                    finish();
+                }
+                break;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isShowing = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isShowing = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     class CallAdapter extends FragmentPagerAdapter {

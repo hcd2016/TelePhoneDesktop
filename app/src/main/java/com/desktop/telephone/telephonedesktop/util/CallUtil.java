@@ -3,6 +3,7 @@ package com.desktop.telephone.telephonedesktop.util;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.desktop.telephone.telephonedesktop.desktop.Activity.CallingActivity;
 
@@ -17,9 +18,19 @@ public class CallUtil {
      * @param context
      * @param phoneNum
      */
-    public static void call(Context context, String phoneNum) {
+    public static void call(Context context, String phoneNum) {//交换机待加
+        boolean isCallingWithTalking = SPUtil.getInstance().getBoolean(SPUtil.KEY_CALLING_WITH_TALKING, false);
+        if (isCallingWithTalking) {
+            Utils.Toast("当前正在通话中,不能呼出");
+            return;
+        }
         if (TextUtils.isEmpty(phoneNum)) {
             Utils.Toast("呼叫号码不能为空");
+            return;
+        }
+        int status = SPUtil.getInstance().getInteger(SPUtil.KEY_HAND_STATUS);
+        if (status == 0) {
+            Utils.Toast("呼叫前请先拿起手柄");
             return;
         }
         Intent intent = new Intent();
@@ -30,7 +41,7 @@ public class CallUtil {
         context.sendBroadcast(intent);
 
         //跳转到呼叫中界面
-        CallingActivity.startActivity(context, phoneNum);
+        CallingActivity.startActivity(context, phoneNum, true);
     }
 
     /**
@@ -59,6 +70,24 @@ public class CallUtil {
     public static void handUpWithFree(Context context) {
         Intent intent = new Intent();
         intent.setAction("com.tongen.Tel.IDLE");
+        context.sendBroadcast(intent);
+    }
+
+    /**
+     * 来电免提接听
+     */
+    public static void incommingAnswerWithFree(Context context) {
+        Intent intent = new Intent();
+        intent.setAction("com.tongen.action.handfree.on");
+        context.sendBroadcast(intent);
+    }
+
+    /**
+     * 来电显示控制
+     */
+    public static void showCallerIds(Context context) {
+        Intent intent = new Intent();
+        intent.setAction("com.tongen.action.set.showCallerIDs");
         context.sendBroadcast(intent);
     }
 }

@@ -16,6 +16,9 @@ public class SPUtil {
     public static final String KEY_IS_BANNER_RUNING = "is_banner_running";//是否正在轮播
     public static final String KEY_IS_OPEN_BANNER = "is_open_banner";//是否开启轮播
 
+    public static final String KEY_HAND_STATUS = "key_hand_status";//记录手柄状态,0为放下,1为抬起.
+    public static final String KEY_CALLING_WITH_TALKING = "key_calling_with_talking";//通话过程中拨打电话
+
 
     public static final String SHARED_PREFERENCE_NAME = "sp_file";
     private static SPUtil uniqueInstance = null;

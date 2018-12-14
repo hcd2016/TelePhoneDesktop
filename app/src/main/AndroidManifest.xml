@@ -25,6 +25,10 @@
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <!--通知栏权限-->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+
     <application
         android:name=".base.App"
         android:allowBackup="true"
@@ -56,14 +60,21 @@
         <activity android:name=".desktop.Activity.ContactsListActivity" />
         <activity android:name=".desktop.Activity.ContactsDetailActivity" />
         <activity android:name=".desktop.Activity.AddContactsActivity" />
-        <activity android:name=".desktop.Activity.CallActivity" />
+
         <activity android:name=".desktop.bluetooth.LeadHintActivity" />
         <activity android:name=".desktop.bluetooth.ChiosePairedActivity" />
         <activity android:name=".desktop.Activity.RecordAudioActivity" />
         <activity android:name=".desktop.Activity.AudioRecordListActivity" />
         <activity android:name=".desktop.Activity.SosActivity" />
+
+        <activity
+            android:name=".desktop.Activity.CallActivity"
+            android:launchMode="singleInstance" />
         <activity
             android:name=".desktop.Activity.CallingActivity"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".desktop.Activity.IncomingCallingActivity"
             android:launchMode="singleInstance" />
 
 
@@ -84,6 +95,36 @@
         <receiver android:name=".desktop.recevier.HandOnReceiver">
             <intent-filter>
                 <action android:name="com.tongen.action.handle.on" />
+            </intent-filter>
+        </receiver>
+        <!-- 来电 -->
+        <receiver android:name=".desktop.recevier.IncomingCallingRecevie">
+            <intent-filter>
+                <action android:name="com.tongen.Tel.INCOMING_RINGING" />
+            </intent-filter>
+        </receiver>
+        <!-- 来电未接 -->
+        <receiver android:name=".desktop.recevier.CallingMissedReceiver">
+            <intent-filter>
+                <action android:name="com.tongen.Tel.INCOMING_MISSED" />
+            </intent-filter>
+        </receiver>
+        <!-- 来电挂断 -->
+        <receiver android:name=".desktop.recevier.CommingHandUpRecevier">
+            <intent-filter>
+                <action android:name="com.tongen.Tel.INCOMING_IDLE" />
+            </intent-filter>
+        </receiver>
+        <!-- 来电挂断 -->
+        <receiver android:name=".desktop.recevier.CallingHandUpReciver">
+            <intent-filter>
+                <action android:name="com.tongen.Tel.OUTGOING_IDLE" />
+            </intent-filter>
+        </receiver>
+        <!-- 通话过程中拨打电话 -->
+        <receiver android:name=".desktop.recevier.CallingWithTalking">
+            <intent-filter>
+                <action android:name="com.tongen.Tel.calling" />
             </intent-filter>
         </receiver>
 

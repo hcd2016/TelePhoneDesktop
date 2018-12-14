@@ -1,15 +1,17 @@
 package com.desktop.telephone.telephonedesktop.desktop.Activity;
 
-import android.content.BroadcastReceiver;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.media.AudioRecord;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -18,13 +20,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.desktop.telephone.telephonedesktop.MainActivity;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
-import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.desktop.recevier.CallingConnectReciver;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.ContactsUtil;
 import com.desktop.telephone.telephonedesktop.util.SPUtil;
+import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.record.AudioRecorderCall;
 
 import org.greenrobot.eventbus.EventBus;
@@ -96,12 +99,19 @@ public class CallingActivity extends BaseActivity {
     LinearLayout llKeyBord;
     @BindView(R.id.ll_key_bord_container)
     LinearLayout llKeyBordContainer;
-    private int callStatus = 1;//呼叫状态,0为呼叫中,1为通话中
+    @BindView(R.id.iv_answer)
+    ImageView ivAnswer;
+    @BindView(R.id.ll_btn_container)
+    LinearLayout llBtnContainer;
+    private boolean isCalling = true;//true为呼叫,false为来电
+    private int callStatus = 0;//呼叫状态,0为呼叫中,1为通话中
     private boolean isHandFree = false;//是否开启免提
 
     public static final String CALLING_CONNECT = "com.tongen.Tel.OUTGOING_RINGING";//通话接通
-    public static final String HAND_OFF = "om.tongen.action.handle.off";//手柄放下
-    public static final String HAND_ON = "com.tongen.action.handle.on";//手柄放下
+    public static final String HAND_OFF = "com.tongen.action.handle.off";//手柄放下
+    public static final String HAND_ON = "com.tongen.action.handle.on";//手柄抬起
+    public static final String CALLING_MISSED = "com.tongen.Tel.INCOMING_MISSED";//来电未接广播
+    public static final String INCOMMING_HAND_UP = "com.tongen.Tel.INCOMING_IDLE";//来电挂断
     private String phoneNum;
     private CallingConnectReciver callingConnectReciver;
 
@@ -128,16 +138,11 @@ public class CallingActivity extends BaseActivity {
     }
 
     private void initView() {
-        SPUtil.getInstance().saveBoolean("isShowCallingActivity",true);//保存当前是否打开通话界面
+        SPUtil.getInstance().saveBoolean("isShowCallingActivity", true);//保存当前是否打开通话界面
         phoneNum = getIntent().getStringExtra("phoneNum");
+        isCalling = getIntent().getBooleanExtra("isCalling", false);
         setViewData();
         registerReceivers();
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-
-        super.onNewIntent(intent);
     }
 
     //相关广播注册
@@ -153,20 +158,35 @@ public class CallingActivity extends BaseActivity {
         unregisterReceiver(callingConnectReciver);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Intent event) {
         switch (event.getAction()) {
             case CALLING_CONNECT://通话接通
+                tvStatus.setVisibility(View.VISIBLE);
+                llBtnContainer.setVisibility(View.VISIBLE);
                 callStatus = 1;
                 setViewData();
                 break;
             case HAND_OFF://手柄放下
-                //挂断电话
-                //todo 通话计时完成等操作
-                finish();
+                if (!isHandFree) {//手柄放下时不是免提状态才挂断电话
+                    finish();
+                }
                 break;
             case HAND_ON://手柄抬起
-
+                if (!isCalling && callStatus == 0) {//是来电呼叫中状态,拿起手柄=接听电话
+                    callStatus = 1;
+                    setViewData();
+                }
+                break;
+            case CALLING_MISSED://来电未接
+                String phoneNumber = event.getStringExtra("phoneNumber");
+                //通知栏
+                showNotification(phoneNumber);
+                finish();
+                break;
+            case INCOMMING_HAND_UP://来电挂断(对方挂断)
+                finish();
                 break;
         }
     }
@@ -176,31 +196,50 @@ public class CallingActivity extends BaseActivity {
             return;
         }
         if (callStatus == 0) {//呼叫中
-            tvStatus.setText("呼叫中...");
-            //联系人显示
-            String name = ContactsUtil.getContactNameByPhoneNumber(this, phoneNum);
-            if (TextUtils.isEmpty(name)) {//没有该联系人
-                tvCallName.setVisibility(View.INVISIBLE);
-            } else {
-                tvCallName.setVisibility(View.VISIBLE);
-                tvCallName.setText(name);
-            }
-            //软键盘
-            tvCallNum.setText(phoneNum);
-            llKeyBordContainer.setVisibility(View.INVISIBLE);
-            //录音
-            llAudioRecord.setClickable(false);
-            ivAudioRecord.setImageResource(R.drawable.audio_record_unclick);
-            tvAudioRecord.setText("录音");
-            //免提
-            llHandFree.setClickable(false);
-            ivHandFree.setImageResource(R.drawable.hand_free_unclick);
-            tvHandFree.setText("免提");
-            //挂断按钮
-            if (isHandFree) {
-                ivHandUp.setVisibility(View.VISIBLE);
-            } else {
-                ivHandUp.setVisibility(View.GONE);
+            if (isCalling) {//是主动呼叫
+                tvStatus.setText("呼叫中...");
+                //联系人显示
+                String name = ContactsUtil.getContactNameByPhoneNumber(this, phoneNum);
+                if (TextUtils.isEmpty(name)) {//没有该联系人
+                    tvCallName.setVisibility(View.INVISIBLE);
+                } else {
+                    tvCallName.setVisibility(View.VISIBLE);
+                    tvCallName.setText(name);
+                }
+                //软键盘
+                tvCallNum.setText(phoneNum);
+                llKeyBordContainer.setVisibility(View.INVISIBLE);
+                //录音
+                llAudioRecord.setClickable(false);
+                ivAudioRecord.setImageResource(R.drawable.audio_record_unclick);
+                tvAudioRecord.setText("录音");
+                //免提
+                llHandFree.setClickable(false);
+                ivHandFree.setImageResource(R.drawable.hand_free_unclick);
+                tvHandFree.setText("免提");
+                //挂断按钮
+                if (isHandFree) {
+                    ivHandUp.setVisibility(View.VISIBLE);
+                } else {
+                    ivHandUp.setVisibility(View.GONE);
+                }
+                ivAnswer.setVisibility(View.GONE);
+            } else {//是来电
+                tvStatus.setVisibility(View.GONE);
+                //联系人显示
+                String name = ContactsUtil.getContactNameByPhoneNumber(this, phoneNum);
+                if (TextUtils.isEmpty(name)) {//没有该联系人
+                    tvCallName.setVisibility(View.INVISIBLE);
+                } else {
+                    tvCallName.setVisibility(View.VISIBLE);
+                    tvCallName.setText(name);
+                }
+                tvCallNum.setText(phoneNum);
+                //软键盘
+                llKeyBordContainer.setVisibility(View.INVISIBLE);
+
+                llBtnContainer.setVisibility(View.GONE);
+                ivAnswer.setVisibility(View.VISIBLE);//来电显示接听按钮
             }
         } else {//通话中
             if (callingRunnable == null) {
@@ -284,7 +323,7 @@ public class CallingActivity extends BaseActivity {
     public String keyInValue = "";
     private boolean isShowKeybord = false;
 
-    @OnClick({R.id.tv_key1, R.id.tv_key2, R.id.tv_key3, R.id.tv_key4, R.id.tv_key5, R.id.tv_key6, R.id.tv_key7, R.id.tv_key8, R.id.tv_key9, R.id.tv_key_xing, R.id.tv_key0, R.id.tv_key_jin, R.id.ll_audio_record, R.id.ll_hand_free, R.id.iv_hand_up, R.id.ll_key_bord})
+    @OnClick({R.id.tv_key1, R.id.tv_key2, R.id.tv_key3, R.id.tv_key4, R.id.tv_key5, R.id.tv_key6, R.id.tv_key7, R.id.tv_key8, R.id.tv_key9, R.id.tv_key_xing, R.id.tv_key0, R.id.tv_key_jin, R.id.ll_audio_record, R.id.ll_hand_free, R.id.iv_hand_up, R.id.ll_key_bord, R.id.iv_answer})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_key1:
@@ -369,15 +408,21 @@ public class CallingActivity extends BaseActivity {
                 }
                 break;
             case R.id.ll_hand_free://免提
-                CallingActivity.startActivity(this,phoneNum);
                 if (isHandFree) {//之前是免提,关闭免提
+                    int status = SPUtil.getInstance().getInteger(SPUtil.KEY_HAND_STATUS);
+                    if (status == 0) {
+                        Utils.Toast("请先拿起手柄");
+                        return;
+                    }
                     ivHandFree.setImageResource(R.drawable.hands_free_icon);
                     CallUtil.handFreeControl(this, 0);
                     ivHandUp.setVisibility(View.GONE);
+                    CallUtil.handFreeControl(this, 0);//通知系统打开或关闭免提
                 } else {//打开免提
                     ivHandFree.setImageResource(R.drawable.hand_free_close);
                     CallUtil.handFreeControl(this, 1);
                     ivHandUp.setVisibility(View.VISIBLE);
+                    CallUtil.handFreeControl(this, 1);
                 }
                 isHandFree = !isHandFree;
                 break;
@@ -393,6 +438,13 @@ public class CallingActivity extends BaseActivity {
                 }
                 isShowKeybord = !isShowKeybord;
                 break;
+            case R.id.iv_answer://来电免提接听按钮
+                CallUtil.incommingAnswerWithFree(this);
+                isHandFree = true;//设为免提接听
+                CallUtil.handFreeControl(this, 1);//通知系统打开免提
+                callStatus = 1;//更换为通话中状态
+                setViewData();
+                break;
         }
     }
 
@@ -405,9 +457,51 @@ public class CallingActivity extends BaseActivity {
         return str;
     }
 
-    public static void startActivity(Context context, String phoneNum) {
+
+    private int Notification_ID = 0;
+
+    /**
+     * 未接电话通知栏
+     *
+     * @param phoneNumber
+     */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private void showNotification(String phoneNumber) {
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // TODO Auto-generated method stub
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setSmallIcon(R.drawable.ic_launcher);//设置图标
+        builder.setTicker("您有1条未接来电");//手机状态栏的提示
+        builder.setContentTitle("您有1条未接来电");//设置标题
+        //联系人显示
+        String name = ContactsUtil.getContactNameByPhoneNumber(this, phoneNumber);
+        if (TextUtils.isEmpty(name)) {//没有该联系人
+            builder.setContentText("您有一条来自" + phoneNumber + "的来电");//设置通知内容
+        } else {
+            builder.setContentText("您有一条来自" + name + "的来电");//设置通知内容
+        }
+        builder.setWhen(System.currentTimeMillis());//设置通知时间
+        Intent intent = new Intent(this, CallActivity.class);
+        intent.putExtra("type", 1);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        builder.setContentIntent(pendingIntent);//点击后的意图
+        builder.setPriority(Notification.PRIORITY_MAX);
+        builder.setDefaults(Notification.DEFAULT_LIGHTS);//设置指示灯
+        builder.setDefaults(Notification.DEFAULT_SOUND);//设置提示声音
+        builder.setDefaults(Notification.DEFAULT_VIBRATE);//设置震动
+        Notification notification = builder.build();//4.1以上，以下要用getNotification()
+        manager.notify(Notification_ID, notification);
+    }
+
+    /**
+     * @param context
+     * @param phoneNum
+     * @param isCalling 是否是主动呼叫
+     */
+    public static void startActivity(Context context, String phoneNum, boolean isCalling) {
         Intent intent = new Intent(context, CallingActivity.class);
         intent.putExtra("phoneNum", phoneNum);
+        intent.putExtra("isCalling", isCalling);
         context.startActivity(intent);
     }
 
@@ -419,6 +513,7 @@ public class CallingActivity extends BaseActivity {
         audioRecordHandler.removeCallbacksAndMessages(null);
         EventBus.getDefault().unregister(this);
         unRegisterReceivers();
-        SPUtil.getInstance().saveBoolean("isShowCallingActivity",false);//保存当前是否打开通话界面
+        SPUtil.getInstance().saveBoolean("isShowCallingActivity", false);//保存当前是否打开通话界面
+        SPUtil.getInstance().saveBoolean(SPUtil.KEY_CALLING_WITH_TALKING,false);
     }
 }

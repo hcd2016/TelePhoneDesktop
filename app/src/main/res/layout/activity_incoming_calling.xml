@@ -1,58 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/slateblue"
     android:orientation="vertical">
 
-    <!--呼叫中or通话计时-->
-    <TextView
-        android:id="@+id/tv_status"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:gravity="center"
-        android:text="呼叫中..."
-        android:textColor="@color/white"
-        android:textSize="24sp" />
+        android:orientation="vertical"
+        android:paddingTop="100dp">
 
-    <com.desktop.telephone.telephonedesktop.view.RoundImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/header_default_icon"
-        android:visibility="gone"
-        app:type="circle" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="中国移动"
+            android:textColor="@color/white"
+            android:textSize="40sp" />
 
-    <TextView
-        android:id="@+id/tv_call_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="40sp"
-        tools:text="中国移动通信" />
-
-    <TextView
-        android:id="@+id/tv_call_num"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="40sp"
-        tools:text="10086" />
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:text="18888888888"
+            android:textColor="@color/white"
+            android:textSize="40sp" />
+    </LinearLayout>
 
     <!--软键盘-->
     <LinearLayout
         android:id="@+id/ll_key_bord_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:orientation="vertical"
         android:visibility="invisible"
         tools:visibility="visible">
@@ -230,111 +213,20 @@
 
     </LinearLayout>
 
-    <!--按钮-->
+
     <LinearLayout
-        android:id="@+id/ll_btn_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:orientation="horizontal">
-
-        <!--录音-->
-        <LinearLayout
-            android:id="@+id/ll_audio_record"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/iv_audio_record"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/audio_record_icon" />
-
-            <TextView
-                android:id="@+id/tv_audio_record"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="录音"
-                android:textColor="@color/white"
-                android:textSize="24sp" />
-        </LinearLayout>
-
-        <!--免提-->
-        <LinearLayout
-            android:id="@+id/ll_hand_free"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/iv_hand_free"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/hands_free_icon" />
-
-            <TextView
-                android:id="@+id/tv_hand_free"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="免提"
-                android:textColor="@color/white"
-                android:textSize="24sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_key_bord"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/iv_key_bord"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/open_keybord" />
-
-            <TextView
-                android:id="@+id/tv_key_bord"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="打开键盘"
-                android:textColor="@color/white"
-                android:textSize="24sp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:gravity="center"
         android:orientation="horizontal">
 
-        <ImageView
-            tools:visibility="visible"
-            android:visibility="gone"
-            android:id="@+id/iv_answer"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginRight="200dp"
-            android:src="@drawable/phone_answer_icon" />
+
 
         <ImageView
-            android:id="@+id/iv_hand_up"
+            android:layout_marginLeft="100dp"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/hand_up_icon"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            android:src="@drawable/hand_up_icon" />
     </LinearLayout>
 </LinearLayout>
