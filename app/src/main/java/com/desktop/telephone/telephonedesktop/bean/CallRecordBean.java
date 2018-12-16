@@ -78,4 +78,5 @@ public class CallRecordBean {
     public void setId(Long id) {
         Id = id;
     }
+
 }

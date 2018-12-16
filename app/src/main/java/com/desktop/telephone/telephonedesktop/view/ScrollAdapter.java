@@ -31,6 +31,7 @@ import com.desktop.telephone.telephonedesktop.desktop.Activity.ContactsListActiv
 import com.desktop.telephone.telephonedesktop.desktop.Activity.PhotosActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.RecordAudioActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.SosActivity;
+import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
 @SuppressLint("UseSparseArrays")
@@ -136,9 +137,9 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
                         }
                     } else if (moveItem.getIconType() == 3) {//一键拨号
                         String phoneNum = moveItem.getPhoneNum();
-                        String name = moveItem.getTitle();
-                        //todo
-                        Utils.Toast("一键拨号点击");
+//                        String name = moveItem.getTitle();
+                        CallUtil.call(mContext,phoneNum);
+//                        Utils.Toast("一键拨号点击");
                     } else {//系统或用户程序跳转
                         Utils.startApp(mContext, moveItem.getPackageName());
                     }

@@ -19,6 +19,7 @@ public class CallUtil {
      * @param phoneNum
      */
     public static void call(Context context, String phoneNum) {//交换机待加
+        boolean isHandFree = false;
         boolean isCallingWithTalking = SPUtil.getInstance().getBoolean(SPUtil.KEY_CALLING_WITH_TALKING, false);
         if (isCallingWithTalking) {
             Utils.Toast("当前正在通话中,不能呼出");
@@ -29,19 +30,20 @@ public class CallUtil {
             return;
         }
         int status = SPUtil.getInstance().getInteger(SPUtil.KEY_HAND_STATUS);
-        if (status == 0) {
-            Utils.Toast("呼叫前请先拿起手柄");
-            return;
+        if (status == 0) {//手柄未抬起就免提呼叫
+            isHandFree = true;
+        } else {
+            isHandFree = false;
         }
         Intent intent = new Intent();
         intent.setAction("com.tongen.Tel.APPLICATION_CALL");
-        intent.putExtra("phoneNumber", phoneNum);
+        intent.putExtra("phoneNumber", "9P" + phoneNum);
         intent.putExtra("isSecret", false);
         intent.putExtra("tag", "");
         context.sendBroadcast(intent);
 
         //跳转到呼叫中界面
-        CallingActivity.startActivity(context, phoneNum, true);
+        CallingActivity.startActivity(context, phoneNum, true, isHandFree);
     }
 
     /**
@@ -85,8 +87,9 @@ public class CallUtil {
     /**
      * 来电显示控制
      */
-    public static void showCallerIds(Context context) {
+    public static void showCallerIds(Context context, int status) {
         Intent intent = new Intent();
+        intent.putExtra("status", status);
         intent.setAction("com.tongen.action.set.showCallerIDs");
         context.sendBroadcast(intent);
     }

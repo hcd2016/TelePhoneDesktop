@@ -320,15 +320,31 @@
         android:gravity="center"
         android:orientation="horizontal">
 
+        <LinearLayout
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:id="@+id/ll_iv_answer"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
         <ImageView
             tools:visibility="visible"
             android:visibility="gone"
             android:id="@+id/iv_answer"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginRight="200dp"
             android:src="@drawable/phone_answer_icon" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:id="@+id/ll_iv_hand_up"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
         <ImageView
             android:id="@+id/iv_hand_up"
             android:layout_width="100dp"
@@ -336,5 +352,6 @@
             android:src="@drawable/hand_up_icon"
             android:visibility="gone"
             tools:visibility="visible" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

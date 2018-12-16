@@ -2,6 +2,7 @@ package com.desktop.telephone.telephonedesktop.base;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -10,11 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 
+import com.desktop.telephone.telephonedesktop.desktop.Activity.CallingActivity;
 import com.desktop.telephone.telephonedesktop.util.SPUtil;
 import com.desktop.telephone.telephonedesktop.view.CountTimer;
 
 public class BaseActivity extends AppCompatActivity {
     public CountTimer countTimerView;
+    public boolean isShowBanner = true;//通话界面不进入banner
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -22,6 +25,10 @@ public class BaseActivity extends AppCompatActivity {
         //设置屏幕长亮
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//固定竖屏
+        if(this instanceof CallingActivity ){
+            isShowBanner = false;
+        }
     }
 
     /**
@@ -37,7 +44,7 @@ public class BaseActivity extends AppCompatActivity {
             case MotionEvent.ACTION_UP:
                 boolean isOpenBanner = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_OPEN_BANNER,true);
                 boolean isBannerRunning = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_BANNER_RUNING, false);
-                if (!isBannerRunning && isOpenBanner) {
+                if (!isBannerRunning && isOpenBanner && isShowBanner) {
                     timeStart();
                 }
                 break;
@@ -64,7 +71,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onResume();
         boolean isOpenBanner = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_OPEN_BANNER,true);
         boolean isBannerRunning = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_BANNER_RUNING, false);
-        if (!isBannerRunning && isOpenBanner) {
+        if (!isBannerRunning && isOpenBanner && isShowBanner) {
             timeStart();
         }
     }

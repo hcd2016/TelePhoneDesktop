@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
  */
 public class AudioRecorderCall {
     //音频输入-麦克风
-    private final static int AUDIO_INPUT = MediaRecorder.AudioSource.VOICE_CALL;
+    private final static int AUDIO_INPUT = MediaRecorder.AudioSource.MIC;
     //采用频率
     //44100是目前的标准，但是某些设备仍然支持22050，16000，11025
     //采样频率一般共分为22.05KHz、44.1KHz、48KHz三个等级

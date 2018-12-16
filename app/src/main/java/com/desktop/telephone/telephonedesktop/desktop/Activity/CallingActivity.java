@@ -20,12 +20,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.desktop.telephone.telephonedesktop.MainActivity;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
+import com.desktop.telephone.telephonedesktop.bean.CallRecordBean;
+import com.desktop.telephone.telephonedesktop.bean.EvenCallRecordBean;
 import com.desktop.telephone.telephonedesktop.desktop.recevier.CallingConnectReciver;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.ContactsUtil;
+import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.SPUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.record.AudioRecorderCall;
@@ -103,9 +105,15 @@ public class CallingActivity extends BaseActivity {
     ImageView ivAnswer;
     @BindView(R.id.ll_btn_container)
     LinearLayout llBtnContainer;
+    @BindView(R.id.ll_iv_answer)
+    LinearLayout llIvAnswer;
+    @BindView(R.id.ll_iv_hand_up)
+    LinearLayout llIvHandUp;
     private boolean isCalling = true;//true为呼叫,false为来电
     private int callStatus = 0;//呼叫状态,0为呼叫中,1为通话中
     private boolean isHandFree = false;//是否开启免提
+    private int callingRecordStatus = 0;//通话记录状态,0为已拨,1为已接,2为未接,3为主动挂断
+
 
     public static final String CALLING_CONNECT = "com.tongen.Tel.OUTGOING_RINGING";//通话接通
     public static final String HAND_OFF = "com.tongen.action.handle.off";//手柄放下
@@ -131,6 +139,8 @@ public class CallingActivity extends BaseActivity {
             window.setStatusBarColor(Color.TRANSPARENT);
             window.setNavigationBarColor(Color.TRANSPARENT);
         }
+        hideBottomUIMenu();
+
         setContentView(R.layout.activity_calling);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
@@ -141,6 +151,7 @@ public class CallingActivity extends BaseActivity {
         SPUtil.getInstance().saveBoolean("isShowCallingActivity", true);//保存当前是否打开通话界面
         phoneNum = getIntent().getStringExtra("phoneNum");
         isCalling = getIntent().getBooleanExtra("isCalling", false);
+        isHandFree = getIntent().getBooleanExtra("isHandFree", false);
         setViewData();
         registerReceivers();
     }
@@ -172,14 +183,24 @@ public class CallingActivity extends BaseActivity {
                 if (!isHandFree) {//手柄放下时不是免提状态才挂断电话
                     finish();
                 }
+//                else {//手柄放下时是免提状态,显示挂断按钮
+//                    ivHandUp.setVisibility(View.VISIBLE);
+//                }
                 break;
             case HAND_ON://手柄抬起
                 if (!isCalling && callStatus == 0) {//是来电呼叫中状态,拿起手柄=接听电话
+                    tvStatus.setText("00:00:00");//重新开始计时
+                    callingSecond = 0;
                     callStatus = 1;
+                    callingRecordStatus = 1;//已接
                     setViewData();
+                }
+                if (isHandFree) {//当前是免提状态,切换为听筒状态
+                    llHandFree.performClick();
                 }
                 break;
             case CALLING_MISSED://来电未接
+                callingRecordStatus = 2;//未接来电
                 String phoneNumber = event.getStringExtra("phoneNumber");
                 //通知栏
                 showNotification(phoneNumber);
@@ -195,36 +216,8 @@ public class CallingActivity extends BaseActivity {
         if (TextUtils.isEmpty(phoneNum)) {
             return;
         }
-        if (callStatus == 0) {//呼叫中
-            if (isCalling) {//是主动呼叫
-                tvStatus.setText("呼叫中...");
-                //联系人显示
-                String name = ContactsUtil.getContactNameByPhoneNumber(this, phoneNum);
-                if (TextUtils.isEmpty(name)) {//没有该联系人
-                    tvCallName.setVisibility(View.INVISIBLE);
-                } else {
-                    tvCallName.setVisibility(View.VISIBLE);
-                    tvCallName.setText(name);
-                }
-                //软键盘
-                tvCallNum.setText(phoneNum);
-                llKeyBordContainer.setVisibility(View.INVISIBLE);
-                //录音
-                llAudioRecord.setClickable(false);
-                ivAudioRecord.setImageResource(R.drawable.audio_record_unclick);
-                tvAudioRecord.setText("录音");
-                //免提
-                llHandFree.setClickable(false);
-                ivHandFree.setImageResource(R.drawable.hand_free_unclick);
-                tvHandFree.setText("免提");
-                //挂断按钮
-                if (isHandFree) {
-                    ivHandUp.setVisibility(View.VISIBLE);
-                } else {
-                    ivHandUp.setVisibility(View.GONE);
-                }
-                ivAnswer.setVisibility(View.GONE);
-            } else {//是来电
+        if (!isCalling) {//是来电
+            if (callStatus == 0) {
                 tvStatus.setVisibility(View.GONE);
                 //联系人显示
                 String name = ContactsUtil.getContactNameByPhoneNumber(this, phoneNum);
@@ -240,23 +233,165 @@ public class CallingActivity extends BaseActivity {
 
                 llBtnContainer.setVisibility(View.GONE);
                 ivAnswer.setVisibility(View.VISIBLE);//来电显示接听按钮
-            }
-        } else {//通话中
-            if (callingRunnable == null) {
-                callingRunnable = new CallingRunnable();
-                callingRunnable.run();
+                llIvAnswer.setVisibility(View.VISIBLE);
+            } else {
+                tvStatus.setVisibility(View.VISIBLE);
+                //联系人显示
+                String name = ContactsUtil.getContactNameByPhoneNumber(this, phoneNum);
+                if (TextUtils.isEmpty(name)) {//没有该联系人
+                    tvCallName.setVisibility(View.INVISIBLE);
+                } else {
+                    tvCallName.setVisibility(View.VISIBLE);
+                    tvCallName.setText(name);
+                }
+                tvCallNum.setText(phoneNum);
+                //软键盘
+                llKeyBordContainer.setVisibility(View.INVISIBLE);
+                llBtnContainer.setVisibility(View.VISIBLE);
+                ivAnswer.setVisibility(View.GONE);//来电显示接听按钮
+                llIvAnswer.setVisibility(View.GONE);
+                ivHandUp.setVisibility(View.GONE);
+                llIvHandUp.setVisibility(View.GONE);
             }
 
-            //录音
-            llAudioRecord.setClickable(true);
-            ivAudioRecord.setImageResource(R.drawable.audio_record_icon);
-            tvAudioRecord.setText("录音");
+        } else {
+            tvStatus.setVisibility(View.VISIBLE);
+            //联系人显示
+            String name = ContactsUtil.getContactNameByPhoneNumber(this, phoneNum);
+            if (TextUtils.isEmpty(name)) {//没有该联系人
+                tvCallName.setVisibility(View.INVISIBLE);
+            } else {
+                tvCallName.setVisibility(View.VISIBLE);
+                tvCallName.setText(name);
+            }
+            tvCallNum.setText(phoneNum);
 
+            //软键盘
+            llKeyBordContainer.setVisibility(View.INVISIBLE);
+            llBtnContainer.setVisibility(View.VISIBLE);
+
+            //挂断按钮
+            if (isHandFree) {
+                ivHandUp.setVisibility(View.VISIBLE);
+                llIvHandUp.setVisibility(View.VISIBLE);
+            } else {
+                ivHandUp.setVisibility(View.GONE);
+                llIvHandUp.setVisibility(View.GONE);
+            }
+            ivAnswer.setVisibility(View.GONE);
+            llIvAnswer.setVisibility(View.GONE);
+        }
+
+        if (callingRunnable == null) {
+            callingRunnable = new CallingRunnable();
+            callingRunnable.run();
+        }
+
+        //录音
+        llAudioRecord.setClickable(true);
+        ivAudioRecord.setImageResource(R.drawable.audio_record_icon);
+        tvAudioRecord.setText("录音");
+
+        if (isHandFree) {
+            ivHandFree.setImageResource(R.drawable.hand_free_close);
+            ivHandUp.setVisibility(View.VISIBLE);
+            llIvHandUp.setVisibility(View.VISIBLE);
+        } else {
             //免提
             llHandFree.setClickable(true);
             ivHandFree.setImageResource(R.drawable.hands_free_icon);
             tvHandFree.setText("免提");
         }
+
+//        if (callStatus == 0) {//呼叫中
+//            if (isCalling) {//是主动呼叫
+////                tvStatus.setText("呼叫中...");
+////                //联系人显示
+////                String name = ContactsUtil.getContactNameByPhoneNumber(this, phoneNum);
+////                if (TextUtils.isEmpty(name)) {//没有该联系人
+////                    tvCallName.setVisibility(View.INVISIBLE);
+////                } else {
+////                    tvCallName.setVisibility(View.VISIBLE);
+////                    tvCallName.setText(name);
+////                }
+////                //软键盘
+////                tvCallNum.setText(phoneNum);
+////                llKeyBordContainer.setVisibility(View.INVISIBLE);
+////                //录音
+////                llAudioRecord.setClickable(false);
+////                ivAudioRecord.setImageResource(R.drawable.audio_record_unclick);
+////                tvAudioRecord.setText("录音");
+////                //免提
+////                llHandFree.setClickable(false);
+////                ivHandFree.setImageResource(R.drawable.hand_free_unclick);
+////                tvHandFree.setText("免提");
+////                //挂断按钮
+////                if (isHandFree) {
+////                    ivHandUp.setVisibility(View.VISIBLE);
+////                } else {
+////                    ivHandUp.setVisibility(View.GONE);
+////                }
+////                ivAnswer.setVisibility(View.GONE);
+//            } else {//是来电
+//                tvStatus.setVisibility(View.GONE);
+//                //联系人显示
+//                String name = ContactsUtil.getContactNameByPhoneNumber(this, phoneNum);
+//                if (TextUtils.isEmpty(name)) {//没有该联系人
+//                    tvCallName.setVisibility(View.INVISIBLE);
+//                } else {
+//                    tvCallName.setVisibility(View.VISIBLE);
+//                    tvCallName.setText(name);
+//                }
+//                tvCallNum.setText(phoneNum);
+//                //软键盘
+//                llKeyBordContainer.setVisibility(View.INVISIBLE);
+//
+//                llBtnContainer.setVisibility(View.GONE);
+//                ivAnswer.setVisibility(View.VISIBLE);//来电显示接听按钮
+//            }
+//        } else {//通话中
+//            tvStatus.setVisibility(View.VISIBLE);
+//            //联系人显示
+//            String name = ContactsUtil.getContactNameByPhoneNumber(this, phoneNum);
+//            if (TextUtils.isEmpty(name)) {//没有该联系人
+//                tvCallName.setVisibility(View.INVISIBLE);
+//            } else {
+//                tvCallName.setVisibility(View.VISIBLE);
+//                tvCallName.setText(name);
+//            }
+//
+//            //软键盘
+//            llKeyBordContainer.setVisibility(View.INVISIBLE);
+//            llBtnContainer.setVisibility(View.VISIBLE);
+//
+//            //挂断按钮
+//            if (isHandFree) {
+//                ivHandUp.setVisibility(View.VISIBLE);
+//            } else {
+//                ivHandUp.setVisibility(View.GONE);
+//            }
+//            ivAnswer.setVisibility(View.GONE);
+//
+//            if (callingRunnable == null) {
+//                callingRunnable = new CallingRunnable();
+//                callingRunnable.run();
+//            }
+//
+//            //录音
+//            llAudioRecord.setClickable(true);
+//            ivAudioRecord.setImageResource(R.drawable.audio_record_icon);
+//            tvAudioRecord.setText("录音");
+//
+//            if(isHandFree) {
+//                ivHandFree.setImageResource(R.drawable.hand_free_close);
+//                ivHandUp.setVisibility(View.VISIBLE);
+//            }else {
+//                //免提
+//                llHandFree.setClickable(true);
+//                ivHandFree.setImageResource(R.drawable.hands_free_icon);
+//                tvHandFree.setText("免提");
+//            }
+//        }
     }
 
     private Handler callingHandler = new Handler();
@@ -295,6 +430,32 @@ public class CallingActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
+//    /**
+//     * 隐藏虚拟按键，并且全屏
+//     */
+//    protected void hideBottomUIMenu(){
+//        //隐藏虚拟按键，并且全屏
+//        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+//            View v = this.getWindow().getDecorView();
+//            v.setSystemUiVisibility(View.GONE);
+//        } else if (Build.VERSION.SDK_INT >= 19) {
+//            //for new api versions.
+//            View decorView = getWindow().getDecorView();
+//            int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+////          | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+//                    | View.SYSTEM_UI_FLAG_IMMERSIVE;
+//            decorView.setSystemUiVisibility(uiOptions);
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//        }
+//    }
 
     private String formatLongToTimeStr(int callingSecond) {
         int minute = 0;
@@ -417,12 +578,18 @@ public class CallingActivity extends BaseActivity {
                     ivHandFree.setImageResource(R.drawable.hands_free_icon);
                     CallUtil.handFreeControl(this, 0);
                     ivHandUp.setVisibility(View.GONE);
+                    llIvHandUp.setVisibility(View.GONE);
                     CallUtil.handFreeControl(this, 0);//通知系统打开或关闭免提
                 } else {//打开免提
                     ivHandFree.setImageResource(R.drawable.hand_free_close);
                     CallUtil.handFreeControl(this, 1);
+                    int status = SPUtil.getInstance().getInteger(SPUtil.KEY_HAND_STATUS);
+//                    if (status == 1) {//手柄抬起
+//                        ivHandUp.setVisibility(View.GONE);
+//                    } else {
                     ivHandUp.setVisibility(View.VISIBLE);
-                    CallUtil.handFreeControl(this, 1);
+                    llIvHandUp.setVisibility(View.VISIBLE);
+//                    }
                 }
                 isHandFree = !isHandFree;
                 break;
@@ -439,6 +606,9 @@ public class CallingActivity extends BaseActivity {
                 isShowKeybord = !isShowKeybord;
                 break;
             case R.id.iv_answer://来电免提接听按钮
+                tvStatus.setText("00:00:00");
+                callingSecond = 0;//接通再计时
+                callingRecordStatus = 1;//已接来电
                 CallUtil.incommingAnswerWithFree(this);
                 isHandFree = true;//设为免提接听
                 CallUtil.handFreeControl(this, 1);//通知系统打开免提
@@ -455,6 +625,28 @@ public class CallingActivity extends BaseActivity {
         Date date = new Date(System.currentTimeMillis());
         String str = format.format(date);
         return str;
+    }
+
+    //获取当前格式化时间
+    private String getCurrentFormatTime() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(System.currentTimeMillis());
+        String str = format.format(date);
+        return str;
+    }
+
+    protected void hideBottomUIMenu() {
+        //隐藏虚拟按键，并且全屏
+        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            View v = this.getWindow().getDecorView();
+            v.setSystemUiVisibility(View.GONE);
+        } else if (Build.VERSION.SDK_INT >= 19) {
+
+            Window _window = getWindow();
+            WindowManager.LayoutParams params = _window.getAttributes();
+            params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE;
+            _window.setAttributes(params);
+        }
     }
 
 
@@ -493,15 +685,18 @@ public class CallingActivity extends BaseActivity {
         manager.notify(Notification_ID, notification);
     }
 
+
     /**
      * @param context
      * @param phoneNum
-     * @param isCalling 是否是主动呼叫
+     * @param isCalling  是否是主动呼叫
+     * @param isHandFree 是否是免提呼叫
      */
-    public static void startActivity(Context context, String phoneNum, boolean isCalling) {
+    public static void startActivity(Context context, String phoneNum, boolean isCalling, boolean isHandFree) {
         Intent intent = new Intent(context, CallingActivity.class);
         intent.putExtra("phoneNum", phoneNum);
         intent.putExtra("isCalling", isCalling);
+        intent.putExtra("isHandFree", isHandFree);
         context.startActivity(intent);
     }
 
@@ -514,6 +709,46 @@ public class CallingActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
         unRegisterReceivers();
         SPUtil.getInstance().saveBoolean("isShowCallingActivity", false);//保存当前是否打开通话界面
-        SPUtil.getInstance().saveBoolean(SPUtil.KEY_CALLING_WITH_TALKING,false);
+        SPUtil.getInstance().saveBoolean(SPUtil.KEY_CALLING_WITH_TALKING, false);
+
+        //保存通话记录 0为已拨,1为已接,2为未接,3为主动挂断(没有主动挂断)
+        int status = callingRecordStatus;
+        String phoneNumber = phoneNum;
+        String name = tvCallName.getText().toString();//没有则为空
+        String date = getCurrentFormatTime();
+        String desc = "";
+        if (status == 0) {
+            desc = formatTimeS(callingSecond);
+        } else if (status == 1) {
+            desc = formatTimeS(callingSecond);
+        } else if (status == 2) {
+            desc = "响铃" + formatTimeS(callingSecond);
+        }
+        CallRecordBean callRecordBean = new CallRecordBean(null, status, phoneNumber, date, desc, name);
+        DaoUtil.getCallRecordBeanDao().insert(callRecordBean);
+        DaoUtil.closeDb();
+        EvenCallRecordBean evenCallRecordBean = new EvenCallRecordBean(callRecordBean, true);
+        EventBus.getDefault().post(evenCallRecordBean);
+    }
+
+    public static String formatTimeS(long seconds) {
+        int temp = 0;
+        StringBuffer sb = new StringBuffer();
+        if (seconds > 3600) {
+            temp = (int) (seconds / 3600);
+            sb.append((seconds / 3600) < 10 ? "0" + temp + ":" : temp + ":");
+            temp = (int) (seconds % 3600 / 60);
+            changeSeconds(seconds, temp, sb);
+        } else {
+            temp = (int) (seconds % 3600 / 60);
+            changeSeconds(seconds, temp, sb);
+        }
+        return sb.toString();
+    }
+
+    private static void changeSeconds(long seconds, int temp, StringBuffer sb) {
+        sb.append((temp < 10) ? "0" + temp + ":" : "" + temp + ":");
+        temp = (int) (seconds % 3600 % 60);
+        sb.append((temp < 10) ? "0" + temp : "" + temp);
     }
 }

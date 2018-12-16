@@ -2,6 +2,7 @@ package com.desktop.telephone.telephonedesktop.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
@@ -10,6 +11,7 @@ import com.desktop.telephone.telephonedesktop.db.DBManager;
 import com.desktop.telephone.telephonedesktop.gen.DaoMaster;
 import com.desktop.telephone.telephonedesktop.gen.DaoSession;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
+import com.desktop.telephone.telephonedesktop.util.CallUtil;
 
 import java.util.List;
 
@@ -25,6 +27,10 @@ public class App extends Application {
         context = getApplicationContext();
 //        DBManager.getInstance();
         setupDatabase();
+        Intent intent = new Intent();
+        intent.setAction("com.tongen.startDial");
+        context.sendBroadcast(intent);
+
     }
 
     /**

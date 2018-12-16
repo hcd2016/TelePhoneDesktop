@@ -17,6 +17,7 @@ import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.ContactsBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBean;
+import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.ContactsUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
@@ -92,7 +93,7 @@ public class ContactsDetailActivity extends BaseActivity {
         llPhoneContainer.setOnClickListener(new View.OnClickListener() {//拨打电话
             @Override
             public void onClick(View v) {
-                //todo
+                CallUtil.call(ContactsDetailActivity.this,constacts_bean.getPhone());
             }
         });
     }

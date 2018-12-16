@@ -19,6 +19,7 @@ import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
+import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.ScrollAdapter;
@@ -79,7 +80,9 @@ public class MainActivity extends BaseActivity {
         //初始化容器Adapter
 //        loadBackground();
         EventBus.getDefault().register(this);
+        CallUtil.showCallerIds(this,1);
     }
+
 
 //    private void getDataFromCache() {
 ////        mDbUtils = DbUtils.create(this);
@@ -216,6 +219,7 @@ public class MainActivity extends BaseActivity {
             desktopIconBean.setId(null);
             desktopIconBean.setTitle(event.getAppName());
             desktopIconBean.setIconType(event.getIconType());
+            desktopIconBean.setPhoneNum(event.getPhoneNum());
             if (event.getIconType() != 3) {
                 desktopIconBean.setApp_icon(event.getAppIcon());
             }

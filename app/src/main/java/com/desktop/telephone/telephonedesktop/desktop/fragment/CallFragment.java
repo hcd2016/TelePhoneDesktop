@@ -20,8 +20,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.bean.CallNumBean;
+import com.desktop.telephone.telephonedesktop.desktop.Activity.CallingActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.ContactsListActivity;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
+import com.desktop.telephone.telephonedesktop.util.SPUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,6 +150,11 @@ public class CallFragment extends Fragment {
                 startActivity(new Intent(getActivity(), ContactsListActivity.class));
                 break;
             case R.id.ll_call_container://拨出
+//                Intent intent1 = new Intent(getActivity(), CallingActivity.class);
+//                intent1.putExtra("phoneNum", "88888");
+//                intent1.putExtra("isCalling", false);
+//                startActivity(intent1);
+
                 CallUtil.call(getActivity(),tvPhoneNum.getText().toString());
                 phoneString = "";
                 tvPhoneNum.setText(phoneString);
