@@ -31,6 +31,7 @@ import com.desktop.telephone.telephonedesktop.desktop.Activity.ContactsListActiv
 import com.desktop.telephone.telephonedesktop.desktop.Activity.PhotosActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.RecordAudioActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.SosActivity;
+import com.desktop.telephone.telephonedesktop.desktop.Activity.TestDeskActivity;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
@@ -109,7 +110,8 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
                     if (moveItem.getIconType() == 1) {//自定义应用指定跳转
                         switch (moveItem.getTitle()) {
                             case "电话":
-                                CallActivity.startActivity(0,mContext);
+//                                CallActivity.startActivity(0,mContext);
+                                mContext.startActivity(new Intent(mContext,TestDeskActivity.class));
                                 break;
                             case "电子相册":
                                 mContext.startActivity(new Intent(mContext, PhotosActivity.class));

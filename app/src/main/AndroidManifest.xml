@@ -66,6 +66,7 @@
         <activity android:name=".desktop.Activity.RecordAudioActivity" />
         <activity android:name=".desktop.Activity.AudioRecordListActivity" />
         <activity android:name=".desktop.Activity.SosActivity" />
+        <activity android:name=".desktop.Activity.TestDeskActivity" />
 
         <activity
             android:name=".desktop.Activity.CallActivity"
