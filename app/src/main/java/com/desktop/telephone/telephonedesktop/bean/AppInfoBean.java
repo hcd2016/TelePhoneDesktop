@@ -146,4 +146,12 @@ public class AppInfoBean {
         this.isShowDesktop = isShowDesktop;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(packageName.equals(((AppInfoBean)obj).getPackageName()))
+            return true;//这里以name为判定标准。
+        else {
+            return false;
+        }
+    }
 }

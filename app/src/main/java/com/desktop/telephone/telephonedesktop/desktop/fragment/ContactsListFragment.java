@@ -270,7 +270,8 @@ public class ContactsListFragment extends Fragment {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             ContactsBean contactsBean = ContactsUtil.getDetailFromContactID(getActivity(), item);
-                                            AppInfoBean appInfoBean = new AppInfoBean(null,0,contactsBean.getName(),null,"",0,false,false,false,3,contactsBean.getPhone());
+                                            //包名存id用来区分同名
+                                            AppInfoBean appInfoBean = new AppInfoBean(null,0,contactsBean.getName(),null,item.id+"",0,false,false,false,3,contactsBean.getPhone());
                                             EventBus.getDefault().post(appInfoBean);
                                             Utils.Toast("生成成功");
                                         }

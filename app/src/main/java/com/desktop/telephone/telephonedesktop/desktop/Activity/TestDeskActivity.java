@@ -1,12 +1,18 @@
 package com.desktop.telephone.telephonedesktop.desktop.Activity;
 
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -33,16 +40,25 @@ import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
+import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
+import com.desktop.telephone.telephonedesktop.bean.BlackListInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
+import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
+import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.DensityUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.MyGridLayoutManager;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -58,16 +74,19 @@ public class TestDeskActivity extends BaseActivity {
     private ArrayList<DesktopIconBean> defaultList;
     private List<DesktopIconBean> mList;
     private List<GridAdapter> adpterList;
+    private List<List<DesktopIconBean>> lists;
+    private BroadcastReceiver deletePackageReceiver;
+    private MyPagerAdapter myPagerAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         translucentStatus();
         setContentView(R.layout.activity_record_test_desk);
+        EventBus.getDefault().register(this);
         ButterKnife.bind(this);
         initIconData();
         initView();
-//        EventBus.getDefault().register(this);
         CallUtil.showCallerIds(this, 1);
     }
 
@@ -186,11 +205,13 @@ public class TestDeskActivity extends BaseActivity {
     }
 
     private void initView() {
-        List<List<DesktopIconBean>> lists = calculate(mList, pageCount);
+        lists = calculate(mList, pageCount);
         adpterList = new ArrayList<>();
         for (int i = 0; i < lists.size(); i++) {
+            GridAdapter gridAdapter = new GridAdapter(lists.get(i));
+            adpterList.add(gridAdapter);
         }
-        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(lists);
+        myPagerAdapter = new MyPagerAdapter(lists);
         viewpager.setAdapter(myPagerAdapter);
     }
 
@@ -245,8 +266,53 @@ public class TestDeskActivity extends BaseActivity {
         return listArray;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(AppInfoBean event) {
+        if (event.isShowDesktop) {//是要删除
+            DesktopIconBeanDao desktopIconBeanDao = DaoUtil.getDesktopIconBeanDao();
+            List<DesktopIconBean> personList = desktopIconBeanDao.queryBuilder()
+                    .where(DesktopIconBeanDao.Properties.Title.eq(event.getAppName()))
+                    .build().list();
+            if (event.getIconType() == 3) {//是一键拨号
+                for (int i = 0; i < personList.size(); i++) {
+                    if (personList.get(i).getPackageName().equals(event.getPackageName())) {
+                        desktopIconBeanDao.delete(personList.get(i));
+                    }
+                }
+            } else {
+                desktopIconBeanDao.delete(personList.get(0));
+            }
+
+            //刷新
+            int currentItem = viewpager.getCurrentItem();
+            mList = DaoUtil.querydata();
+            initView();
+            viewpager.setCurrentItem(currentItem);
+
+        } else {//是要添加
+            DesktopIconBean desktopIconBean = new DesktopIconBean();
+            desktopIconBean.setId(null);
+            desktopIconBean.setTitle(event.getAppName());
+            desktopIconBean.setIconType(event.getIconType());
+            desktopIconBean.setPhoneNum(event.getPhoneNum());
+            if (event.getIconType() != 3) {
+                desktopIconBean.setApp_icon(event.getAppIcon());
+            }
+            desktopIconBean.setMid(mList.size());
+            desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(mList.size()));
+            desktopIconBean.setPackageName(event.getPackageName());
+//            mList.add(desktopIconBean);
+            DaoUtil.getDesktopIconBeanDao().insert(desktopIconBean);
+
+            //刷新
+            int currentItem = viewpager.getCurrentItem();
+            mList = DaoUtil.querydata();
+            initView();
+            viewpager.setCurrentItem(currentItem);
+        }
+    }
+
     private Handler timerHandler = new Handler();
-    private GridAdapter gridAdapter;
 
     class MyPagerAdapter extends PagerAdapter {
         List<List<DesktopIconBean>> list;
@@ -298,34 +364,35 @@ public class TestDeskActivity extends BaseActivity {
             //            gridLayoutManager.setScrollEnabled(false);
             recycleView.setLayoutManager(gridLayoutManager);
             List<DesktopIconBean> dataList = list.get(position);
-            gridAdapter = new GridAdapter(dataList);
+            final GridAdapter gridAdapter = adpterList.get(position);
 
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemDragAndSwipeCallback(gridAdapter));
             itemTouchHelper.attachToRecyclerView(recycleView);
 
-            // 开启拖拽
-            gridAdapter.enableDragItem(itemTouchHelper, R.id.rl_item_container, true);
-            gridAdapter.setOnItemDragListener(new OnItemDragListener() {
-                @Override
-                public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
-                    viewHolder.itemView.findViewById(R.id.delete_iv).setVisibility(View.VISIBLE);
-                    Utils.Toast("长按了");
-                    gridAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
-                    Utils.Toast("位置换了");
-                    source.itemView.findViewById(R.id.delete_iv).setVisibility(View.GONE);
-                    gridAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
-                    Log.i("myList", mList.toString());
-                }
-
-            });
+//            // 开启拖拽
+//            gridAdapter.enableDragItem(itemTouchHelper, R.id.rl_item_container, true);
+//            gridAdapter.setOnItemDragListener(new OnItemDragListener() {
+//                @Override
+//                public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
+//                    isEdit = true;
+//                    viewHolder.itemView.findViewById(R.id.delete_iv).setVisibility(View.VISIBLE);
+//                    Utils.Toast("长按了");
+//                    gridAdapter.notifyDataSetChanged();
+//                }
+//
+//                @Override
+//                public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
+//                    Utils.Toast("位置换了");
+//                    source.itemView.findViewById(R.id.delete_iv).setVisibility(View.GONE);
+//                    gridAdapter.notifyDataSetChanged();
+//                }
+//
+//                @Override
+//                public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
+//                    Log.i("myList", mList.toString());
+//                }
+//
+//            });
             recycleView.setAdapter(gridAdapter);
 
 //            header_view.setHeight(viewHeight / line);
@@ -347,55 +414,22 @@ public class TestDeskActivity extends BaseActivity {
         }
     }
 
+    private boolean isEdit = false;//是否是编辑状态,编辑状态下显示删除按钮.
 
     @Override
     public void onBackPressed() {
         //back键监听，如果在编辑模式，则取消编辑模式
-
-        if (isEdit) {//编辑状态
-            isEdit = !isEdit;
-            gridAdapter.notifyDataSetChanged();
-            return;
+        for (int i = 0; i < adpterList.size(); i++) {
+            adpterList.get(i).editList.clear();//清除所有选中
+            adpterList.get(i).notifyDataSetChanged();
         }
-    }
-
-    private boolean isEdit = false;//是否是编辑状态,编辑状态下显示删除按钮.
-    OnItemDragListener onItemDragListener = new OnItemDragListener() {
-        @Override
-        public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
-            viewHolder.itemView.findViewById(R.id.delete_iv).setVisibility(View.VISIBLE);
-            Utils.Toast("长按了");
-            gridAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
-            Utils.Toast("位置换了");
-            source.itemView.findViewById(R.id.delete_iv).setVisibility(View.GONE);
-            gridAdapter.notifyDataSetChanged();
-            Log.i("myList", mList.toString());
-        }
-
-        @Override
-        public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
-            Log.i("myList", mList.toString());
-        }
-    };
-
-    public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height",
-                "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
     }
 
     private ImageView delete_iv;
+    private AlertDialog alertDialog;
 
     class GridAdapter extends BaseItemDraggableAdapter<DesktopIconBean, BaseViewHolder> {
-
+        public List<Long> editList = new ArrayList<>();
 
         public GridAdapter(@Nullable List<DesktopIconBean> data) {
             super(R.layout.item, data);
@@ -415,7 +449,7 @@ public class TestDeskActivity extends BaseActivity {
             RelativeLayout rl_item_container = helper.getView(R.id.rl_item_container);
             LinearLayout ll_item_container = helper.getView(R.id.ll_item_container);
 
-            if (isEdit) {
+            if (editList.contains(item.getId())) {
                 delete_iv.setVisibility(View.VISIBLE);
             } else {
                 delete_iv.setVisibility(View.GONE);
@@ -477,17 +511,95 @@ public class TestDeskActivity extends BaseActivity {
                 }
             });
 
-
             helper.getView(R.id.rl_item_container).setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    Utils.Toast("长按了 onLongClick");
+                    editList.add(item.getId());//长按保存显示了删除的
+                    notifyDataSetChanged();
                     return false;
+                }
+            });
+
+            delete_iv.setOnClickListener(new View.OnClickListener() {//删除
+                @Override
+                public void onClick(View view) {
+                    if (item.getIconType() == 0 || item.getIconType() == 1) {
+                        Toast.makeText(mContext, "该应用为系统应用，不能卸载", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (item.getIconType() == 3) {//是一键拨号
+                        alertDialog = new AlertDialog.Builder(mContext)
+                                .setMessage("确定要删除" + item.getTitle() + "?")
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        DaoUtil.getDesktopIconBeanDao().delete(item);
+                                        int currentItem = viewpager.getCurrentItem();
+                                        mList = DaoUtil.querydata();
+                                        initView();
+                                        viewpager.setCurrentItem(currentItem);
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        alertDialog.dismiss();
+                                    }
+                                }).create();
+                        alertDialog.show();
+                        Utils.Toast("删除成功");
+                    } else {
+                        Uri uri = Uri.fromParts("package", item.getPackageName(), null);
+                        Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+                        mContext.startActivity(intent);
+
+                        IntentFilter filter = new IntentFilter(Intent.ACTION_PACKAGE_REMOVED);
+                        filter.addDataScheme("package");
+                        //卸载成功
+                        //如果删除后少了一屏，则移动到前一屏，并进行页面刷新
+                        deletePackageReceiver = new BroadcastReceiver() {
+                            @Override
+                            public void onReceive(Context context, Intent intent) {
+                                if (intent.getAction() == Intent.ACTION_PACKAGE_REMOVED) {//卸载成功
+
+                                    AppInfoBean appInfoBean = DaoUtil.querydataByWhere(AppInfoBeanDao.Properties.PackageName.eq(item.getPackageName()));
+                                    if (appInfoBean != null) {
+                                        DaoUtil.getAppInfoBeanDao().delete(appInfoBean);
+                                    }
+
+                                    DaoUtil.getDesktopIconBeanDao().delete(item);
+                                    int currentItem = viewpager.getCurrentItem();
+                                    mList = DaoUtil.querydata();
+                                    initView();
+                                    viewpager.setCurrentItem(currentItem);
+                                    Utils.Toast("卸载成功");
+                                }
+                                context.unregisterReceiver(deletePackageReceiver);
+                                DaoUtil.closeDb();
+                            }
+                        };
+                        mContext.registerReceiver(deletePackageReceiver, filter);
+                    }
                 }
             });
         }
     }
 
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height",
+                "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        DaoUtil.closeDb();
+    }
 
 //    OnItemSwipeListener onItemSwipeListener = new OnItemSwipeListener() {
 //        @Override

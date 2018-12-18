@@ -104,7 +104,7 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
 //            states.addState(new int[]{}, normal);
 
             //点击事件
-            view.findViewById(R.id.ll_item_container).setOnClickListener(new View.OnClickListener() {
+            view.findViewById(R.id.rl_item_container).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (moveItem.getIconType() == 1) {//自定义应用指定跳转

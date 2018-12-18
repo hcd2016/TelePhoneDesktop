@@ -29,6 +29,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,30 +54,20 @@ public class AllAppsActivity extends BaseActivity {
         recycleView.setLayoutManager(new LinearLayoutManager(this));
         List<AppInfoBean> isShowDeskList = DaoUtil.getAppInfoBeanDao().loadAll();//数据库记录添加到桌面的应用包名
         List<AppInfoBean> appInfos = getAppInfos(this);
-        if(isShowDeskList == null || isShowDeskList.size() == 0) {
+        if (isShowDeskList == null || isShowDeskList.size() == 0) {
             for (int i = 0; i < appInfos.size(); i++) {
                 DaoUtil.getAppInfoBeanDao().insert(appInfos.get(i));
                 isShowDeskList.add(appInfos.get(i));
             }
+        } else if (appInfos.size() > isShowDeskList.size()) {//有新安装包,添加到数据库
+            for (AppInfoBean appinfo : appInfos) {
+                if (!isShowDeskList.contains(appinfo)) {
+                    DaoUtil.getAppInfoBeanDao().insert(appinfo);
+                    isShowDeskList.add(appinfo);
+                }
+            }
         }
-//        List<AppInfoBean> appInfoList = new ArrayList<>();
 
-//        if (isShowDeskList != null && isShowDeskList.size() != 0) {
-//            for (int i = 0; i < appInfos.size(); i++) {
-//                for (int j = 0; j < isShowDeskList.size(); j++) {
-//                    if (appInfos.get(i).getPackageName().equals(isShowDeskList.get(j).packageName)) {
-//                        appInfos.get(i).setIsShowDesktop(true);
-//                    }
-//                }
-//            }
-//        }
-
-//        if(appInfoBeanList == null || appInfoBeanList.size() == 0) {//未加入过数据库
-//            appInfoList.addAll(getAppInfos(this));
-//            DaoUtil.saveAppInfoBeanNLists(appInfoList);
-//        }else {
-//            appInfoList.addAll(appInfoBeanList);
-//        }
         sortByShowDesktopList(isShowDeskList);
         myAdapter = new MyAdapter(isShowDeskList);
         recycleView.setAdapter(myAdapter);
@@ -184,7 +175,7 @@ public class AllAppsActivity extends BaseActivity {
             Drawable icon = packInfo.applicationInfo.loadIcon(pm);
             String name = packInfo.applicationInfo.loadLabel(pm).toString();
 
-            if(packname.equals("com.android.settings") || packname.equals("com.android.camera2")) {//去除相机和设置
+            if (packname.equals("com.android.settings") || packname.equals("com.android.camera2")) {//去除相机和设置
                 continue;
             }
 
@@ -205,7 +196,7 @@ public class AllAppsActivity extends BaseActivity {
             } else {//手机外存储设备
                 appInfo.setInRom(false);
             }
-            if(packname.equals(App.getContext().getPackageName())) {//本应用不加入应用程序列表
+            if (packname.equals(App.getContext().getPackageName())) {//本应用不加入应用程序列表
                 continue;
             }
             appInfo.setPackageName(packname);
