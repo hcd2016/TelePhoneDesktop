@@ -1,19 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_header_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:background="@color/colorPrimaryDark"
-        android:id="@+id/header_view"
-        android:textSize="25dp"
         android:gravity="center"
-        android:text="我是头布局"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp">
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="18:00"
+            android:textColor="@color/white"
+            android:textSize="100sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_time"
+            android:paddingLeft="20dp"
+            android:text="12月18日 星期六"
+            android:textColor="@color/white"
+            android:textSize="26sp" />
+    </RelativeLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 </LinearLayout>

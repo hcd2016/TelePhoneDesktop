@@ -9,32 +9,28 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.view.menu.MenuView;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseItemDraggableAdapter;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
-import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
@@ -44,10 +40,11 @@ import com.desktop.telephone.telephonedesktop.util.DensityUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.MyGridLayoutManager;
 
-import org.greenrobot.eventbus.EventBus;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +57,7 @@ public class TestDeskActivity extends BaseActivity {
     private int pageCount = line * row;//分页数量
     private ArrayList<DesktopIconBean> defaultList;
     private List<DesktopIconBean> mList;
+    private List<GridAdapter> adpterList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -189,7 +187,9 @@ public class TestDeskActivity extends BaseActivity {
 
     private void initView() {
         List<List<DesktopIconBean>> lists = calculate(mList, pageCount);
-
+        adpterList = new ArrayList<>();
+        for (int i = 0; i < lists.size(); i++) {
+        }
         MyPagerAdapter myPagerAdapter = new MyPagerAdapter(lists);
         viewpager.setAdapter(myPagerAdapter);
     }
@@ -245,7 +245,9 @@ public class TestDeskActivity extends BaseActivity {
         return listArray;
     }
 
+    private Handler timerHandler = new Handler();
     private GridAdapter gridAdapter;
+
     class MyPagerAdapter extends PagerAdapter {
         List<List<DesktopIconBean>> list;
         private RecyclerView recycleView;
@@ -269,30 +271,70 @@ public class TestDeskActivity extends BaseActivity {
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             View view = View.inflate(TestDeskActivity.this, R.layout.item_main_view_pager, null);
             recycleView = view.findViewById(R.id.recycleView);
-            TextView header_view = view.findViewById(R.id.header_view);
-            MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(TestDeskActivity.this, 3);
-//            gridLayoutManager.setScrollEnabled(false);
+            final TextView tv_time = view.findViewById(R.id.tv_time);
+            final TextView tv_date = view.findViewById(R.id.tv_date);
+            RelativeLayout rl_header_container = view.findViewById(R.id.rl_header_container);
+            //剩余高度
+            int viewHeight = Utils.getScreenHeight(TestDeskActivity.this) - getStatusBarHeight() - ((line + 3) * DensityUtil.dip2px(TestDeskActivity.this, 10));
+            ViewGroup.LayoutParams lp;
+            lp = rl_header_container.getLayoutParams();
+            lp.height = viewHeight / line;
+            rl_header_container.setLayoutParams(lp);
 
+            //每一秒计时一次更新时间
+            new Runnable() {
+                @Override
+                public void run() {
+                    timerHandler.postDelayed(this, 1000);
+                    Date date = new Date(System.currentTimeMillis());
+                    SimpleDateFormat timeFm = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+                    SimpleDateFormat dateFm = new SimpleDateFormat("MM月dd日 EEEE", Locale.CHINA);
+                    tv_time.setText(timeFm.format(date));
+                    tv_date.setText(dateFm.format(date));
+                }
+            }.run();
 
+            MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(TestDeskActivity.this, row);
+            //            gridLayoutManager.setScrollEnabled(false);
             recycleView.setLayoutManager(gridLayoutManager);
-            gridAdapter = new GridAdapter(list.get(position));
+            List<DesktopIconBean> dataList = list.get(position);
+            gridAdapter = new GridAdapter(dataList);
 
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemDragAndSwipeCallback(gridAdapter));
             itemTouchHelper.attachToRecyclerView(recycleView);
 
             // 开启拖拽
             gridAdapter.enableDragItem(itemTouchHelper, R.id.rl_item_container, true);
-            gridAdapter.setOnItemDragListener(onItemDragListener);
+            gridAdapter.setOnItemDragListener(new OnItemDragListener() {
+                @Override
+                public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
+                    viewHolder.itemView.findViewById(R.id.delete_iv).setVisibility(View.VISIBLE);
+                    Utils.Toast("长按了");
+                    gridAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
+                    Utils.Toast("位置换了");
+                    source.itemView.findViewById(R.id.delete_iv).setVisibility(View.GONE);
+                    gridAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
+                    Log.i("myList", mList.toString());
+                }
+
+            });
             recycleView.setAdapter(gridAdapter);
-            //剩余高度
-            int viewHeight = Utils.getScreenHeight(TestDeskActivity.this) - getStatusBarHeight() - ((line + 1) * DensityUtil.dip2px(TestDeskActivity.this, 10));
-            header_view.setHeight(viewHeight / 4);
+
+//            header_view.setHeight(viewHeight / line);
 
 
             if (position == 0) {//是第一页,显示头布局
-                header_view.setVisibility(View.VISIBLE);
+                rl_header_container.setVisibility(View.VISIBLE);
             } else {
-                header_view.setVisibility(View.GONE);
+                rl_header_container.setVisibility(View.GONE);
             }
             container.addView(view);
             return view;
@@ -305,41 +347,40 @@ public class TestDeskActivity extends BaseActivity {
         }
     }
 
+
+    @Override
+    public void onBackPressed() {
+        //back键监听，如果在编辑模式，则取消编辑模式
+
+        if (isEdit) {//编辑状态
+            isEdit = !isEdit;
+            gridAdapter.notifyDataSetChanged();
+            return;
+        }
+    }
+
+    private boolean isEdit = false;//是否是编辑状态,编辑状态下显示删除按钮.
     OnItemDragListener onItemDragListener = new OnItemDragListener() {
         @Override
         public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
+            viewHolder.itemView.findViewById(R.id.delete_iv).setVisibility(View.VISIBLE);
             Utils.Toast("长按了");
-            delete_iv.setVisibility(View.VISIBLE);
             gridAdapter.notifyDataSetChanged();
         }
 
         @Override
         public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
             Utils.Toast("位置换了");
+            source.itemView.findViewById(R.id.delete_iv).setVisibility(View.GONE);
+            gridAdapter.notifyDataSetChanged();
+            Log.i("myList", mList.toString());
         }
 
         @Override
         public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
+            Log.i("myList", mList.toString());
         }
     };
-
-//    OnItemDragListener onItemDragListener = new OnItemDragListener() {
-//        @Override
-//        public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
-//            ToastUtils.showShortToast("你在拖拽第" + (pos + 1) + "个位置的item哦！");
-//        }
-//
-//        @Override
-//        public void onItemDragMoving(RecyclerView.ViewHolder source, int from,
-//                                     RecyclerView.ViewHolder target, int to) {
-//
-//        }
-//
-//        @Override
-//        public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
-//            ToastUtils.showShortToast("拖拽到了第" + (pos + 1) + "个位置哦！");
-//        }
-//    };
 
     public int getStatusBarHeight() {
         int result = 0;
@@ -352,8 +393,8 @@ public class TestDeskActivity extends BaseActivity {
     }
 
     private ImageView delete_iv;
-    class GridAdapter extends BaseItemDraggableAdapter<DesktopIconBean, BaseViewHolder> {
 
+    class GridAdapter extends BaseItemDraggableAdapter<DesktopIconBean, BaseViewHolder> {
 
 
         public GridAdapter(@Nullable List<DesktopIconBean> data) {
@@ -373,6 +414,12 @@ public class TestDeskActivity extends BaseActivity {
             delete_iv = helper.getView(R.id.delete_iv);
             RelativeLayout rl_item_container = helper.getView(R.id.rl_item_container);
             LinearLayout ll_item_container = helper.getView(R.id.ll_item_container);
+
+            if (isEdit) {
+                delete_iv.setVisibility(View.VISIBLE);
+            } else {
+                delete_iv.setVisibility(View.GONE);
+            }
 
             tv_title.setText(item.getTitle());
             int imgUrl = Utils.getAppIconId(item.getImg_id_name());
@@ -396,7 +443,7 @@ public class TestDeskActivity extends BaseActivity {
                     if (item.getIconType() == 1) {//自定义应用指定跳转
                         switch (item.getTitle()) {
                             case "电话":
-                                CallActivity.startActivity(0,mContext);
+                                CallActivity.startActivity(0, mContext);
 //                                mContext.startActivity(new Intent(mContext,TestDeskActivity.class));
                                 break;
                             case "电子相册":
@@ -415,7 +462,7 @@ public class TestDeskActivity extends BaseActivity {
                                 mContext.startActivity(new Intent(mContext, ContactsListActivity.class));
                                 break;
                             case "通话记录":
-                                CallActivity.startActivity(1,mContext);
+                                CallActivity.startActivity(1, mContext);
                                 break;
                             case "所有应用":
                                 mContext.startActivity(new Intent(mContext, AllAppsActivity.class));
@@ -423,17 +470,18 @@ public class TestDeskActivity extends BaseActivity {
                         }
                     } else if (item.getIconType() == 3) {//一键拨号
                         String phoneNum = item.getPhoneNum();
-                        CallUtil.call(mContext,phoneNum);
+                        CallUtil.call(mContext, phoneNum);
                     } else {//系统或用户程序跳转
                         Utils.startApp(mContext, item.getPackageName());
                     }
                 }
             });
 
+
             helper.getView(R.id.rl_item_container).setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    Utils.Toast("长按了");
+                    Utils.Toast("长按了 onLongClick");
                     return false;
                 }
             });
