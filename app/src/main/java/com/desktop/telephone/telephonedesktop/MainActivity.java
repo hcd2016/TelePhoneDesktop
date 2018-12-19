@@ -36,6 +36,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+/**
+ * 该类已作废
+ */
 public class MainActivity extends BaseActivity {
     Unbinder unbinder;
     @BindView(R.id.container)

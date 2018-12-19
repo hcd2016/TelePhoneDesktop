@@ -39,7 +39,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".desktop.Activity.TestDeskActivity">
+        <activity android:name=".desktop.Activity.NewMainActivity">
             <!--<activity android:name=".view.NewMainActivity">-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -66,7 +66,7 @@
         <activity android:name=".desktop.Activity.RecordAudioActivity" />
         <activity android:name=".desktop.Activity.AudioRecordListActivity" />
         <activity android:name=".desktop.Activity.SosActivity" />
-        <!--<activity android:name=".desktop.Activity.TestDeskActivity" />-->
+        <!--<activity android:name=".desktop.Activity.NewMainActivity" />-->
 
         <activity
             android:name=".desktop.Activity.CallActivity"

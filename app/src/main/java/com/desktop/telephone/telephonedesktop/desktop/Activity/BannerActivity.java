@@ -55,15 +55,15 @@ public class BannerActivity extends BaseActivity {
         banner.setBannerStyle(BannerConfig.NOT_INDICATOR);
         //设置图片加载器
         banner.setImageLoader(new GlideImageLoader());
-        //设置图片集合
+        //设置图片集合0
         banner.setImages(images);
-        //设置banner动画效果
+////        设置banner动画效果
 //        banner.setBannerAnimation(Transformer.DepthPage);
 //        //设置标题集合（当banner样式有显示title时）
 //        banner.setBannerTitles(titles);
         //设置自动轮播，默认为true
         banner.isAutoPlay(true);
-        banner.setOffscreenPageLimit(bannerList.size());
+//        banner.setOffscreenPageLimit(bannerList.size());
 
         boolean is_preview = getIntent().getBooleanExtra("is_preview",false);
         long banner_speed = 3000;
@@ -76,6 +76,7 @@ public class BannerActivity extends BaseActivity {
         banner.setDelayTime((int) banner_speed);
 //        //设置指示器位置（当banner模式中有指示器时）
 //        banner.setIndicatorGravity(BannerConfig.CENTER);
+//        banner.setBannerAnimation(Transformer.ForegroundToBackground);
         //banner设置方法全部调用完毕时最后调用
         banner.setOnBannerListener(new OnBannerListener() {
             @Override
@@ -84,6 +85,7 @@ public class BannerActivity extends BaseActivity {
                 finish();
             }
         });
+
         banner.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -140,25 +142,25 @@ public class BannerActivity extends BaseActivity {
                     default:
                         banner.setBannerAnimation(Transformer.Default);
                 }
-//                    public static Class<? extends PageTransformer> Default = DefaultTransformer.class;
-//                    public static Class<? extends PageTransformer> Accordion = AccordionTransformer.class;
-//                    public static Class<? extends PageTransformer> BackgroundToForeground = BackgroundToForegroundTransformer.class;
-//                    public static Class<? extends PageTransformer> ForegroundToBackground = ForegroundToBackgroundTransformer.class;
-//                    public static Class<? extends PageTransformer> CubeIn = CubeInTransformer.class;
-//                    public static Class<? extends PageTransformer> CubeOut = CubeOutTransformer.class;
-//                    public static Class<? extends PageTransformer> DepthPage = DepthPageTransformer.class;
-//                    public static Class<? extends PageTransformer> FlipHorizontal = FlipHorizontalTransformer.class;
-//                    public static Class<? extends PageTransformer> FlipVertical = FlipVerticalTransformer.class;
-//                    public static Class<? extends PageTransformer> RotateDown = RotateDownTransformer.class;
-//                    public static Class<? extends PageTransformer> RotateUp = RotateUpTransformer.class;
-//                    public static Class<? extends PageTransformer> ScaleInOut = ScaleInOutTransformer.class;
-//                    public static Class<? extends PageTransformer> Stack = StackTransformer.class;
-//                    public static Class<? extends PageTransformer> Tablet = TabletTransformer.class;
-//                    public static Class<? extends PageTransformer> ZoomIn = ZoomInTransformer.class;
-//                    public static Class<? extends PageTransformer> ZoomOut = ZoomOutTranformer.class;
-//                    public static Class<? extends PageTransformer> ZoomOutSlide = ZoomOutSlideTransformer.class;
-
-
+////                    public static Class<? extends PageTransformer> Default = DefaultTransformer.class;
+////                    public static Class<? extends PageTransformer> Accordion = AccordionTransformer.class;
+////                    public static Class<? extends PageTransformer> BackgroundToForeground = BackgroundToForegroundTransformer.class;
+////                    public static Class<? extends PageTransformer> ForegroundToBackground = ForegroundToBackgroundTransformer.class;
+////                    public static Class<? extends PageTransformer> CubeIn = CubeInTransformer.class;
+////                    public static Class<? extends PageTransformer> CubeOut = CubeOutTransformer.class;
+////                    public static Class<? extends PageTransformer> DepthPage = DepthPageTransformer.class;
+////                    public static Class<? extends PageTransformer> FlipHorizontal = FlipHorizontalTransformer.class;
+////                    public static Class<? extends PageTransformer> FlipVertical = FlipVerticalTransformer.class;
+////                    public static Class<? extends PageTransformer> RotateDown = RotateDownTransformer.class;
+////                    public static Class<? extends PageTransformer> RotateUp = RotateUpTransformer.class;
+////                    public static Class<? extends PageTransformer> ScaleInOut = ScaleInOutTransformer.class;
+////                    public static Class<? extends PageTransformer> Stack = StackTransformer.class;
+////                    public static Class<? extends PageTransformer> Tablet = TabletTransformer.class;
+////                    public static Class<? extends PageTransformer> ZoomIn = ZoomInTransformer.class;
+////                    public static Class<? extends PageTransformer> ZoomOut = ZoomOutTranformer.class;
+////                    public static Class<? extends PageTransformer> ZoomOutSlide = ZoomOutSlideTransformer.class;
+//
+//
             }
 
             @Override

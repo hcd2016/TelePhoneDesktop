@@ -22,7 +22,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -37,11 +36,9 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
-import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
-import com.desktop.telephone.telephonedesktop.bean.BlackListInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
@@ -58,14 +55,13 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TestDeskActivity extends BaseActivity {
+public class NewMainActivity extends BaseActivity {
     @BindView(R.id.viewpager)
     ViewPager viewpager;
     private int line = 4;//行
@@ -184,8 +180,8 @@ public class TestDeskActivity extends BaseActivity {
                     List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
                     for (int j = 0; j < packInfos1.size(); j++) {
                         PackageInfo packInfo = packInfos1.get(j);
-                        if (packInfo.packageName.equals("com.android.camera2")) {
-//                        if(packInfo.packageName.equals("com.android.camera")) {
+//                        if (packInfo.packageName.equals("com.android.camera2")) {
+                        if(packInfo.packageName.equals("com.android.camera")) {
                             moveItem.setIconType(2);
                             moveItem.setTitle("相机");
                             moveItem.setPackageName(packInfo.packageName);
@@ -335,13 +331,13 @@ public class TestDeskActivity extends BaseActivity {
         @NonNull
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            View view = View.inflate(TestDeskActivity.this, R.layout.item_main_view_pager, null);
+            View view = View.inflate(NewMainActivity.this, R.layout.item_main_view_pager, null);
             recycleView = view.findViewById(R.id.recycleView);
             final TextView tv_time = view.findViewById(R.id.tv_time);
             final TextView tv_date = view.findViewById(R.id.tv_date);
             RelativeLayout rl_header_container = view.findViewById(R.id.rl_header_container);
             //剩余高度
-            int viewHeight = Utils.getScreenHeight(TestDeskActivity.this) - getStatusBarHeight() - ((line + 3) * DensityUtil.dip2px(TestDeskActivity.this, 10));
+            int viewHeight = Utils.getScreenHeight(NewMainActivity.this) - getStatusBarHeight() - ((line + 3) * DensityUtil.dip2px(NewMainActivity.this, 10));
             ViewGroup.LayoutParams lp;
             lp = rl_header_container.getLayoutParams();
             lp.height = viewHeight / line;
@@ -360,7 +356,7 @@ public class TestDeskActivity extends BaseActivity {
                 }
             }.run();
 
-            MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(TestDeskActivity.this, row);
+            MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(NewMainActivity.this, row);
             //            gridLayoutManager.setScrollEnabled(false);
             recycleView.setLayoutManager(gridLayoutManager);
             List<DesktopIconBean> dataList = list.get(position);
@@ -438,8 +434,8 @@ public class TestDeskActivity extends BaseActivity {
         @Override
         protected void convert(BaseViewHolder helper, final DesktopIconBean item) {
             //计算item宽高
-            int screenHeight = Utils.getScreenHeight(TestDeskActivity.this);
-            int screenWidth = Utils.getScreenWidth(TestDeskActivity.this);
+            int screenHeight = Utils.getScreenHeight(NewMainActivity.this);
+            int screenWidth = Utils.getScreenWidth(NewMainActivity.this);
             helper.itemView.setLayoutParams(new AbsListView.LayoutParams(screenWidth / 3, (screenHeight - getStatusBarHeight()) / 4));
 
             //
@@ -478,7 +474,7 @@ public class TestDeskActivity extends BaseActivity {
                         switch (item.getTitle()) {
                             case "电话":
                                 CallActivity.startActivity(0, mContext);
-//                                mContext.startActivity(new Intent(mContext,TestDeskActivity.class));
+//                                mContext.startActivity(new Intent(mContext,NewMainActivity.class));
                                 break;
                             case "电子相册":
                                 mContext.startActivity(new Intent(mContext, PhotosActivity.class));

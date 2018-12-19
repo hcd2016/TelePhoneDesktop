@@ -1,10 +1,6 @@
 package com.desktop.telephone.telephonedesktop.view;
 
-import java.lang.ref.SoftReference;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,26 +8,22 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.StateListDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.AllAppsActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.BlacklistActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.CallActivity;
-import com.desktop.telephone.telephonedesktop.desktop.Activity.CallingActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.ContactsListActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.PhotosActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.RecordAudioActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.SosActivity;
-import com.desktop.telephone.telephonedesktop.desktop.Activity.TestDeskActivity;
+import com.desktop.telephone.telephonedesktop.desktop.Activity.NewMainActivity;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
@@ -111,7 +103,7 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
                         switch (moveItem.getTitle()) {
                             case "电话":
 //                                CallActivity.startActivity(0,mContext);
-                                mContext.startActivity(new Intent(mContext,TestDeskActivity.class));
+                                mContext.startActivity(new Intent(mContext,NewMainActivity.class));
                                 break;
                             case "电子相册":
                                 mContext.startActivity(new Intent(mContext, PhotosActivity.class));
