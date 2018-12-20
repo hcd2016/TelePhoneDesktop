@@ -70,10 +70,10 @@ public class SmsRecevier extends BroadcastReceiver {
 //                                }
 //                            }
 //
-//                        }else {//白名单模式,拦截非白名单所有号码
+//                        }else {//红名单模式,拦截非红名单所有号码
 //                            for (int i = 0; i < blackListInfoBeans.size(); i++) {
 //                                if(blackListInfoBeans.get(i).getType() == 2) {
-//                                    if(!blackListInfoBeans.get(i).getPhone().equals(address)) {//只要不是白名单号码 全部拦截
+//                                    if(!blackListInfoBeans.get(i).getPhone().equals(address)) {//只要不是红名单号码 全部拦截
 //                                        // 中止发送通知
 //                                        abortBroadcast();
 //                                    }

@@ -22,6 +22,8 @@ import com.desktop.telephone.telephonedesktop.bean.EventBlacklistInfoBean;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.BlacklistAddActivity;
 import com.desktop.telephone.telephonedesktop.desktop.dialog.BlacklistDeleteDialog;
 import com.desktop.telephone.telephonedesktop.gen.BlackListInfoBeanDao;
+import com.desktop.telephone.telephonedesktop.util.BlackListFileUtil;
+import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
@@ -41,7 +43,7 @@ public class BlackListFramgent extends Fragment {
     @BindView(R.id.recycleView)
     RecyclerView recycleView;
     Unbinder unbinder;
-    private int type = 1;//1为白名单,2为黑名单
+    private int type = 1;//1为红名单,2为黑名单
     private List<BlackListInfoBean> list;
     private List<BlackListInfoBean> blackList;
     private List<BlackListInfoBean> whiteList;
@@ -124,7 +126,7 @@ public class BlackListFramgent extends Fragment {
             BlackListInfoBean deletebean = event.getDeletebean();
             if (type == 1) {//当前是黑名单fragment
                 if (event.isNeedDelete()) {
-                    if (deletebean.getType() == 1) {//删除黑名单,添加到白名单
+                    if (deletebean.getType() == 1) {//删除黑名单,添加到红名单
                         Iterator<BlackListInfoBean> it = blackList.iterator();
                         while (it.hasNext()) {
                             if (it.next().getPhone().equals(deletebean.getPhone())) {
@@ -142,7 +144,7 @@ public class BlackListFramgent extends Fragment {
                     }
                 }
                 blackListAdapter.notifyDataSetChanged();
-            } else {//当前是白名单framgment
+            } else {//当前是红名单framgment
                 if (event.isNeedDelete()) {
                     if (deletebean.getType() == 1) {
                         whiteList.add(0, addbean);
@@ -155,7 +157,7 @@ public class BlackListFramgent extends Fragment {
                         }
                     }
                 } else {
-                    if (addbean.getType() == 2) {//是白名单添加
+                    if (addbean.getType() == 2) {//是红名单添加
                         whiteList.add(0, addbean);
                     }
                 }
@@ -180,7 +182,7 @@ public class BlackListFramgent extends Fragment {
     }
 
 //            if (event.isNeedDelete()) {
-//                if (addbean.getType() == 1) {//删除黑名单,添加到白名单
+//                if (addbean.getType() == 1) {//删除黑名单,添加到红名单
 //                    blackList.remove(deletebean);
 //                } else {
 //                    blackList.add(addbean);
@@ -212,15 +214,12 @@ public class BlackListFramgent extends Fragment {
         blacklistDeleteDialog.setBtnClickListener(new BlacklistDeleteDialog.BtnClickListener() {
             @Override
             public void callClick() {//拨号
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                Uri data = Uri.parse("tel:" + blackListInfoBean.getPhone());
-                intent.setData(data);
-                startActivity(intent);
+                CallUtil.call(getActivity(),blackListInfoBean.getPhone());
             }
 
             @Override
-            public void addToListClick() {//加入黑/白名单
-                if(type == 1) {//加入到白名单
+            public void addToListClick() {//加入黑/红名单
+                if(type == 1) {//加入到红名单
                     DaoUtil.getBlackListInfoBeanDao().delete(blackListInfoBean);
 
                     BlackListInfoBean addBlackListInfoBean = new BlackListInfoBean(null, blackListInfoBean.getPhone(), 2, Utils.getFormatDate());
@@ -232,6 +231,7 @@ public class BlackListFramgent extends Fragment {
                     eventBlacklistInfoBean.setAddbean(addBlackListInfoBean);
                     EventBus.getDefault().post(eventBlacklistInfoBean);
                     Utils.Toast("操作成功");
+                    BlackListFileUtil.updateFile();//更新文件
                     return;
                 }else {
                     DaoUtil.getBlackListInfoBeanDao().delete(blackListInfoBean);
@@ -262,6 +262,7 @@ public class BlackListFramgent extends Fragment {
 //                }
 //                EventBus.getDefault().post(new EventBean(EventBean.BLACK_LIST_ALL_NOTIFAL));
 //                Utils.Toast("操作成功");
+                BlackListFileUtil.updateFile();//更新文件
             }
 
             @Override
@@ -275,6 +276,7 @@ public class BlackListFramgent extends Fragment {
                     whiteListAdapter.notifyDataSetChanged();
                 }
                 Utils.Toast("删除成功");
+                BlackListFileUtil.updateFile();//更新文件
             }
 
             @Override
@@ -306,7 +308,7 @@ public class BlackListFramgent extends Fragment {
             if (item.getType() == 1) {
                 helper.setText(R.id.tv_desc, "黑名单号码");
             } else {
-                helper.setText(R.id.tv_desc, "白名单号码");
+                helper.setText(R.id.tv_desc, "红名单号码");
             }
         }
     }

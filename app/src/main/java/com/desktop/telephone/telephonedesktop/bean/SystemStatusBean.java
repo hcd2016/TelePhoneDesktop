@@ -10,11 +10,11 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class SystemStatusBean {
     @Id
-    public long id;
-    public int blackListModeType = 0; //黑白名单模式,0为普通模式,1为
+    public Long id;
+    public int blackListModeType = 0; //黑红名单模式,0为普通模式,1为黑名单,2为白名单
 
-    @Generated(hash = 591960185)
-    public SystemStatusBean(long id, int blackListModeType) {
+    @Generated(hash = 1277101765)
+    public SystemStatusBean(Long id, int blackListModeType) {
         this.id = id;
         this.blackListModeType = blackListModeType;
     }
@@ -31,11 +31,11 @@ public class SystemStatusBean {
         this.blackListModeType = blackListModeType;
     }
 
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

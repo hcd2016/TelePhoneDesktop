@@ -14,7 +14,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 删除黑白名单
+ * 删除黑红名单
  */
 public class BlacklistDeleteDialog extends TBaseDialog {
     public void setBtnClickListener(BtnClickListener btnClickListener) {
@@ -39,7 +39,7 @@ public class BlacklistDeleteDialog extends TBaseDialog {
     public void setData(BlackListInfoBean blackListInfoBean) {
         tvPhoneNum.setText(blackListInfoBean.getPhone());
         if (blackListInfoBean.getType() == 1) {
-            tvBtnAddToList.setText("加入白名单");
+            tvBtnAddToList.setText("加入红名单");
         } else {
             tvBtnAddToList.setText("加入黑名单");
         }

@@ -19,6 +19,7 @@ import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.SystemStatusBean;
 import com.desktop.telephone.telephonedesktop.desktop.fragment.BlackListFramgent;
+import com.desktop.telephone.telephonedesktop.util.BlackListFileUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
@@ -62,13 +63,16 @@ public class BlacklistActivity extends BaseActivity {
     private void initView() {
         tabList = new ArrayList<>();
         tabList.add("黑名单");
-        tabList.add("白名单");
+        tabList.add("红名单");
         myApdater = new MyApdater(getSupportFragmentManager());
         viewpager.setAdapter(myApdater);
         tablayout.setupWithViewPager(viewpager);
         systemStatusBeans = DaoUtil.getSystemStatusBeanDao().loadAll();
         if (systemStatusBeans != null && systemStatusBeans.size() != 0) {
             modeStatus = systemStatusBeans.get(0).getBlackListModeType();
+        } else {
+            DaoUtil.getSystemStatusBeanDao().insert(new SystemStatusBean(null, modeStatus));
+            systemStatusBeans = DaoUtil.getSystemStatusBeanDao().loadAll();
         }
         //初始化:
         if (modeStatus == 0) {
@@ -76,12 +80,12 @@ public class BlacklistActivity extends BaseActivity {
         } else if (modeStatus == 1) {
             tvModeDesc.setText("黑名单模式");
         } else {
-            tvModeDesc.setText("白名单模式");
+            tvModeDesc.setText("红名单模式");
         }
 
     }
 
-    @OnClick({R.id.iv_back, R.id.ll_mode_container,R.id.ll_btn_add_container})
+    @OnClick({R.id.iv_back, R.id.ll_mode_container, R.id.ll_btn_add_container})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -95,12 +99,12 @@ public class BlacklistActivity extends BaseActivity {
                 }
                 break;
             case R.id.ll_btn_add_container://添加
-                BlacklistAddActivity.startActivity(this, viewpager.getCurrentItem()+1,"");
+                BlacklistAddActivity.startActivity(this, viewpager.getCurrentItem() + 1, "");
                 break;
         }
     }
 
-    private int modeStatus = 0; //0为普通,1为黑名单,2为白名单
+    private int modeStatus = 0; //0为普通,1为黑名单,2为红名单
 
     private void showModePop() {
         final int[] choiseStatus = {modeStatus};//记录选中状态,关闭时有可能没确定.
@@ -143,7 +147,7 @@ public class BlacklistActivity extends BaseActivity {
                 choiseStatus[0] = 1;
             }
         });
-        llModeWhitelistContainer.setOnClickListener(new View.OnClickListener() {//选择白名单模式
+        llModeWhitelistContainer.setOnClickListener(new View.OnClickListener() {//选择红名单模式
             @Override
             public void onClick(View view) {
                 ivGouNomal.setVisibility(View.GONE);
@@ -161,15 +165,17 @@ public class BlacklistActivity extends BaseActivity {
                 } else if (modeStatus == 1) {
                     tvModeDesc.setText("黑名单模式");
                 } else {
-                    tvModeDesc.setText("白名单模式");
+                    tvModeDesc.setText("红名单模式");
                 }
-                if (systemStatusBeans == null || systemStatusBeans.size() == 0) {
-                    SystemStatusBean systemStatusBean = new SystemStatusBean(0, modeStatus);
-                    DaoUtil.getSystemStatusBeanDao().insertOrReplace(systemStatusBean);
-                } else {
-                    systemStatusBeans.get(0).setBlackListModeType(modeStatus);
-                    DaoUtil.getSystemStatusBeanDao().update(systemStatusBeans.get(0));
-                }
+//                if (systemStatusBeans == null || systemStatusBeans.size() == 0) {
+//                    SystemStatusBean systemStatusBean = new SystemStatusBean(null, modeStatus);
+//                    DaoUtil.getSystemStatusBeanDao().insertOrReplace(systemStatusBean);
+//                } else {
+                BlackListFileUtil.setModeChangeFile(modeStatus);//保存模式对应文件处理,在保存数据库之前调用
+                systemStatusBeans.get(0).setBlackListModeType(modeStatus);
+                DaoUtil.getSystemStatusBeanDao().update(systemStatusBeans.get(0));
+//                }
+
                 popupWindow.dismiss();
                 Utils.Toast("设置成功");
             }
@@ -202,7 +208,7 @@ public class BlacklistActivity extends BaseActivity {
         @Override
         public Fragment getItem(int i) {
             if (i == 0) {
-                return BlackListFramgent.newInstance(1);//1为黑名单,2为白名单
+                return BlackListFramgent.newInstance(1);//1为黑名单,2为红名单
             } else {
                 return BlackListFramgent.newInstance(2);
             }

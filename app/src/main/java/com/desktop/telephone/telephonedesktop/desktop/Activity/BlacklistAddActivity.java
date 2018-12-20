@@ -20,6 +20,7 @@ import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.BlackListInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBlacklistInfoBean;
+import com.desktop.telephone.telephonedesktop.util.BlackListFileUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
@@ -32,7 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * 黑/白名单添加
+ * 黑/红名单添加
  */
 public class BlacklistAddActivity extends BaseActivity {
     @BindView(R.id.iv_back)
@@ -60,6 +61,7 @@ public class BlacklistAddActivity extends BaseActivity {
         setContentView(R.layout.activity_blacklist_add);
         ButterKnife.bind(this);
         initView();
+        BlackListFileUtil.createFlies();
     }
 
     private void initView() {
@@ -77,7 +79,7 @@ public class BlacklistAddActivity extends BaseActivity {
         if (modeStatus == 1) {
             tvModeDesc.setText("黑名单");
         } else {
-            tvModeDesc.setText("白名单");
+            tvModeDesc.setText("红名单");
         }
     }
 
@@ -109,7 +111,7 @@ public class BlacklistAddActivity extends BaseActivity {
                                     return;
                                 } else {
                                     alertDialog = new AlertDialog.Builder(BlacklistAddActivity.this)
-                                            .setMessage("该号码已存在白名单列表,是否从白名单移至黑名单?")
+                                            .setMessage("该号码已存在红名单列表,是否从红名单移至黑名单?")
                                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -124,6 +126,7 @@ public class BlacklistAddActivity extends BaseActivity {
                                                     eventBlacklistInfoBean.setAddbean(addBlackListInfoBean);
                                                     EventBus.getDefault().post(eventBlacklistInfoBean);
                                                     Utils.Toast("操作成功");
+                                                    BlackListFileUtil.updateFile();//更新文件
                                                     return;
                                                 }
                                             })
@@ -136,13 +139,13 @@ public class BlacklistAddActivity extends BaseActivity {
                                             .create();
                                     alertDialog.show();
                                 }
-                            } else {//白名单类型
+                            } else {//红名单类型
                                 if (blackListInfoBean.getType() == modeStatus) {
-                                    Utils.Toast("该号码已存在白名单列表,请勿重复添加");
+                                    Utils.Toast("该号码已存在红名单列表,请勿重复添加");
                                     return;
                                 } else {
                                     alertDialog = new AlertDialog.Builder(BlacklistAddActivity.this)
-                                            .setMessage("该号码已存在黑名单列表,是否从黑名单移至白名单?")
+                                            .setMessage("该号码已存在黑名单列表,是否从黑名单移至红名单?")
                                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -157,6 +160,7 @@ public class BlacklistAddActivity extends BaseActivity {
                                                     eventBlacklistInfoBean.setAddbean(addBlackListInfoBean);
                                                     EventBus.getDefault().post(eventBlacklistInfoBean);
                                                     Utils.Toast("操作成功");
+                                                    BlackListFileUtil.updateFile();//更新文件
                                                     return;
                                                 }
                                             })
@@ -177,7 +181,7 @@ public class BlacklistAddActivity extends BaseActivity {
                             for (int i = 0; i < list.size(); i++) {
                                 BlackListInfoBean blackListInfoBean = list.get(i);
                                 if (blackListInfoBean.getPhone().equals(getIntent().getStringExtra("phoneNum"))) {
-                                    if (modeStatus != blackListInfoBean.getType()) {//修改黑名单选的白名单添加,重设id保证排序
+                                    if (modeStatus != blackListInfoBean.getType()) {//修改黑名单选的红名单添加,重设id保证排序
                                         blackListInfoBean.setId(null);
                                         blackListInfoBean.setType(modeStatus);
                                         blackListInfoBean.setPhone(phoneNum);
@@ -204,6 +208,7 @@ public class BlacklistAddActivity extends BaseActivity {
                         }
                     }
                 }
+                BlackListFileUtil.updateFile();//更新黑名单文件
                 break;
             case R.id.ll_mode_container:
                 if (popupWindow != null && popupWindow.isShowing()) {
@@ -244,7 +249,7 @@ public class BlacklistAddActivity extends BaseActivity {
                 choiseStatus[0] = 1;
             }
         });
-        llModeWhitelistContainer.setOnClickListener(new View.OnClickListener() {//选择白名单模式
+        llModeWhitelistContainer.setOnClickListener(new View.OnClickListener() {//选择红名单模式
             @Override
             public void onClick(View view) {
                 ivBlacklist.setVisibility(View.GONE);
@@ -259,7 +264,7 @@ public class BlacklistAddActivity extends BaseActivity {
                 if (modeStatus == 1) {
                     tvModeDesc.setText("黑名单");
                 } else {
-                    tvModeDesc.setText("白名单");
+                    tvModeDesc.setText("红名单");
                 }
                 popupWindow.dismiss();
             }

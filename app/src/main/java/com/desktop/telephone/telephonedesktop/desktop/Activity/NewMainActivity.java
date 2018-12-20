@@ -131,9 +131,9 @@ public class NewMainActivity extends BaseActivity {
                     moveItem.setImg_id_name("photo_icon");
                     break;
                 case 3:
-                    //黑白名单
+                    //黑红名单
                     moveItem.setIconType(1);
-                    moveItem.setTitle("黑白名单");
+                    moveItem.setTitle("黑红名单");
                     moveItem.setImg_id_name("blacklist_icon");
                     break;
                 case 4:
@@ -180,8 +180,8 @@ public class NewMainActivity extends BaseActivity {
                     List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
                     for (int j = 0; j < packInfos1.size(); j++) {
                         PackageInfo packInfo = packInfos1.get(j);
-//                        if (packInfo.packageName.equals("com.android.camera2")) {
-                        if(packInfo.packageName.equals("com.android.camera")) {
+                        if (packInfo.packageName.equals("com.android.camera2")) {
+//                        if(packInfo.packageName.equals("com.android.camera")) {
                             moveItem.setIconType(2);
                             moveItem.setTitle("相机");
                             moveItem.setPackageName(packInfo.packageName);
@@ -485,7 +485,7 @@ public class NewMainActivity extends BaseActivity {
                             case "录音":
                                 mContext.startActivity(new Intent(mContext, RecordAudioActivity.class));
                                 break;
-                            case "黑白名单":
+                            case "黑红名单":
                                 mContext.startActivity(new Intent(mContext, BlacklistActivity.class));
                                 break;
                             case "智能通讯录":

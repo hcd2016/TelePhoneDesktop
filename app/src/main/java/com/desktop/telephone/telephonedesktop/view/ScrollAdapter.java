@@ -116,7 +116,7 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
                             case "录音":
                                 mContext.startActivity(new Intent(mContext, RecordAudioActivity.class));
                                 break;
-                            case "黑白名单":
+                            case "黑红名单":
                                 mContext.startActivity(new Intent(mContext, BlacklistActivity.class));
                                 break;
                             case "智能通讯录":

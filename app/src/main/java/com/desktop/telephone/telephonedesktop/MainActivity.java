@@ -123,9 +123,9 @@ public class MainActivity extends BaseActivity {
                     moveItem.setImg_id_name("photo_icon");
                     break;
                 case 3:
-                    //黑白名单
+                    //黑红名单
                     moveItem.setIconType(1);
-                    moveItem.setTitle("黑白名单");
+                    moveItem.setTitle("黑红名单");
                     moveItem.setImg_id_name("blacklist_icon");
                     break;
 //                case 4:

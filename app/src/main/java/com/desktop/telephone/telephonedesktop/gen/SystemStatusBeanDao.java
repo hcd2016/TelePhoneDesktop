@@ -24,7 +24,7 @@ public class SystemStatusBeanDao extends AbstractDao<SystemStatusBean, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, long.class, "id", true, "_id");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property BlackListModeType = new Property(1, int.class, "blackListModeType", false, "BLACK_LIST_MODE_TYPE");
     }
 
@@ -41,7 +41,7 @@ public class SystemStatusBeanDao extends AbstractDao<SystemStatusBean, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"SYSTEM_STATUS_BEAN\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 0: id
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"BLACK_LIST_MODE_TYPE\" INTEGER NOT NULL );"); // 1: blackListModeType
     }
 
@@ -54,26 +54,34 @@ public class SystemStatusBeanDao extends AbstractDao<SystemStatusBean, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, SystemStatusBean entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
         stmt.bindLong(2, entity.getBlackListModeType());
     }
 
     @Override
     protected final void bindValues(SQLiteStatement stmt, SystemStatusBean entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
         stmt.bindLong(2, entity.getBlackListModeType());
     }
 
     @Override
     public Long readKey(Cursor cursor, int offset) {
-        return cursor.getLong(offset + 0);
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public SystemStatusBean readEntity(Cursor cursor, int offset) {
         SystemStatusBean entity = new SystemStatusBean( //
-            cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getInt(offset + 1) // blackListModeType
         );
         return entity;
@@ -81,7 +89,7 @@ public class SystemStatusBeanDao extends AbstractDao<SystemStatusBean, Long> {
      
     @Override
     public void readEntity(Cursor cursor, SystemStatusBean entity, int offset) {
-        entity.setId(cursor.getLong(offset + 0));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setBlackListModeType(cursor.getInt(offset + 1));
      }
     
@@ -102,7 +110,7 @@ public class SystemStatusBeanDao extends AbstractDao<SystemStatusBean, Long> {
 
     @Override
     public boolean hasKey(SystemStatusBean entity) {
-        throw new UnsupportedOperationException("Unsupported for entities with a non-null key");
+        return entity.getId() != null;
     }
 
     @Override

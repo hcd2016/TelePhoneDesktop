@@ -9,7 +9,7 @@ public class BlackListInfoBean {
     @Id(autoincrement = true)
     public Long id;
     public String phone;
-    public int type = 1;//1为黑名单,2为白名单
+    public int type = 1;//1为黑名单,2为红名单
     public String date;
 
     @Generated(hash = 867824689)
