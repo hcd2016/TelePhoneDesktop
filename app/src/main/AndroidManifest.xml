@@ -80,6 +80,8 @@
             android:launchMode="singleInstance" />
 
 
+
+
         <!-- 短信广播 -->
         <receiver android:name=".desktop.recevier.SmsRecevier">
             <intent-filter android:priority="1000000000">

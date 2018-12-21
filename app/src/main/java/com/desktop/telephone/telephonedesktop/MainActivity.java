@@ -21,6 +21,7 @@ import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
+import com.desktop.telephone.telephonedesktop.util.SPUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.ScrollAdapter;
 import com.desktop.telephone.telephonedesktop.view.ScrollLayout;
@@ -83,7 +84,11 @@ public class MainActivity extends BaseActivity {
         //初始化容器Adapter
 //        loadBackground();
         EventBus.getDefault().register(this);
-        CallUtil.showCallerIds(this,1);
+        boolean isSend = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_SEND_COMMING_CALL, false);
+        if(!isSend) {
+            CallUtil.showCallerIds(this,1);
+            SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_SEND_COMMING_CALL,true);
+        }
     }
 
 

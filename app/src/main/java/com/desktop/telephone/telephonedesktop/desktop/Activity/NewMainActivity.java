@@ -108,7 +108,7 @@ public class NewMainActivity extends BaseActivity {
      */
     private void initIconData() {
         defaultList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 11; i++) {
             DesktopIconBean moveItem = new DesktopIconBean();
             moveItem.setMid(i);
             switch (i) {
@@ -188,6 +188,12 @@ public class NewMainActivity extends BaseActivity {
                             moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
                         }
                     }
+                    break;
+                case 10:
+                    //话机设置
+                    moveItem.setIconType(1);
+                    moveItem.setTitle("话机设置");
+                    moveItem.setImg_id_name("phone_setting");
                     break;
             }
             moveItem.setIconBgColor(Utils.getColorBgFromPosition(i));
@@ -496,6 +502,9 @@ public class NewMainActivity extends BaseActivity {
                                 break;
                             case "所有应用":
                                 mContext.startActivity(new Intent(mContext, AllAppsActivity.class));
+                                break;
+                            case "话机设置":
+                                mContext.startActivity(new Intent(mContext,TelephoneSettingActivity.class));
                                 break;
                         }
                     } else if (item.getIconType() == 3) {//一键拨号

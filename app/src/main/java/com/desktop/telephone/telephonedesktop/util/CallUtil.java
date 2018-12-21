@@ -35,9 +35,10 @@ public class CallUtil {
         } else {
             isHandFree = false;
         }
+        int i = SPUtil.getInstance().getInteger(SPUtil.KEY_INTERCHANGER_SETTING);
         Intent intent = new Intent();
         intent.setAction("com.tongen.Tel.APPLICATION_CALL");
-        intent.putExtra("phoneNumber", "9P" + phoneNum);
+        intent.putExtra("phoneNumber", i+"P" + phoneNum);
         intent.putExtra("isSecret", false);
         intent.putExtra("tag", "");
         context.sendBroadcast(intent);
@@ -91,6 +92,16 @@ public class CallUtil {
         Intent intent = new Intent();
         intent.putExtra("status", status);
         intent.setAction("com.tongen.action.set.showCallerIDs");
+        context.sendBroadcast(intent);
+    }
+
+    /**
+     * 交换机设置提交
+     */
+    public static void interchangerSetting(Context context, int time) {
+        Intent intent = new Intent();
+        intent.putExtra("time",time);
+        intent.setAction("com.tongen.action.switch.time");
         context.sendBroadcast(intent);
     }
 }

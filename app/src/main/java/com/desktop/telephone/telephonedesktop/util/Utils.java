@@ -69,6 +69,7 @@ public class Utils {
         appIconIdMap.put("address_list_icon", R.drawable.address_list_icon);//通话记录
         appIconIdMap.put("sos_icon", R.drawable.sos_icon);//sos
         appIconIdMap.put("all_apps_icon", R.drawable.all_apps_icon);//所有应用
+        appIconIdMap.put("phone_setting", R.drawable.phone_setting);//所有应用
     }
 
 

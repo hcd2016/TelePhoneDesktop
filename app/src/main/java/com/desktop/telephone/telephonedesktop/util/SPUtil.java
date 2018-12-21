@@ -18,6 +18,9 @@ public class SPUtil {
 
     public static final String KEY_HAND_STATUS = "key_hand_status";//记录手柄状态,0为放下,1为抬起.
     public static final String KEY_CALLING_WITH_TALKING = "key_calling_with_talking";//通话过程中拨打电话
+    public static final String KEY_IS_SHOW_COMMING_CALL_NUM = "key_is_show_comming_call_num";//是否显示来电
+    public static final String KEY_IS_SEND_COMMING_CALL = "key_is_send_comming_call";//第一次是否发送过来电
+    public static final String KEY_INTERCHANGER_SETTING= "key_interchanger_setting";//第一次是否发送过来电
 
 
     public static final String SHARED_PREFERENCE_NAME = "sp_file";

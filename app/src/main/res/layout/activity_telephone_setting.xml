@@ -36,42 +36,55 @@
         android:text="话机设置"
         android:textSize="24sp" />
 
-    <LinearLayout
-        android:id="@+id/ll_mode_container"
+
+    <TextView
+        android:id="@+id/tv_mode_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp">
+        android:paddingLeft="50dp"
+        android:text="是否显示来电号码"
+        android:textColor="@color/text_333333"
+        android:textSize="28sp" />
 
-        <TextView
-            android:id="@+id/tv_mode_desc"
-            android:layout_width="0dp"
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:paddingLeft="50dp"
+        android:paddingTop="20dp">
+
+        <RadioButton
+            android:id="@+id/rb_show"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="是否显示来电号码"
+            android:checked="true"
+            android:text="显示"
             android:textColor="@color/text_333333"
-            android:textSize="24sp" />
+            android:textSize="28sp" />
 
-        <ImageView
-            android:id="@+id/iv_arrow"
-            android:layout_width="30dp"
-            android:layout_height="23dp"
-            android:src="@drawable/arrow_down" />
-    </LinearLayout>
+        <RadioButton
+            android:id="@+id/rb_hide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="隐藏"
+            android:textColor="@color/text_333333"
+            android:textSize="28sp" />
+    </RadioGroup>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp"
-        android:text="交换机设置"
+        android:text="交换机设置(请输入0~3参数)"
         android:textSize="24sp" />
 
     <LinearLayout
+        android:paddingLeft="50dp"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -83,14 +96,30 @@
             android:paddingLeft="15dp"
             android:text="交换机参数设置:"
             android:textColor="@color/text_333333"
-            android:textSize="24sp" />
+            android:textSize="28sp" />
 
         <EditText
+            android:maxLength="1"
+            android:background="@null"
+            android:id="@+id/et_interchanger"
+            android:text="0"
+            android:digits="0123"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:hint="请输入0-3类型参数"
-            android:textSize="24sp" />
+            android:textSize="28sp" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="80dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="保存"
+        android:textColor="@color/white"
+        android:textSize="28sp" />
 </LinearLayout>
