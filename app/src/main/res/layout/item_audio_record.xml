@@ -19,11 +19,11 @@
         android:layout_height="wrap_content"
         android:text="201020505005"
         android:textColor="@color/text_333333"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
     <TextView
         android:id="@+id/tv_date"
         android:layout_marginTop="5dp"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:text="2018-08-08 12:12:12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

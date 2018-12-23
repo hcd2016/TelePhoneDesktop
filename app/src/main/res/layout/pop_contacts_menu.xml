@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="250dp"
-    android:layout_height="120dp"
+    android:layout_width="125dp"
+    android:layout_height="80dp"
     android:background="@color/bg_gray"
     android:orientation="vertical">
     <TextView
         android:textStyle="bold"
         android:id="@+id/tv_daoru"
-        android:padding="10dp"
+        android:padding="5dp"
         android:gravity="center"
         android:textColor="@color/text_333333"
-        android:textSize="28sp"
+        android:textSize="18sp"
         android:text="导入"
         android:layout_weight="1"
         android:layout_width="match_parent"
@@ -22,9 +22,9 @@
     <TextView
         android:textStyle="bold"
         android:id="@+id/tv_daochu"
-        android:padding="10dp"
+        android:padding="5dp"
         android:gravity="center"
-        android:textSize="28sp"
+        android:textSize="18sp"
         android:textColor="@color/text_333333"
         android:text="导出"
         android:layout_weight="1"

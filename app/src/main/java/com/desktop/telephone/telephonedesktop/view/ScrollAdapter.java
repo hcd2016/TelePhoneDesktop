@@ -105,7 +105,7 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
 //                                CallActivity.startActivity(0,mContext);
                                 mContext.startActivity(new Intent(mContext,NewMainActivity.class));
                                 break;
-                            case "电子相册":
+                            case "相册":
                                 mContext.startActivity(new Intent(mContext, PhotosActivity.class));
                                 break;
 //                            case "一键拨号":
@@ -119,7 +119,7 @@ public class ScrollAdapter implements ScrollLayout.SAdapter {
                             case "黑红名单":
                                 mContext.startActivity(new Intent(mContext, BlacklistActivity.class));
                                 break;
-                            case "智能通讯录":
+                            case "联系人":
                                 mContext.startActivity(new Intent(mContext, ContactsListActivity.class));
                                 break;
                             case "通话记录":

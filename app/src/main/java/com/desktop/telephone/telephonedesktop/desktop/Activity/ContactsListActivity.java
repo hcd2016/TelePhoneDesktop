@@ -392,7 +392,7 @@ public class ContactsListActivity extends BaseActivity {
                             popupWindow.dismiss();
                         }
                     });
-                    popupWindow = new PopupWindow(popView, DensityUtil.dip2px(this,150), LinearLayout.LayoutParams.WRAP_CONTENT);
+                    popupWindow = new PopupWindow(popView, DensityUtil.dip2px(this,125), LinearLayout.LayoutParams.WRAP_CONTENT);
                     popupWindow.setBackgroundDrawable(new BitmapDrawable());
                     popupWindow.showAsDropDown(rlTitleContainer,0,0, Gravity.RIGHT);
                     break;

@@ -17,12 +17,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:gravity="center_vertical"
-            android:paddingBottom="40dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:paddingTop="40dp"
             tools:text="15889479929"
-            android:textSize="80sp" />
+            android:textSize="40sp" />
 
 
         <LinearLayout
@@ -31,7 +29,7 @@
             android:layout_height="wrap_content">
 
             <android.support.v7.widget.RecyclerView
-                android:paddingTop="30dp"
+                android:paddingTop="15dp"
                 android:background="@color/white"
                 android:overScrollMode="never"
                 android:id="@+id/recycleView"
@@ -44,7 +42,7 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingBottom="30dp">
+                android:paddingBottom="15dp">
 
                 <RelativeLayout
                     android:id="@+id/rl_contacts_container"
@@ -53,8 +51,8 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_centerInParent="true"
                         android:src="@drawable/contacts_icon" />
                 </RelativeLayout>
@@ -68,13 +66,13 @@
                     android:layout_weight="1"
                     android:background="@drawable/shape_radus30_green"
                     android:gravity="center"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp">
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp">
 
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:src="@drawable/call_phone_icon_white" />
 
                     <TextView
@@ -93,8 +91,8 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_centerInParent="true"
                         android:src="@drawable/back_delete_icon" />
                 </RelativeLayout>

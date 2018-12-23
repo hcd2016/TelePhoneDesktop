@@ -47,7 +47,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * 电子相册
+ * 相册
  */
 public class PhotosActivity extends BaseActivity {
     @BindView(R.id.recycleView)
@@ -102,7 +102,7 @@ public class PhotosActivity extends BaseActivity {
 
     private void initView() {
         allPhotos = getAllPhotos();
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         recycleView.setLayoutManager(gridLayoutManager);
         photosAdapter = new PhotosAdapter(allPhotos);
         View empty_view = View.inflate(this, R.layout.empty_view, null);

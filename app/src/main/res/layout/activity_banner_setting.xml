@@ -18,7 +18,7 @@
         <ImageView
             android:id="@+id/iv_back"
             android:layout_width="50dp"
-            android:layout_height="35dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:src="@drawable/arrow_left_white" />
 
@@ -29,7 +29,7 @@
             android:layout_centerInParent="true"
             android:text="轮播设置"
             android:textColor="@color/white"
-            android:textSize="28sp" />
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/tv_btn_save"
@@ -40,7 +40,7 @@
             android:layout_marginRight="20dp"
             android:text="保存"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/iv_selector_title"
@@ -81,7 +81,7 @@
                         android:layout_height="wrap_content"
                         android:text="是否开启轮播"
                         android:textColor="@color/text_333333"
-                        android:textSize="24sp" />
+                        android:textSize="16sp" />
 
                     <Switch
                         android:id="@+id/switch_off"
@@ -98,6 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"/>
             <LinearLayout
+                android:gravity="center"
                 android:padding="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -114,22 +115,22 @@
                     tools:visibility="visible">
 
                     <LinearLayout
+                        android:gravity="center"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="1.2">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="进入轮播时间"
                             android:textColor="@color/text_333333"
-                            android:textSize="22sp" />
+                            android:textSize="16sp" />
 
                         <EditText
                             android:id="@+id/et_banner_begin_time"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
                             android:layout_weight="1"
                             android:background="@null"
                             android:gravity="center"
@@ -137,15 +138,15 @@
                             android:maxEms="5"
                             android:text="5"
                             android:textColor="@color/text_333333"
-                            android:textSize="26sp" />
+                            android:textSize="20sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="30dp"
+                            android:layout_marginRight="15dp"
                             android:text="分钟"
                             android:textColor="@color/text_333333"
-                            android:textSize="22sp" />
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -159,26 +160,24 @@
                             android:layout_height="wrap_content"
                             android:text="轮播速度"
                             android:textColor="@color/text_333333"
-                            android:textSize="22sp" />
+                            android:textSize="16sp" />
 
                         <EditText
                             android:id="@+id/et_banner_speed"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
                             android:layout_weight="1"
                             android:background="@null"
                             android:ems="6"
                             android:gravity="center"
                             android:inputType="number"
                             android:text="3"
-                            android:textSize="26sp" />
+                            android:textSize="20sp" />
 
                         <TextView
-                            android:textSize="22sp"
+                            android:textSize="16sp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="30dp"
                             android:text="秒一张"
                             android:textColor="@color/text_333333" />
                     </LinearLayout>
@@ -200,7 +199,7 @@
                     android:layout_weight="1"
                     android:text="已加入轮播图列"
                     android:textColor="@color/text_333333"
-                    android:textSize="24sp" />
+                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/btn_banner"
@@ -209,7 +208,7 @@
                     android:gravity="center"
                     android:text="轮播预览"
                     android:textColor="@color/text_333333"
-                    android:textSize="24sp" />
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView

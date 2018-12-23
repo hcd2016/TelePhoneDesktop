@@ -22,14 +22,14 @@
         android:id="@+id/tv_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
+        android:padding="10dp"
         android:text="张三"
         android:textColor="@color/text_333333"
-        android:textSize="24sp" />
+        android:textSize="28sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="10dp"
         android:background="@color/gray_d5d" />
 </LinearLayout>

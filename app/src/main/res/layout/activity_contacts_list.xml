@@ -11,31 +11,31 @@
         android:background="@color/colorPrimaryDark"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp">
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
 
         <ImageView
             android:layout_centerVertical="true"
             android:id="@+id/iv_back"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
             android:src="@drawable/arrow_left_white" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="智能通讯录"
+            android:text="联系人"
             android:textColor="@color/white"
-            android:textSize="28sp" />
+            android:textSize="24sp" />
         <ImageView
             android:id="@+id/iv_menu"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/menu"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -67,8 +67,8 @@
             android:textSize="60sp" />
         <LinearLayout
             android:id="@+id/ll_btn_add_container"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
             android:layout_marginBottom="10dp"
             android:paddingRight="50dp"
             android:paddingLeft="50dp"
@@ -88,15 +88,15 @@
             <ImageView
                 android:layout_marginTop="2dp"
                 android:src="@drawable/add"
-                android:layout_width="40dp"
-                android:layout_height="40dp" />
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
             <TextView
                 android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="新建联系人"
                 android:textColor="@color/text_333333"
-                android:textSize="28sp" />
+                android:textSize="20sp" />
             </LinearLayout>
 
         </LinearLayout>

@@ -12,12 +12,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
@@ -107,6 +109,7 @@ public class NewMainActivity extends BaseActivity {
      * 桌面数据添加
      */
     private void initIconData() {
+        DaoUtil.getDesktopIconBeanDao().deleteAll();
         defaultList = new ArrayList<>();
         for (int i = 0; i < 11; i++) {
             DesktopIconBean moveItem = new DesktopIconBean();
@@ -119,15 +122,15 @@ public class NewMainActivity extends BaseActivity {
                     moveItem.setImg_id_name("phone_icon");
                     break;
                 case 1:
-                    //智能通讯录
+                    //联系人
                     moveItem.setIconType(1);
-                    moveItem.setTitle("智能通讯录");
+                    moveItem.setTitle("联系人");
                     moveItem.setImg_id_name("call_records_icon");
                     break;
                 case 2:
-                    //电子相册
+                    //相册
                     moveItem.setIconType(1);
-                    moveItem.setTitle("电子相册");
+                    moveItem.setTitle("相册");
                     moveItem.setImg_id_name("photo_icon");
                     break;
                 case 3:
@@ -151,7 +154,7 @@ public class NewMainActivity extends BaseActivity {
                 case 6:
                     //sos
                     moveItem.setIconType(1);
-                    moveItem.setTitle("SOS");
+                    moveItem.setTitle("紧急呼叫");
                     moveItem.setImg_id_name("sos_icon");
                     break;
                 case 7:
@@ -160,7 +163,7 @@ public class NewMainActivity extends BaseActivity {
                     moveItem.setTitle("所有应用");
                     moveItem.setImg_id_name("all_apps_icon");
                     break;
-                case 8://设置
+                case 9://设置
                     PackageManager pm = getPackageManager();
                     //所有的安装在系统上的应用程序包信息。
                     List<PackageInfo> packInfos = pm.getInstalledPackages(0);
@@ -170,11 +173,12 @@ public class NewMainActivity extends BaseActivity {
                             moveItem.setIconType(2);
                             moveItem.setTitle("设置");
                             moveItem.setPackageName(packInfo.packageName);
-                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+                            moveItem.setImg_id_name("settings_icon");
+//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
                         }
                     }
                     break;
-                case 9://相机 记得改上面size
+                case 8://相机 记得改上面size
                     PackageManager pm1 = getPackageManager();
                     //所有的安装在系统上的应用程序包信息。
                     List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
@@ -184,15 +188,15 @@ public class NewMainActivity extends BaseActivity {
 //                        if(packInfo.packageName.equals("com.android.camera")) {
                             moveItem.setIconType(2);
                             moveItem.setTitle("相机");
-                            moveItem.setPackageName(packInfo.packageName);
-                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
+                            moveItem.setImg_id_name("photos_icon");
+//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
                         }
                     }
                     break;
                 case 10:
-                    //话机设置
+                    //分机设置
                     moveItem.setIconType(1);
-                    moveItem.setTitle("话机设置");
+                    moveItem.setTitle("分机设置");
                     moveItem.setImg_id_name("phone_setting");
                     break;
             }
@@ -343,7 +347,7 @@ public class NewMainActivity extends BaseActivity {
             final TextView tv_date = view.findViewById(R.id.tv_date);
             RelativeLayout rl_header_container = view.findViewById(R.id.rl_header_container);
             //剩余高度
-            int viewHeight = Utils.getScreenHeight(NewMainActivity.this) - getStatusBarHeight() - ((line + 3) * DensityUtil.dip2px(NewMainActivity.this, 10));
+            int viewHeight = Utils.getScreenHeight(NewMainActivity.this) - getStatusBarHeight() - ((line + 3) * DensityUtil.dip2px(NewMainActivity.this, 2));
             ViewGroup.LayoutParams lp;
             lp = rl_header_container.getLayoutParams();
             lp.height = viewHeight / line;
@@ -437,6 +441,7 @@ public class NewMainActivity extends BaseActivity {
             super(R.layout.item, data);
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @Override
         protected void convert(BaseViewHolder helper, final DesktopIconBean item) {
             //计算item宽高
@@ -459,13 +464,44 @@ public class NewMainActivity extends BaseActivity {
 
             tv_title.setText(item.getTitle());
             int imgUrl = Utils.getAppIconId(item.getImg_id_name());
-            rl_item_container.setBackgroundColor(item.getIconBgColor());
+//            //颜色设置:
+//            switch (item.getTitle()) {
+//                case "电话":
+//                    rl_item_container.setBackgroundColor(item.getIconBgColor());
+//                    break;
+//                case "相册":
+//                    break;
+//                case "紧急呼叫":
+//                    break;
+//                case "录音":
+//                    break;
+//                case "黑红名单":
+//                    break;
+//                case "联系人":
+//                    break;
+//                case "通话记录":
+//                    break;
+//                case "所有应用":
+//                    break;
+//                case "分机设置":
+//                    break;
+//            }
+
+            GradientDrawable drawable=new GradientDrawable();
+           drawable.setShape(GradientDrawable.RECTANGLE);
+           drawable.setCornerRadius(DensityUtil.dip2px(NewMainActivity.this,5));
+           drawable.setColor(item.getIconBgColor());
+            rl_item_container.setBackground(drawable);
 
             if (item.getIconType() == 0 || item.getIconType() == 2) {
-                byte[] app_icon = item.getApp_icon();
-                Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
-                BitmapDrawable bd = new BitmapDrawable(bmp);
-                content_iv.setImageDrawable(bd);
+                if(item.getTitle().equals("设置") || item.getTitle().equals("相机")) {
+                    content_iv.setImageResource(imgUrl);
+                }else {
+                    byte[] app_icon = item.getApp_icon();
+                    Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
+                    BitmapDrawable bd = new BitmapDrawable(bmp);
+                    content_iv.setImageDrawable(bd);
+                }
             } else if (item.getIconType() == 3) {//一键拨号
                 content_iv.setImageResource(R.drawable.one_key);
             } else {
@@ -482,10 +518,10 @@ public class NewMainActivity extends BaseActivity {
                                 CallActivity.startActivity(0, mContext);
 //                                mContext.startActivity(new Intent(mContext,NewMainActivity.class));
                                 break;
-                            case "电子相册":
+                            case "相册":
                                 mContext.startActivity(new Intent(mContext, PhotosActivity.class));
                                 break;
-                            case "SOS":
+                            case "紧急呼叫":
                                 mContext.startActivity(new Intent(mContext, SosActivity.class));
                                 break;
                             case "录音":
@@ -494,7 +530,7 @@ public class NewMainActivity extends BaseActivity {
                             case "黑红名单":
                                 mContext.startActivity(new Intent(mContext, BlacklistActivity.class));
                                 break;
-                            case "智能通讯录":
+                            case "联系人":
                                 mContext.startActivity(new Intent(mContext, ContactsListActivity.class));
                                 break;
                             case "通话记录":
@@ -503,8 +539,8 @@ public class NewMainActivity extends BaseActivity {
                             case "所有应用":
                                 mContext.startActivity(new Intent(mContext, AllAppsActivity.class));
                                 break;
-                            case "话机设置":
-                                mContext.startActivity(new Intent(mContext,TelephoneSettingActivity.class));
+                            case "分机设置":
+                                mContext.startActivity(new Intent(mContext, TelephoneSettingActivity.class));
                                 break;
                         }
                     } else if (item.getIconType() == 3) {//一键拨号

@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/carview"
-    android:layout_margin="20dp"
+    android:layout_margin="5dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -15,21 +15,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="姓名: "
-                android:textColor="@color/text_333333"
-                android:textSize="24sp" />
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
             <TextView
+                android:textStyle="bold"
                 android:id="@+id/tv_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_333333"
-                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
                 tools:text="王大锤" />
         </LinearLayout>
 
@@ -37,21 +38,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="号码: "
-                android:textColor="@color/text_333333"
-                android:textSize="24sp" />
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
             <TextView
+                android:textStyle="bold"
                 android:id="@+id/tv_phone_num"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_333333"
-                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
                 tools:text="13874564564" />
         </LinearLayout>
 
@@ -60,21 +62,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="发送内容: "
-                android:textColor="@color/text_333333"
-                android:textSize="24sp" />
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
             <TextView
+                android:textStyle="bold"
                 android:id="@+id/tv_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_333333"
-                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:textSize="18sp"
                 tools:text="王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤王大锤" />
         </LinearLayout>
 

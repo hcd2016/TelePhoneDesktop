@@ -39,10 +39,28 @@ public class BannerActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        translucentStatus();
+//        translucentStatus();
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        hideBottomUIMenu();
         setContentView(R.layout.activity_banner);
         ButterKnife.bind(this);
         initView();
+    }
+
+    protected void hideBottomUIMenu() {
+        //隐藏虚拟按键，并且全屏
+        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            View v = this.getWindow().getDecorView();
+            v.setSystemUiVisibility(View.GONE);
+        } else if (Build.VERSION.SDK_INT >= 19) {
+
+            Window _window = getWindow();
+            WindowManager.LayoutParams params = _window.getAttributes();
+            params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE;
+            _window.setAttributes(params);
+        }
     }
 
     //透明状态栏
@@ -104,6 +122,7 @@ public class BannerActivity extends BaseActivity {
             @Override
             public void OnBannerClick(int position) {
                 SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_BANNER_RUNING, false);
+                startActivity(NewMainActivity.class);
                 finish();
             }
         });

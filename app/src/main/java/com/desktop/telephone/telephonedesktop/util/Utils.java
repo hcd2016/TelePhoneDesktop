@@ -61,8 +61,8 @@ public class Utils {
 
     static {
         appIconIdMap.put("phone_icon", R.drawable.phone_icon);//电话
-        appIconIdMap.put("call_records_icon", R.drawable.call_records_icon);//智能通讯录
-        appIconIdMap.put("photo_icon", R.drawable.photo_icon);//电子相册
+        appIconIdMap.put("call_records_icon", R.drawable.call_records_icon);//联系人
+        appIconIdMap.put("photo_icon", R.drawable.photo_icon);//相册
         appIconIdMap.put("blacklist_icon", R.drawable.blacklist_icon);//黑红名单
 //        appIconIdMap.put("one_key", R.drawable.one_key);//一键拨号
         appIconIdMap.put("record_icon", R.drawable.record_icon);//录音
@@ -70,33 +70,37 @@ public class Utils {
         appIconIdMap.put("sos_icon", R.drawable.sos_icon);//sos
         appIconIdMap.put("all_apps_icon", R.drawable.all_apps_icon);//所有应用
         appIconIdMap.put("phone_setting", R.drawable.phone_setting);//所有应用
+        appIconIdMap.put("photos_icon", R.drawable.photos_desk_icon);//相机
+        appIconIdMap.put("settings_icon", R.drawable.settings_desk_icon);//设置
     }
 
 
     public static int getColorBgFromPosition(int position) {
-        switch (position % 10) {
+        switch (position % 11) {
             case 0:
-                return Utils.getColor(R.color.limegreen);
+                return Utils.getColor(R.color.color_1);
             case 1:
-                return Utils.getColor(R.color.steelblue);
+                return Utils.getColor(R.color.color_2);
             case 2:
-                return Utils.getColor(R.color.slateblue);
+                return Utils.getColor(R.color.color_3);
             case 3:
                 return Utils.getColor(R.color.dimgray);
             case 4:
                 return Utils.getColor(R.color.coral);
             case 5:
-                return Utils.getColor(R.color.orchid);
+                return Utils.getColor(R.color.color_6);
             case 6:
-                return Utils.getColor(R.color.darkkhaki);
-            case 8:
-                return Utils.getColor(R.color.steelblue);
+                return Utils.getColor(R.color.color_7);
             case 7:
-                return Utils.getColor(R.color.crimson);
+                return Utils.getColor(R.color.color_8);
+            case 8:
+                return Utils.getColor(R.color.color_9);
             case 9:
-                return Utils.getColor(R.color.darkgreen);
+                return Utils.getColor(R.color.color_10);
+            case 10:
+                return Utils.getColor(R.color.color_11);
             default:
-                return Utils.getColor(R.color.darkorange);
+                return Utils.getColor(R.color.colorPrimary);
         }
     }
 

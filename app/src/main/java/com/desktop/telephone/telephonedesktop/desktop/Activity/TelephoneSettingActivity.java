@@ -23,12 +23,12 @@ import butterknife.OnClick;
 public class TelephoneSettingActivity extends BaseActivity {
     @BindView(R.id.iv_back)
     ImageView ivBack;
-    @BindView(R.id.tv_mode_desc)
-    TextView tvModeDesc;
-    @BindView(R.id.rb_show)
-    RadioButton rbShow;
-    @BindView(R.id.rb_hide)
-    RadioButton rbHide;
+//    @BindView(R.id.tv_mode_desc)
+//    TextView tvModeDesc;
+//    @BindView(R.id.rb_show)
+//    RadioButton rbShow;
+//    @BindView(R.id.rb_hide)
+//    RadioButton rbHide;
     @BindView(R.id.et_interchanger)
     EditText etInterchanger;
     @BindView(R.id.tv_save)
@@ -43,12 +43,12 @@ public class TelephoneSettingActivity extends BaseActivity {
     }
 
     private void initView() {
-        boolean isShow = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_SHOW_COMMING_CALL_NUM, true);
-        if (isShow) {
-            rbShow.setChecked(true);
-        } else {
-            rbShow.setChecked(false);
-        }
+//        boolean isShow = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_SHOW_COMMING_CALL_NUM, true);
+//        if (isShow) {
+//            rbShow.setChecked(true);
+//        } else {
+//            rbShow.setChecked(false);
+//        }
         int time = SPUtil.getInstance().getInteger(SPUtil.KEY_INTERCHANGER_SETTING);
         etInterchanger.setText(time + "");
         etInterchanger.setSelection(etInterchanger.getText().toString().length());
@@ -65,12 +65,12 @@ public class TelephoneSettingActivity extends BaseActivity {
                     Utils.Toast("交换机参数不能为空");
                     return;
                 }
-                SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_SHOW_COMMING_CALL_NUM, rbShow.isChecked());
-                if (rbShow.isChecked()) {
-                    CallUtil.showCallerIds(this, 1);
-                } else {
-                    CallUtil.showCallerIds(this, 0);
-                }
+//                SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_SHOW_COMMING_CALL_NUM, rbShow.isChecked());
+//                if (rbShow.isChecked()) {
+//                    CallUtil.showCallerIds(this, 1);
+//                } else {
+//                    CallUtil.showCallerIds(this, 0);
+//                }
                 String s = etInterchanger.getText().toString();
                 SPUtil.getInstance().saveInteger(SPUtil.KEY_INTERCHANGER_SETTING, Integer.parseInt(s));
                 CallUtil.interchangerSetting(this, Integer.parseInt(s));

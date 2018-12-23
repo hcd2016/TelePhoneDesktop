@@ -115,15 +115,15 @@ public class DesktopIconFragment extends Fragment {
                     moveItem.setImg_id_name("phone_icon");
                     break;
                 case 1:
-                    //智能通讯录
+                    //联系人
                     moveItem.setIconType(1);
-                    moveItem.setTitle("智能通讯录");
+                    moveItem.setTitle("联系人");
                     moveItem.setImg_id_name("call_records_icon");
                     break;
                 case 2:
-                    //电子相册
+                    //相册
                     moveItem.setIconType(1);
-                    moveItem.setTitle("电子相册");
+                    moveItem.setTitle("相册");
                     moveItem.setImg_id_name("photo_icon");
                     break;
                 case 3:

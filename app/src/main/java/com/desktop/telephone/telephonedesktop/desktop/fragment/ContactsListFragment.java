@@ -371,7 +371,7 @@ public class ContactsListFragment extends Fragment {
                             popupWindow.dismiss();
                         }
                     });
-                    popupWindow = new PopupWindow(popView, DensityUtil.dip2px(getActivity(), 250), DensityUtil.dip2px(getActivity(), 120));
+                    popupWindow = new PopupWindow(popView, DensityUtil.dip2px(getActivity(), 125), DensityUtil.dip2px(getActivity(), 80));
                     popupWindow.setBackgroundDrawable(new BitmapDrawable());
 
                     int[] ints = new int[2];

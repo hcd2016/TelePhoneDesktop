@@ -3,9 +3,12 @@
         <!--<color name="colorPrimary">#027cfb</color>-->
         <!--<color name="colorPrimaryDark">#027cfb</color>-->
         <!--<color name="colorAccent">#027cfb</color>-->
-        <color name="colorPrimary">#1296db</color>
-        <color name="colorPrimaryDark">#1296db</color>
-        <color name="colorAccent">#1296db</color>
+        <!--<color name="colorPrimary">#1296db</color>-->
+        <!--<color name="colorPrimaryDark">#1296db</color>-->
+        <!--<color name="colorAccent">#1296db</color>-->
+        <color name="colorPrimary">#1274F5</color>
+        <color name="colorPrimaryDark">#1274F5</color>
+        <color name="colorAccent">#1274F5</color>
         <!--<color name="colorAccent">#1296db</color>-->
 
         <color name="transparent">#00000000</color>
@@ -260,4 +263,15 @@
     <color name="mediumblue">#0000cd</color><!--中兰色 -->
     <color name="darkblue">#00008b</color><!--暗蓝色 -->
     <color name="navy">#000080</color><!--海军色 -->
+
+
+    <color name="color_1">#CAA209</color>
+    <color name="color_2">#9245ca</color>
+    <color name="color_3">#37bf5a</color>
+    <color name="color_6">#21B9FC</color>
+    <color name="color_7">#DA2E1E</color>
+    <color name="color_8">#CAA209</color>
+    <color name="color_9">#1274F5</color>
+    <color name="color_10">#49C004</color>
+    <color name="color_11">#1274F5</color>
     </resources>

@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:id="@+id/rl_item_container"
-        android:layout_margin="10dp"
+        android:layout_margin="2dp"
         android:clickable="true"
         android:longClickable="true"
         android:layout_width="match_parent"
@@ -22,13 +22,13 @@
         <ImageView
             android:layout_gravity="center"
             android:id="@+id/content_iv"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/phone_icon"
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:id="@+id/tv_title"
             android:layout_gravity="center"
@@ -37,17 +37,17 @@
             android:layout_centerHorizontal="true"
             tools:text="电话"
             android:textColor="@color/white"
-            android:textSize="36sp" />
+            android:textSize="24sp" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/delete_iv"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
         android:src="@drawable/close"
         android:visibility="gone"
         tools:ignore="ContentDescription" />

@@ -9,14 +9,14 @@
         android:background="@color/colorPrimaryDark"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp">
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
 
         <ImageView
             android:layout_centerVertical="true"
             android:id="@+id/iv_back"
-            android:layout_width="50dp"
-            android:layout_height="20dp"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
             android:src="@drawable/arrow_left_white" />
 
         <TextView
@@ -25,7 +25,7 @@
             android:layout_centerInParent="true"
             android:text="选择已配对设备"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="24sp" />
     </RelativeLayout>
 
     <TextView
@@ -33,7 +33,7 @@
         android:paddingLeft="15dp"
         android:background="@color/bg_gray"
         android:textColor="@color/text_333333"
-        android:textSize="16sp"
+        android:textSize="24sp"
         android:text="已连接设备"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

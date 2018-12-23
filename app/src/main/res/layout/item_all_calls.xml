@@ -17,8 +17,8 @@
 
         <ImageView
             android:id="@+id/iv_status_icon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             tools:src="@drawable/phone_icon_gray" />
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_weight="1"
             tools:text="158 8888 8888"
             android:textColor="@color/text_333333"
-            android:textSize="35sp" />
+            android:textSize="25sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -42,22 +42,22 @@
                 android:layout_height="wrap_content"
                 tools:text="11/8"
                 android:textColor="@color/text_666666"
-                android:textSize="24sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_gravity="right"
                 android:id="@+id/tv_status_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 tools:text="19秒"
                 android:textColor="@color/text_666666"
-                android:textSize="24sp" />
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 
     <View
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="50dp"
         android:background="@color/gray_d5d"
         android:layout_width="match_parent"
