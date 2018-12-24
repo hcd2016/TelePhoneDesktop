@@ -2,7 +2,6 @@ package com.desktop.telephone.telephonedesktop.desktop.Activity;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -23,7 +22,6 @@ import com.desktop.telephone.telephonedesktop.util.BlackListFileUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +44,30 @@ public class BlacklistActivity extends BaseActivity {
     LinearLayout llModeContainer;
     @BindView(R.id.ll_btn_add_container)
     LinearLayout llBtnAddContainers;
+    @BindView(R.id.tv_normal)
+    TextView tvNormal;
+    @BindView(R.id.tv_btn_normal)
+    TextView tvBtnNormal;
+    @BindView(R.id.tv_normal_status)
+    TextView tvNormalStatus;
+    @BindView(R.id.ll_normal_contianer)
+    LinearLayout llNormalContianer;
+    @BindView(R.id.tv_black)
+    TextView tvBlack;
+    @BindView(R.id.tv_btn_black)
+    TextView tvBtnBlack;
+    @BindView(R.id.tv_black_status)
+    TextView tvBlackStatus;
+    @BindView(R.id.ll_black_container)
+    LinearLayout llBlackContainer;
+    @BindView(R.id.tv_white)
+    TextView tvWhite;
+    @BindView(R.id.tv_btn_white)
+    TextView tvBtnWhite;
+    @BindView(R.id.tv_white_status)
+    TextView tvWhiteStatus;
+    @BindView(R.id.ll_white_container)
+    LinearLayout llWhiteContainer;
     private List<String> tabList;
     private PopupWindow popupWindow;
     private List<SystemStatusBean> systemStatusBeans;
@@ -74,18 +96,34 @@ public class BlacklistActivity extends BaseActivity {
             DaoUtil.getSystemStatusBeanDao().insert(new SystemStatusBean(null, modeStatus));
             systemStatusBeans = DaoUtil.getSystemStatusBeanDao().loadAll();
         }
-        //初始化:
-        if (modeStatus == 0) {
-            tvModeDesc.setText("普通模式");
-        } else if (modeStatus == 1) {
-            tvModeDesc.setText("黑名单模式");
-        } else {
-            tvModeDesc.setText("红名单模式");
+
+        //初始化
+        if(modeStatus == 0) {
+            llNormalContianer.performClick();
+            tvNormalStatus.setTextColor(Utils.getColor(R.color.color_3));
+            tvNormalStatus.setText("启用中");
+        }else if(modeStatus == 1) {
+            llBlackContainer.performClick();
+            tvBlackStatus.setTextColor(Utils.getColor(R.color.color_3));
+            tvBlackStatus.setText("启用中");
+        }else {
+            llWhiteContainer.performClick();
+            tvWhiteStatus.setTextColor(Utils.getColor(R.color.color_3));
+            tvWhiteStatus.setText("启用中");
         }
+
+//        //初始化:
+//        if (modeStatus == 0) {
+//            tvModeDesc.setText("普通模式");
+//        } else if (modeStatus == 1) {
+//            tvModeDesc.setText("黑名单模式");
+//        } else {
+//            tvModeDesc.setText("红名单模式");
+//        }
 
     }
 
-    @OnClick({R.id.iv_back, R.id.ll_mode_container, R.id.ll_btn_add_container})
+    @OnClick({R.id.iv_back, R.id.ll_mode_container, R.id.ll_btn_add_container,R.id.tv_btn_normal, R.id.ll_normal_contianer, R.id.tv_btn_black, R.id.ll_black_container, R.id.tv_btn_white, R.id.ll_white_container})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -101,8 +139,84 @@ public class BlacklistActivity extends BaseActivity {
             case R.id.ll_btn_add_container://添加
                 BlacklistAddActivity.startActivity(this, viewpager.getCurrentItem() + 1, "");
                 break;
+            case R.id.ll_normal_contianer://普通模式选中
+                resetItem();
+                llNormalContianer.setBackgroundColor(Utils.getColor(R.color.blue_2));
+                tvNormal.setTextColor(Utils.getColor(R.color.white));
+                tvBtnNormal.setVisibility(View.VISIBLE);
+                break;
+            case R.id.ll_black_container://黑名单模式选中
+                resetItem();
+                llBlackContainer.setBackgroundColor(Utils.getColor(R.color.blue_2));
+                tvBlack.setTextColor(Utils.getColor(R.color.white));
+                tvBtnBlack.setVisibility(View.VISIBLE);
+                break;
+            case R.id.ll_white_container://白名单模式选中
+                resetItem();
+                llWhiteContainer.setBackgroundColor(Utils.getColor(R.color.blue_2));
+                tvWhite.setTextColor(Utils.getColor(R.color.white));
+                tvBtnWhite.setVisibility(View.VISIBLE);
+                break;
+            case R.id.tv_btn_normal://普通模式启用
+                resetStatus();
+                modeStatus = 0;
+                tvNormalStatus.setTextColor(Utils.getColor(R.color.color_3));
+                tvNormalStatus.setText("启用中");
+
+                BlackListFileUtil.setModeChangeFile(modeStatus);//保存模式对应文件处理,在保存数据库之前调用
+                systemStatusBeans.get(0).setBlackListModeType(modeStatus);
+                DaoUtil.getSystemStatusBeanDao().update(systemStatusBeans.get(0));
+                Utils.Toast("设置成功");
+                break;
+            case R.id.tv_btn_black://黑名单模式启用
+                resetStatus();
+                modeStatus = 1;
+                tvBlackStatus.setTextColor(Utils.getColor(R.color.color_3));
+                tvBlackStatus.setText("启用中");
+
+                BlackListFileUtil.setModeChangeFile(modeStatus);//保存模式对应文件处理,在保存数据库之前调用
+                systemStatusBeans.get(0).setBlackListModeType(modeStatus);
+                DaoUtil.getSystemStatusBeanDao().update(systemStatusBeans.get(0));
+                Utils.Toast("设置成功");
+                break;
+            case R.id.tv_btn_white://白名单模式启用
+                resetStatus();
+                modeStatus = 2;
+                tvWhiteStatus.setTextColor(Utils.getColor(R.color.color_3));
+                tvWhiteStatus.setText("启用中");
+
+                BlackListFileUtil.setModeChangeFile(modeStatus);//保存模式对应文件处理,在保存数据库之前调用
+                systemStatusBeans.get(0).setBlackListModeType(modeStatus);
+                DaoUtil.getSystemStatusBeanDao().update(systemStatusBeans.get(0));
+                Utils.Toast("设置成功");
+                break;
         }
     }
+
+    private void resetStatus() {
+        tvNormalStatus.setTextColor(Utils.getColor(R.color.color_7));
+        tvBlackStatus.setTextColor(Utils.getColor(R.color.color_7));
+        tvWhiteStatus.setTextColor(Utils.getColor(R.color.color_7));
+
+        tvNormalStatus.setText("禁用中");
+        tvBlackStatus.setText("禁用中");
+        tvWhiteStatus.setText("禁用中");
+    }
+
+    private void resetItem() {
+        llNormalContianer.setBackgroundColor(Utils.getColor(R.color.white));
+        llBlackContainer.setBackgroundColor(Utils.getColor(R.color.white));
+        llWhiteContainer.setBackgroundColor(Utils.getColor(R.color.white));
+
+        tvNormal.setTextColor(Utils.getColor(R.color.text_333333));
+        tvBlack.setTextColor(Utils.getColor(R.color.text_333333));
+        tvWhite.setTextColor(Utils.getColor(R.color.text_333333));
+
+        tvBtnNormal.setVisibility(View.GONE);
+        tvBtnBlack.setVisibility(View.GONE);
+        tvBtnWhite.setVisibility(View.GONE);
+    }
+
 
     private int modeStatus = 0; //0为普通,1为黑名单,2为红名单
 

@@ -42,12 +42,14 @@ import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
+import com.desktop.telephone.telephonedesktop.bean.WeatherBean;
 import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.DensityUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
+import com.desktop.telephone.telephonedesktop.util.weather.GetLocationUtils;
 import com.desktop.telephone.telephonedesktop.view.MyGridLayoutManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -75,6 +77,7 @@ public class NewMainActivity extends BaseActivity {
     private List<List<DesktopIconBean>> lists;
     private BroadcastReceiver deletePackageReceiver;
     private MyPagerAdapter myPagerAdapter;
+    private WeatherBean weatherBean;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,6 +89,18 @@ public class NewMainActivity extends BaseActivity {
         initIconData();
         initView();
         CallUtil.showCallerIds(this, 1);
+    }
+
+    /**
+     * 获取天气
+     */
+    private void getWeather() {
+        GetLocationUtils.getCityByLocation(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(WeatherBean weatherBean) {//获取天气完成
+        this.weatherBean = weatherBean;
     }
 
     //透明状态栏
@@ -109,9 +124,10 @@ public class NewMainActivity extends BaseActivity {
      * 桌面数据添加
      */
     private void initIconData() {
-        DaoUtil.getDesktopIconBeanDao().deleteAll();
+//        DaoUtil.getDesktopIconBeanDao().deleteAll();
         defaultList = new ArrayList<>();
-        for (int i = 0; i < 11; i++) {
+//        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 10; i++) {
             DesktopIconBean moveItem = new DesktopIconBean();
             moveItem.setMid(i);
             switch (i) {
@@ -178,22 +194,23 @@ public class NewMainActivity extends BaseActivity {
                         }
                     }
                     break;
-                case 8://相机 记得改上面size
-                    PackageManager pm1 = getPackageManager();
-                    //所有的安装在系统上的应用程序包信息。
-                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
-                    for (int j = 0; j < packInfos1.size(); j++) {
-                        PackageInfo packInfo = packInfos1.get(j);
-                        if (packInfo.packageName.equals("com.android.camera2")) {
-//                        if(packInfo.packageName.equals("com.android.camera")) {
-                            moveItem.setIconType(2);
-                            moveItem.setTitle("相机");
-                            moveItem.setImg_id_name("photos_icon");
-//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
-                        }
-                    }
-                    break;
-                case 10:
+//                case 8://相机 记得改上面size
+//                    PackageManager pm1 = getPackageManager();
+//                    //所有的安装在系统上的应用程序包信息。
+//                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
+//                    for (int j = 0; j < packInfos1.size(); j++) {
+//                        PackageInfo packInfo = packInfos1.get(j);
+////                        if (packInfo.packageName.equals("com.android.camera2")) {
+//                        if (packInfo.packageName.equals("com.android.camera")) {
+//                            moveItem.setIconType(2);
+//                            moveItem.setTitle("相机");
+//                            moveItem.setImg_id_name("photos_icon");
+////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
+//                        }
+//                    }
+//                    break;
+//                case 10:
+                case 8:
                     //分机设置
                     moveItem.setIconType(1);
                     moveItem.setTitle("分机设置");
@@ -319,6 +336,7 @@ public class NewMainActivity extends BaseActivity {
     }
 
     private Handler timerHandler = new Handler();
+    private Handler weatherHandler = new Handler();
 
     class MyPagerAdapter extends PagerAdapter {
         List<List<DesktopIconBean>> list;
@@ -346,6 +364,11 @@ public class NewMainActivity extends BaseActivity {
             final TextView tv_time = view.findViewById(R.id.tv_time);
             final TextView tv_date = view.findViewById(R.id.tv_date);
             RelativeLayout rl_header_container = view.findViewById(R.id.rl_header_container);
+            final LinearLayout ll_weather_container = view.findViewById(R.id.ll_weather_container);
+            final TextView tv_weather = view.findViewById(R.id.tv_weather);
+            final TextView tv_city = view.findViewById(R.id.tv_city);
+            final TextView tv_dushu = view.findViewById(R.id.tv_dushu);
+
             //剩余高度
             int viewHeight = Utils.getScreenHeight(NewMainActivity.this) - getStatusBarHeight() - ((line + 3) * DensityUtil.dip2px(NewMainActivity.this, 2));
             ViewGroup.LayoutParams lp;
@@ -365,6 +388,25 @@ public class NewMainActivity extends BaseActivity {
                     tv_date.setText(dateFm.format(date));
                 }
             }.run();
+
+            //每一小时更新一次天气,获取不到隐藏
+            new Runnable() {
+                @Override
+                public void run() {
+                    weatherHandler.postDelayed(this, 1000 * 60 * 60);
+                    getWeather();
+                    //设置天气
+                    if (weatherBean != null && weatherBean.isSucess) {
+                        ll_weather_container.setVisibility(View.VISIBLE);
+                        tv_city.setText(weatherBean.city);
+                        tv_weather.setText(weatherBean.weather);
+                        tv_dushu.setText(weatherBean.dushu + "℃");
+                    } else {
+                        ll_weather_container.setVisibility(View.GONE);
+                    }
+                }
+            }.run();
+
 
             MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(NewMainActivity.this, row);
             //            gridLayoutManager.setScrollEnabled(false);
@@ -404,9 +446,13 @@ public class NewMainActivity extends BaseActivity {
 //            header_view.setHeight(viewHeight / line);
 
 
-            if (position == 0) {//是第一页,显示头布局
+            if (position == 0)
+
+            {//是第一页,显示头布局
                 rl_header_container.setVisibility(View.VISIBLE);
-            } else {
+            } else
+
+            {
                 rl_header_container.setVisibility(View.GONE);
             }
             container.addView(view);
@@ -414,7 +460,8 @@ public class NewMainActivity extends BaseActivity {
         }
 
         @Override
-        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        public void destroyItem(@NonNull ViewGroup container, int position,
+                                @NonNull Object object) {
             ((ViewGroup) container).removeView((View) object);
             object = null;
         }
@@ -487,16 +534,16 @@ public class NewMainActivity extends BaseActivity {
 //                    break;
 //            }
 
-            GradientDrawable drawable=new GradientDrawable();
-           drawable.setShape(GradientDrawable.RECTANGLE);
-           drawable.setCornerRadius(DensityUtil.dip2px(NewMainActivity.this,5));
-           drawable.setColor(item.getIconBgColor());
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setShape(GradientDrawable.RECTANGLE);
+            drawable.setCornerRadius(DensityUtil.dip2px(NewMainActivity.this, 5));
+            drawable.setColor(item.getIconBgColor());
             rl_item_container.setBackground(drawable);
 
             if (item.getIconType() == 0 || item.getIconType() == 2) {
-                if(item.getTitle().equals("设置") || item.getTitle().equals("相机")) {
+                if (item.getTitle().equals("设置") || item.getTitle().equals("相机")) {
                     content_iv.setImageResource(imgUrl);
-                }else {
+                } else {
                     byte[] app_icon = item.getApp_icon();
                     Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
                     BitmapDrawable bd = new BitmapDrawable(bmp);
