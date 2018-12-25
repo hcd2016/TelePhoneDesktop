@@ -76,6 +76,7 @@
         <activity android:name=".desktop.Activity.AudioRecordListActivity" />
         <activity android:name=".desktop.Activity.SosActivity" />
         <activity android:name=".desktop.Activity.TelephoneSettingActivity" />
+        <activity android:name=".desktop.Activity.FamilyDetailActivity" />
         <!--<activity android:name=".desktop.Activity.NewMainActivity" />-->
 
         <activity

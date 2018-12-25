@@ -19,10 +19,10 @@ public class ViewPagerSlide extends ViewPager {
     public ViewPagerSlide(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-//    @Override
-//    public boolean onInterceptTouchEvent(MotionEvent ev) {
-//        return isSlide;
-//    }
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return isSlide;
+    }
 
     @Override
     public boolean canScrollHorizontally(int direction) {

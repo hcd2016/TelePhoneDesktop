@@ -21,6 +21,7 @@ import com.desktop.telephone.telephonedesktop.desktop.fragment.BlackListFramgent
 import com.desktop.telephone.telephonedesktop.util.BlackListFileUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
+import com.desktop.telephone.telephonedesktop.view.ViewPagerSlide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class BlacklistActivity extends BaseActivity {
     @BindView(R.id.tablayout)
     TabLayout tablayout;
     @BindView(R.id.viewpager)
-    ViewPager viewpager;
+    ViewPagerSlide viewpager;
     @BindView(R.id.tv_mode_desc)
     TextView tvModeDesc;
     @BindView(R.id.iv_arrow)
@@ -88,7 +89,8 @@ public class BlacklistActivity extends BaseActivity {
         tabList.add("红名单");
         myApdater = new MyApdater(getSupportFragmentManager());
         viewpager.setAdapter(myApdater);
-        tablayout.setupWithViewPager(viewpager);
+        viewpager.setSlide(false);
+//        tablayout.setupWithViewPager(viewpager);
         systemStatusBeans = DaoUtil.getSystemStatusBeanDao().loadAll();
         if (systemStatusBeans != null && systemStatusBeans.size() != 0) {
             modeStatus = systemStatusBeans.get(0).getBlackListModeType();
@@ -144,18 +146,26 @@ public class BlacklistActivity extends BaseActivity {
                 llNormalContianer.setBackgroundColor(Utils.getColor(R.color.blue_2));
                 tvNormal.setTextColor(Utils.getColor(R.color.white));
                 tvBtnNormal.setVisibility(View.VISIBLE);
+
+                viewpager.setVisibility(View.GONE);
                 break;
             case R.id.ll_black_container://黑名单模式选中
                 resetItem();
                 llBlackContainer.setBackgroundColor(Utils.getColor(R.color.blue_2));
                 tvBlack.setTextColor(Utils.getColor(R.color.white));
                 tvBtnBlack.setVisibility(View.VISIBLE);
+
+                viewpager.setVisibility(View.VISIBLE);
+                viewpager.setCurrentItem(0);
                 break;
             case R.id.ll_white_container://白名单模式选中
                 resetItem();
                 llWhiteContainer.setBackgroundColor(Utils.getColor(R.color.blue_2));
                 tvWhite.setTextColor(Utils.getColor(R.color.white));
                 tvBtnWhite.setVisibility(View.VISIBLE);
+
+                viewpager.setVisibility(View.VISIBLE);
+                viewpager.setCurrentItem(1);
                 break;
             case R.id.tv_btn_normal://普通模式启用
                 resetStatus();

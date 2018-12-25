@@ -2,6 +2,8 @@ package com.desktop.telephone.telephonedesktop.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
@@ -72,6 +74,7 @@ public class Utils {
         appIconIdMap.put("phone_setting", R.drawable.phone_setting);//所有应用
         appIconIdMap.put("photos_icon", R.drawable.photos_desk_icon);//相机
         appIconIdMap.put("settings_icon", R.drawable.settings_desk_icon);//设置
+        appIconIdMap.put("add_contact_icon", R.drawable.add_contact_icon);//亲情添加
     }
 
 
@@ -261,6 +264,38 @@ public class Utils {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    /**
+     * 判断字符是否为中文
+     *
+     * @param a
+     * @return
+     */
+    public static boolean isChinese(char a) {
+        int v = (int) a;
+        return (v >= 19968 && v <= 171941);
+    }
+
+    public static boolean isChineseA(char c) {
+        Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+        if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) {
+            return true;
+        }
+        return false;
+    }
+
+    //获取当前app的版本号
+    public static String getAppVersion(Context context){
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packInfo;
+            packInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            return packInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return "";
         }
     }
 }

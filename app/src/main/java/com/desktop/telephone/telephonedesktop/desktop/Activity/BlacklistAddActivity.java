@@ -209,6 +209,7 @@ public class BlacklistAddActivity extends BaseActivity {
                     }
                 }
                 BlackListFileUtil.updateFile();//更新黑名单文件
+                finish();
                 break;
             case R.id.ll_mode_container:
                 if (popupWindow != null && popupWindow.isShowing()) {

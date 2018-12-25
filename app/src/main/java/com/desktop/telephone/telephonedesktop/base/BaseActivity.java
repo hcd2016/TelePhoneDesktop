@@ -7,15 +7,32 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 
+import com.desktop.telephone.telephonedesktop.MainActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.CallingActivity;
+import com.desktop.telephone.telephonedesktop.desktop.dialog.AlertFragmentDialog;
+import com.desktop.telephone.telephonedesktop.http.HttpApi;
+import com.desktop.telephone.telephonedesktop.http.RetrofitUtil;
+import com.desktop.telephone.telephonedesktop.util.AppUpdateUtil;
+import com.desktop.telephone.telephonedesktop.util.Constant;
 import com.desktop.telephone.telephonedesktop.util.SPUtil;
+import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.CountTimer;
+import com.google.gson.JsonObject;
 
-public class BaseActivity extends AppCompatActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import okhttp3.internal.Util;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class BaseActivity extends FragmentActivity {
     public CountTimer countTimerView;
     public boolean isShowBanner = true;//通话界面不进入banner
 
@@ -31,6 +48,88 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+//    /**
+//     * 版本更新检查
+//     */
+//    private void checkVersionUpdate() {
+//        Call<JsonObject> call = RetrofitUtil.create().checkUpdateVersion(Utils.getAppVersion(this), "android");
+//        call.enqueue(new Callback<JsonObject>() {
+//            @Override
+//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                String json = response.body().toString();
+//                try {
+//                    JSONObject jsonObject = new JSONObject(json);
+//                    JSONObject info = jsonObject.optJSONObject("info");
+//
+//                    if (info != null) {//有更新
+//                        final int force = info.optInt("force");//1位强制更新,其他为普通更新
+//                        final String url = HttpApi.baseUrl + info.optString("update_url");
+//                        String description = info.optString("description");
+////                        final String noticeTitle = App.getAPPName();
+//                        final String authority = "com.credit.xiaowei.provider.fileprovider";
+//                        if (force == 1) {//强制更新
+//                            new AlertFragmentDialog.Builder(BaseActivity.this)
+//                                    .setTitle("更新提示")
+//                                    .setContent(description)
+//                                    .setRightBtnText("立即更新")
+//                                    .setRightCallBack(new AlertFragmentDialog.RightClickCallBack() {
+//                                        @Override
+//                                        public void dialogRightBtnClick() {
+////                                            AppUpdateUtil.getInstance().downLoadApk(BaseActivity.this, url, "xiaowei_credit", noticeTitle, authority, force);
+//                                        }
+//                                    })
+//                                    .setCancel(false)
+//                                    .build();
+//
+////                            new AlertFragmentDialog.Builder(MainActivity.this)
+////                                    .setTitle("发现新版本")
+////                                    .setContent(description)
+////                                    .setLeftBtnText("立即更新")
+////                                    .setLeftCallBack(new AlertFragmentDialog.LeftClickCallBack() {
+////                                        @Override
+////                                        public void dialogLeftBtnClick() {
+////                                            AppUpdateUtil.getInstance().downLoadApk(MainActivity.this, url, "xiaowei_credit", noticeTitle, authority, force);
+////                                        }
+////                                    })
+////                                    .setCancel(false)
+////                                    .build();
+//                        } else {//非强制更新
+////                            long lastTime = SpUtil.getLong(Constant.LAST_UPDATE_SHOW_TIME);
+////                            long currentTimeMillis = System.currentTimeMillis();
+////                            if (lastTime == 0 || currentTimeMillis - lastTime > 1000 * 60 * 60 * 24) {//未取消过 或 取消间隔大于1天
+////                                new AlertFragmentDialog.Builder(MainActivity.this)
+////                                        .setTitle("更新提示")
+////                                        .setContent(description)
+////                                        .setRightBtnText("立即更新")
+////                                        .setRightCallBack(new AlertFragmentDialog.RightClickCallBack() {
+////                                            @Override
+////                                            public void dialogRightBtnClick() {
+////                                                AppUpdateUtil.getInstance().downLoadApk(MainActivity.this, url, "xiaowei_credit", noticeTitle, authority, force);
+////                                            }
+////                                        })
+////                                        .setLeftBtnText("暂不更新")
+////                                        .setLeftCallBack(new AlertFragmentDialog.LeftClickCallBack() {
+////                                            @Override
+////                                            public void dialogLeftBtnClick() {
+////                                                SpUtil.putLong(Constant.LAST_UPDATE_SHOW_TIME, System.currentTimeMillis());//记录上次取消时间
+////                                            }
+////                                        })
+////                                        .setCancel(false)
+////                                        .build();
+//                            }
+//                        }
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JsonObject> call, Throwable t) {
+//                t.toString();
+//            }
+//        });
+//    }
     /**
      * 主要的方法，重写dispatchTouchEvent
      *

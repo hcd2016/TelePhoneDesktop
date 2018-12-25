@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBean;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.AddContactsActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.ContactsDetailActivity;
+import com.desktop.telephone.telephonedesktop.desktop.Activity.ContactsListActivity;
 import com.desktop.telephone.telephonedesktop.desktop.bluetooth.LeadHintActivity;
 import com.desktop.telephone.telephonedesktop.desktop.bluetooth.android.bluetooth.client.pbap.BluetoothPbapClient;
 import com.desktop.telephone.telephonedesktop.desktop.bluetooth.android.vcard.VCardEntry;
@@ -213,16 +215,18 @@ public class ContactsListFragment extends Fragment {
             super(R.layout.item_contacts, data);
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @Override
         protected void convert(final BaseViewHolder helper, final ContactsBean item) {
             TextView tv_word = helper.getView(R.id.tv_word);
-            String firstWord = PinYinUtils.getPinyin(item.getName()).substring(0, 1).toUpperCase();//小写转大写
+            String name = item.getName();
+            String firstWord = PinYinUtils.getPinyin(name).substring(0, 1).toUpperCase();//小写转大写
             if (firstWord.matches("[A-Z]")) {//是A到Z
                 helper.setText(R.id.tv_word, firstWord);
             } else {
                 helper.setText(R.id.tv_word, "#");
             }
-            helper.setText(R.id.tv_name, item.getName());
+            helper.setText(R.id.tv_name, name);
             //将相同字母开头的合并在一起
             if (helper.getLayoutPosition() == 0) {
                 //第一个是一定显示的
@@ -230,7 +234,7 @@ public class ContactsListFragment extends Fragment {
             } else {
                 //后一个与前一个对比,判断首字母是否相同，相同则隐藏
                 String headerWord = getHeaderWord(getData().get(helper.getLayoutPosition() - 1).getName());
-                String word = getHeaderWord(item.getName());
+                String word = getHeaderWord(name);
                 //首字母不区分大小写,非A-Z当#一类处理
                 String s1 = headerWord.toUpperCase();
                 String s = word.toUpperCase();
@@ -241,11 +245,36 @@ public class ContactsListFragment extends Fragment {
                     s = "#";
                 }
                 if (s.equals(s1)) {
-                    tv_word.setVisibility(View.GONE);
+                    tv_word.setVisibility(View.INVISIBLE);
                 } else {
                     tv_word.setVisibility(View.VISIBLE);
                 }
             }
+
+            TextView tv_header_icon = helper.getView(R.id.tv_header_icon);
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setShape(GradientDrawable.OVAL);
+            drawable.setColor(Utils.getColorBgFromPosition(helper.getLayoutPosition()));
+
+            char last = name.charAt(name.length() - 1);//最后一个字符
+            if (Utils.isChineseA(last)) {
+                tv_header_icon.setText(last + "");
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tv_header_icon.getLayoutParams();
+                layoutParams.width = DensityUtil.dip2px(getActivity(), 50);
+                layoutParams.height = DensityUtil.dip2px(getActivity(), 50);
+                layoutParams.setMargins(10,0,0,0);
+                tv_header_icon.setLayoutParams(layoutParams);
+                tv_header_icon.setBackground(drawable);
+            } else {
+                tv_header_icon.setText("");
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tv_header_icon.getLayoutParams();
+                layoutParams.width = DensityUtil.dip2px(getActivity(), 58);
+                layoutParams.height = DensityUtil.dip2px(getActivity(), 58);
+                layoutParams.setMargins(0,0,0,0);
+                tv_header_icon.setLayoutParams(layoutParams);
+                tv_header_icon.setBackgroundResource(R.drawable.iv_avatar_default);
+            }
+
             helper.getView(R.id.tv_name).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

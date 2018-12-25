@@ -127,7 +127,7 @@ public class NewMainActivity extends BaseActivity {
 //        DaoUtil.getDesktopIconBeanDao().deleteAll();
         defaultList = new ArrayList<>();
 //        for (int i = 0; i < 11; i++) {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 13; i++) {
             DesktopIconBean moveItem = new DesktopIconBean();
             moveItem.setMid(i);
             switch (i) {
@@ -215,6 +215,24 @@ public class NewMainActivity extends BaseActivity {
                     moveItem.setIconType(1);
                     moveItem.setTitle("分机设置");
                     moveItem.setImg_id_name("phone_setting");
+                    break;
+                case 10:
+                    //亲情号码1
+                    moveItem.setIconType(4);
+                    moveItem.setTitle("亲情号码1");
+                    moveItem.setImg_id_name("add_contact_icon");
+                    break;
+                case 11:
+                    //亲情号码2
+                    moveItem.setIconType(4);
+                    moveItem.setTitle("亲情号码2");
+                    moveItem.setImg_id_name("add_contact_icon");
+                    break;
+                case 12:
+                    //亲情号码3
+                    moveItem.setIconType(4);
+                    moveItem.setTitle("亲情号码3");
+                    moveItem.setImg_id_name("add_contact_icon");
                     break;
             }
             moveItem.setIconBgColor(Utils.getColorBgFromPosition(i));
@@ -593,6 +611,8 @@ public class NewMainActivity extends BaseActivity {
                     } else if (item.getIconType() == 3) {//一键拨号
                         String phoneNum = item.getPhoneNum();
                         CallUtil.call(mContext, phoneNum);
+                    } else if (item.getIconType() == 4) {//亲情号码
+
                     } else {//系统或用户程序跳转
                         Utils.startApp(mContext, item.getPackageName());
                     }
