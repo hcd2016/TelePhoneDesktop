@@ -22,17 +22,8 @@ import com.desktop.telephone.telephonedesktop.util.Constant;
 import com.desktop.telephone.telephonedesktop.util.SPUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.CountTimer;
-import com.google.gson.JsonObject;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import okhttp3.internal.Util;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class BaseActivity extends FragmentActivity {
+public class BaseActivity extends AppCompatActivity {
     public CountTimer countTimerView;
     public boolean isShowBanner = true;//通话界面不进入banner
 

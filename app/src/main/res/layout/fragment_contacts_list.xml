@@ -16,7 +16,7 @@
 
         <com.desktop.telephone.telephonedesktop.view.WordsView
             android:id="@+id/wordsView"
-            android:layout_width="25dp"
+            android:layout_width="35dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_gravity="right"
@@ -34,8 +34,8 @@
             android:textSize="60sp" />
         <LinearLayout
             android:id="@+id/ll_btn_add_container"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
             android:layout_marginBottom="10dp"
             android:paddingRight="50dp"
             android:paddingLeft="50dp"
@@ -53,17 +53,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             <ImageView
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/add"
-                android:layout_width="20dp"
-                android:layout_height="20dp" />
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
             <TextView
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="新建联系人"
                 android:textColor="@color/text_333333"
-                android:textSize="18sp" />
+                android:textSize="24sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -74,17 +74,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:src="@drawable/menu_point_icon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp" />
+                    android:layout_width="30dp"
+                    android:layout_height="30dp" />
                 <TextView
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="更多"
                     android:textColor="@color/text_333333"
-                    android:textSize="18sp" />
+                    android:textSize="24sp" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

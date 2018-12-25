@@ -17,10 +17,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:gravity="center_vertical"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             tools:text="15889479929"
-            android:textSize="40sp" />
+            android:textSize="60sp" />
 
 
         <LinearLayout
@@ -51,8 +51,8 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:layout_centerInParent="true"
                         android:src="@drawable/contacts_icon" />
                 </RelativeLayout>
@@ -66,8 +66,8 @@
                     android:layout_weight="1"
                     android:background="@drawable/shape_radus30_green"
                     android:gravity="center"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="8dp">
+                    android:paddingBottom="12dp"
+                    android:paddingTop="12dp">
 
 
                     <ImageView
@@ -81,7 +81,7 @@
                         android:layout_marginLeft="10dp"
                         android:text="呼叫"
                         android:textColor="@color/white"
-                        android:textSize="16sp" />
+                        android:textSize="24sp" />
                 </LinearLayout>
 
                 <RelativeLayout
@@ -91,8 +91,8 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:layout_centerInParent="true"
                         android:src="@drawable/back_delete_icon" />
                 </RelativeLayout>

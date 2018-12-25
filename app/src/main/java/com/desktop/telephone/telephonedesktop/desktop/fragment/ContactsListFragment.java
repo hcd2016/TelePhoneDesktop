@@ -260,16 +260,16 @@ public class ContactsListFragment extends Fragment {
             if (Utils.isChineseA(last)) {
                 tv_header_icon.setText(last + "");
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tv_header_icon.getLayoutParams();
-                layoutParams.width = DensityUtil.dip2px(getActivity(), 50);
-                layoutParams.height = DensityUtil.dip2px(getActivity(), 50);
+                layoutParams.width = DensityUtil.dip2px(getActivity(), 95);
+                layoutParams.height = DensityUtil.dip2px(getActivity(), 95);
                 layoutParams.setMargins(10,0,0,0);
                 tv_header_icon.setLayoutParams(layoutParams);
                 tv_header_icon.setBackground(drawable);
             } else {
                 tv_header_icon.setText("");
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tv_header_icon.getLayoutParams();
-                layoutParams.width = DensityUtil.dip2px(getActivity(), 58);
-                layoutParams.height = DensityUtil.dip2px(getActivity(), 58);
+                layoutParams.width = DensityUtil.dip2px(getActivity(), 100);
+                layoutParams.height = DensityUtil.dip2px(getActivity(), 100);
                 layoutParams.setMargins(0,0,0,0);
                 tv_header_icon.setLayoutParams(layoutParams);
                 tv_header_icon.setBackgroundResource(R.drawable.iv_avatar_default);

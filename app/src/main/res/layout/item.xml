@@ -22,8 +22,8 @@
         <ImageView
             android:layout_gravity="center"
             android:id="@+id/content_iv"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/phone_icon"
             tools:ignore="ContentDescription" />
 
@@ -37,13 +37,13 @@
             android:layout_centerHorizontal="true"
             tools:text="电话"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="30sp" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/delete_iv"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="5dp"

@@ -77,6 +77,7 @@
         <activity android:name=".desktop.Activity.SosActivity" />
         <activity android:name=".desktop.Activity.TelephoneSettingActivity" />
         <activity android:name=".desktop.Activity.FamilyDetailActivity" />
+        <activity android:name=".desktop.Activity.FamilyChoiseActivity" />
         <!--<activity android:name=".desktop.Activity.NewMainActivity" />-->
 
         <activity

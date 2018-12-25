@@ -127,7 +127,7 @@ public class NewMainActivity extends BaseActivity {
 //        DaoUtil.getDesktopIconBeanDao().deleteAll();
         defaultList = new ArrayList<>();
 //        for (int i = 0; i < 11; i++) {
-        for (int i = 0; i < 13; i++) {
+        for (int i = 0; i < 14; i++) {
             DesktopIconBean moveItem = new DesktopIconBean();
             moveItem.setMid(i);
             switch (i) {
@@ -194,41 +194,41 @@ public class NewMainActivity extends BaseActivity {
                         }
                     }
                     break;
-//                case 8://相机 记得改上面size
-//                    PackageManager pm1 = getPackageManager();
-//                    //所有的安装在系统上的应用程序包信息。
-//                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
-//                    for (int j = 0; j < packInfos1.size(); j++) {
-//                        PackageInfo packInfo = packInfos1.get(j);
-////                        if (packInfo.packageName.equals("com.android.camera2")) {
+                case 8://相机 记得改上面size
+                    PackageManager pm1 = getPackageManager();
+                    //所有的安装在系统上的应用程序包信息。
+                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
+                    for (int j = 0; j < packInfos1.size(); j++) {
+                        PackageInfo packInfo = packInfos1.get(j);
+                        if (packInfo.packageName.equals("com.android.camera2")) {
 //                        if (packInfo.packageName.equals("com.android.camera")) {
-//                            moveItem.setIconType(2);
-//                            moveItem.setTitle("相机");
-//                            moveItem.setImg_id_name("photos_icon");
-////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
-//                        }
-//                    }
-//                    break;
-//                case 10:
-                case 8:
+                            moveItem.setIconType(2);
+                            moveItem.setTitle("相机");
+                            moveItem.setImg_id_name("photos_icon");
+//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
+                        }
+                    }
+                    break;
+                case 10:
+//                case 8:
                     //分机设置
                     moveItem.setIconType(1);
                     moveItem.setTitle("分机设置");
                     moveItem.setImg_id_name("phone_setting");
                     break;
-                case 10:
+                case 11:
                     //亲情号码1
                     moveItem.setIconType(4);
                     moveItem.setTitle("亲情号码1");
                     moveItem.setImg_id_name("add_contact_icon");
                     break;
-                case 11:
+                case 12:
                     //亲情号码2
                     moveItem.setIconType(4);
                     moveItem.setTitle("亲情号码2");
                     moveItem.setImg_id_name("add_contact_icon");
                     break;
-                case 12:
+                case 13:
                     //亲情号码3
                     moveItem.setIconType(4);
                     moveItem.setTitle("亲情号码3");
@@ -381,7 +381,7 @@ public class NewMainActivity extends BaseActivity {
             recycleView = view.findViewById(R.id.recycleView);
             final TextView tv_time = view.findViewById(R.id.tv_time);
             final TextView tv_date = view.findViewById(R.id.tv_date);
-            RelativeLayout rl_header_container = view.findViewById(R.id.rl_header_container);
+            LinearLayout ll_header_container = view.findViewById(R.id.ll_header_container);
             final LinearLayout ll_weather_container = view.findViewById(R.id.ll_weather_container);
             final TextView tv_weather = view.findViewById(R.id.tv_weather);
             final TextView tv_city = view.findViewById(R.id.tv_city);
@@ -390,9 +390,9 @@ public class NewMainActivity extends BaseActivity {
             //剩余高度
             int viewHeight = Utils.getScreenHeight(NewMainActivity.this) - getStatusBarHeight() - ((line + 3) * DensityUtil.dip2px(NewMainActivity.this, 2));
             ViewGroup.LayoutParams lp;
-            lp = rl_header_container.getLayoutParams();
+            lp = ll_header_container.getLayoutParams();
             lp.height = viewHeight / line;
-            rl_header_container.setLayoutParams(lp);
+            ll_header_container.setLayoutParams(lp);
 
             //每一秒计时一次更新时间
             new Runnable() {
@@ -407,23 +407,23 @@ public class NewMainActivity extends BaseActivity {
                 }
             }.run();
 
-            //每一小时更新一次天气,获取不到隐藏
-            new Runnable() {
-                @Override
-                public void run() {
-                    weatherHandler.postDelayed(this, 1000 * 60 * 60);
-                    getWeather();
-                    //设置天气
-                    if (weatherBean != null && weatherBean.isSucess) {
-                        ll_weather_container.setVisibility(View.VISIBLE);
-                        tv_city.setText(weatherBean.city);
-                        tv_weather.setText(weatherBean.weather);
-                        tv_dushu.setText(weatherBean.dushu + "℃");
-                    } else {
-                        ll_weather_container.setVisibility(View.GONE);
-                    }
-                }
-            }.run();
+//            //每一小时更新一次天气,获取不到隐藏
+//            new Runnable() {
+//                @Override
+//                public void run() {
+//                    weatherHandler.postDelayed(this, 1000 );
+//                    getWeather();
+//                    //设置天气
+//                    if (weatherBean != null && weatherBean.isSucess) {
+//                        ll_weather_container.setVisibility(View.VISIBLE);
+//                        tv_city.setText(weatherBean.city);
+//                        tv_weather.setText(weatherBean.weather);
+//                        tv_dushu.setText(weatherBean.dushu + "℃");
+//                    } else {
+//                        ll_weather_container.setVisibility(View.GONE);
+//                    }
+//                }
+//            }.run();
 
 
             MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(NewMainActivity.this, row);
@@ -467,11 +467,11 @@ public class NewMainActivity extends BaseActivity {
             if (position == 0)
 
             {//是第一页,显示头布局
-                rl_header_container.setVisibility(View.VISIBLE);
+                ll_header_container.setVisibility(View.VISIBLE);
             } else
 
             {
-                rl_header_container.setVisibility(View.GONE);
+                ll_header_container.setVisibility(View.GONE);
             }
             container.addView(view);
             return view;
@@ -612,7 +612,7 @@ public class NewMainActivity extends BaseActivity {
                         String phoneNum = item.getPhoneNum();
                         CallUtil.call(mContext, phoneNum);
                     } else if (item.getIconType() == 4) {//亲情号码
-
+                        mContext.startActivity(new Intent(mContext, FamilyChoiseActivity.class));
                     } else {//系统或用户程序跳转
                         Utils.startApp(mContext, item.getPackageName());
                     }

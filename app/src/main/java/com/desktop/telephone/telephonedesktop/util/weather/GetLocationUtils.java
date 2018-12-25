@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 
 
+import java.util.List;
 import java.util.Locale;
 
 public class GetLocationUtils {
@@ -40,6 +41,7 @@ public class GetLocationUtils {
         Location location = null;
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(context,Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            List<String> allProviders = locationManager.getAllProviders();
             location = locationManager.getLastKnownLocation(provider);
             //获取位置需要访问Google提供的服务进行位置解析，比较耗时所以就放在task中，（其实在Android6.0及以下，可以直接放在主线程中执行，Android8.0必须放在Task中）
             new GetCityNameByGeocoder(context,geocoder).execute(location);

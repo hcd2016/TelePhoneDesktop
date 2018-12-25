@@ -34,7 +34,7 @@
         <item name="android:textSize">24sp</item>
     </style>
     <style name="TablayoutTextSize30" >
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">28sp</item>
     </style>
     <style name="TablayoutTextSize18" >
         <item name="android:textSize">18sp</item>

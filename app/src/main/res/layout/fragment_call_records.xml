@@ -21,7 +21,7 @@
             android:gravity="center"
             android:text="全部通话"
             android:textColor="@color/text_333333"
-            android:textSize="18sp" />
+            android:textSize="24sp" />
 
         <TextView
             android:layout_marginLeft="-1dp"
@@ -34,7 +34,7 @@
             android:gravity="center"
             android:text="已拨电话"
             android:textColor="@color/text_333333"
-            android:textSize="18sp" />
+            android:textSize="24sp" />
 
         <TextView
             android:layout_marginLeft="-1dp"
@@ -47,7 +47,7 @@
             android:gravity="center"
             android:text="已接电话"
             android:textColor="@color/text_333333"
-            android:textSize="18sp" />
+            android:textSize="24sp" />
 
         <TextView
             android:layout_marginLeft="-1dp"
@@ -60,7 +60,7 @@
             android:gravity="center"
             android:text="未接电话"
             android:textColor="@color/text_333333"
-            android:textSize="18sp" />
+            android:textSize="24sp" />
     </LinearLayout>
 
     <com.desktop.telephone.telephonedesktop.view.ViewPagerSlide
