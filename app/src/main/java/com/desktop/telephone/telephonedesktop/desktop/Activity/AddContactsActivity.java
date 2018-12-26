@@ -102,7 +102,7 @@ public class AddContactsActivity extends BaseActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    ContactsBean contactsBean = new ContactsBean(id, name, email, desc, phone);
+                    ContactsBean contactsBean = new ContactsBean(id, name, email, desc, phone,false);
 //                    DaoUtil.getContactsBeanDao().update(contactsBean);
                     EventBus.getDefault().post(contactsBean);
                     Utils.Toast("修改成功");

@@ -5,6 +5,8 @@ import android.text.StaticLayout;
 
 import com.google.gson.JsonObject;
 
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Map;
 
@@ -52,5 +54,9 @@ public interface HttpApi {
     @GET("credit-loan/check-limit")
     Call<JsonObject> checkLimit();
 
+    //检测借款金额是否超出限制
+    @FormUrlEncoded
+    @POST(".cn")
+    Call<JsonObject> getWeather();
 
 }

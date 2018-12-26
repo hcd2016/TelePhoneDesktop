@@ -61,7 +61,7 @@ public class DaoUtil {
     public static List<DesktopIconBean> querydata() {
         Query<DesktopIconBean> nQuery = getDesktopIconBeanDao().queryBuilder()
 //                .where(UserDao.Properties.Name.eq("user1"))//.where(UserDao.Properties.Id.notEq(999))
-                .orderAsc(DesktopIconBeanDao.Properties.Mid)//.limit(5)//orderDesc
+                .orderAsc(DesktopIconBeanDao.Properties.Id)//.limit(5)//orderDesc
                 .build();
         return nQuery.list();
     }
@@ -91,7 +91,7 @@ public class DaoUtil {
             public void run() {
                 for (int i = 0; i < list.size(); i++) {
                     DesktopIconBean desktopIconBean = list.get(i);
-                    desktopIconBean.setMid(i);
+//                    desktopIconBean.setMid(i);
                     getDesktopIconBeanDao().insertOrReplace(desktopIconBean);
                 }
             }

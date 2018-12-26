@@ -38,7 +38,7 @@ public class ContactsUtil {
             int id = cursor.getInt(0);
             delete(id);
             uri = Uri.parse("content://com.android.contacts/contacts/" + id + "/data");
-            ContactsBean contactsBean = new ContactsBean((long) id, "", "", "", "");
+            ContactsBean contactsBean = new ContactsBean((long) id, "", "", "", "",false);
             //data1存储各个记录的总数据，mimetype存放记录的类型，如电话、email等
             Cursor cursor2 = resolver.query(uri, new String[]{ContactsContract.Contacts.Data.DATA1, ContactsContract.Contacts.Data.MIMETYPE}, null, null, null);
             while (cursor2.moveToNext()) {
@@ -153,7 +153,7 @@ public class ContactsUtil {
             cursor.moveToFirst();
             while (cursor.moveToNext()) {
                 int userId = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                ContactsBean contactsBean = new ContactsBean((long) userId, "", "", "", "");
+                ContactsBean contactsBean = new ContactsBean((long) userId, "", "", "", "",false);
 
                 Cursor dataCursor = resolver.query(ContactsContract.Data.CONTENT_URI, null, ContactsContract.Data.RAW_CONTACT_ID + "=" + userId, null, null);
                 if (dataCursor != null && dataCursor.getCount() > 0) {
@@ -221,7 +221,7 @@ public class ContactsUtil {
 //            sb.append("contactId=").append(contactId).append(",Name=").append(name);
 //            map.put("name", name);
             id = Long.parseLong(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID)));//联系人ID
-            ContactsBean contactsBean = new ContactsBean(id, name, "", "", "");
+            ContactsBean contactsBean = new ContactsBean(id, name, "", "", "",false);
             list.add(contactsBean);
         }
 
@@ -320,7 +320,7 @@ public class ContactsUtil {
             while (cursor.moveToNext()) {
                 contactsId = cursor.getColumnName(0);
                 name = cursor.getString(1);
-                ContactsBean contactsBean = new ContactsBean(Long.parseLong(contactsId), name, "", "", "");
+                ContactsBean contactsBean = new ContactsBean(Long.parseLong(contactsId), name, "", "", "",false);
                 listContacts.add(contactsBean);
             }
         }
@@ -406,7 +406,7 @@ public class ContactsUtil {
                 phoneNum = phoneNum.replaceAll("-", "");
                 phoneNum = phoneNum.replaceAll(" ", "");
                 phoneNum = phoneNum.trim();
-                ContactsBean contactsBean = new ContactsBean(Long.parseLong(contactsId), name, email, desc, phoneNum);
+                ContactsBean contactsBean = new ContactsBean(Long.parseLong(contactsId), name, email, desc, phoneNum,false);
                 listContacts.add(contactsBean);
 //                // 如果当前号码是手机号码
 //                if (CheckUtil.PhoneNumberCheck(phoneNum)) {
@@ -452,7 +452,7 @@ public class ContactsUtil {
             displayName = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
 //            // 查看联系人有多少个号码，如果没有号码，返回0
 //            int phoneCount = cursor.getInt(cursor.getColumnIndex(HAS_PHONE_NUMBER));
-            ContactsBean contactsBean = new ContactsBean(Long.parseLong(contactId), displayName, "", "", "");
+            ContactsBean contactsBean = new ContactsBean(Long.parseLong(contactId), displayName, "", "", "",false);
             list.add(contactsBean);
         } while (cursor.moveToNext());
         cursor.close();

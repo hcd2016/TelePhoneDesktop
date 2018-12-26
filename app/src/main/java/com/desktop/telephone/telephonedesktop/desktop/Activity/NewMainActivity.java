@@ -39,31 +39,48 @@ import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.desktop.telephone.telephonedesktop.R;
+import com.desktop.telephone.telephonedesktop.base.App;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
+import com.desktop.telephone.telephonedesktop.bean.EventBean;
 import com.desktop.telephone.telephonedesktop.bean.WeatherBean;
 import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
+import com.desktop.telephone.telephonedesktop.http.HttpApi;
+import com.desktop.telephone.telephonedesktop.http.RetrofitUtil;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.DensityUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.util.weather.GetLocationUtils;
 import com.desktop.telephone.telephonedesktop.view.MyGridLayoutManager;
+import com.google.gson.JsonObject;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewMainActivity extends BaseActivity {
     @BindView(R.id.viewpager)
@@ -194,21 +211,36 @@ public class NewMainActivity extends BaseActivity {
                         }
                     }
                     break;
-                case 8://相机 记得改上面size
+                case 8://设置
                     PackageManager pm1 = getPackageManager();
                     //所有的安装在系统上的应用程序包信息。
                     List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
                     for (int j = 0; j < packInfos1.size(); j++) {
                         PackageInfo packInfo = packInfos1.get(j);
-                        if (packInfo.packageName.equals("com.android.camera2")) {
-//                        if (packInfo.packageName.equals("com.android.camera")) {
+                        if (packInfo.packageName.equals("com.android.settings")) {
                             moveItem.setIconType(2);
-                            moveItem.setTitle("相机");
-                            moveItem.setImg_id_name("photos_icon");
-//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
+                            moveItem.setTitle("设置");
+                            moveItem.setPackageName(packInfo.packageName);
+                            moveItem.setImg_id_name("settings_icon");
+//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
                         }
                     }
                     break;
+//                case 8://相机 记得改上面size
+//                    PackageManager pm1 = getPackageManager();
+//                    //所有的安装在系统上的应用程序包信息。
+//                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
+//                    for (int j = 0; j < packInfos1.size(); j++) {
+//                        PackageInfo packInfo = packInfos1.get(j);
+////                        if (packInfo.packageName.equals("com.android.camera2")) {
+//                        if (packInfo.packageName.equals("com.android.camera")) {
+//                            moveItem.setIconType(2);
+//                            moveItem.setTitle("相机");
+//                            moveItem.setImg_id_name("photos_icon");
+////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
+//                        }
+//                    }
+//                    break;
                 case 10:
 //                case 8:
                     //分机设置
@@ -219,19 +251,19 @@ public class NewMainActivity extends BaseActivity {
                 case 11:
                     //亲情号码1
                     moveItem.setIconType(4);
-                    moveItem.setTitle("亲情号码1");
+                    moveItem.setTitle("亲情1");
                     moveItem.setImg_id_name("add_contact_icon");
                     break;
                 case 12:
                     //亲情号码2
                     moveItem.setIconType(4);
-                    moveItem.setTitle("亲情号码2");
+                    moveItem.setTitle("亲情2");
                     moveItem.setImg_id_name("add_contact_icon");
                     break;
                 case 13:
                     //亲情号码3
                     moveItem.setIconType(4);
-                    moveItem.setTitle("亲情号码3");
+                    moveItem.setTitle("亲情3");
                     moveItem.setImg_id_name("add_contact_icon");
                     break;
             }
@@ -254,6 +286,49 @@ public class NewMainActivity extends BaseActivity {
         }
         myPagerAdapter = new MyPagerAdapter(lists);
         viewpager.setAdapter(myPagerAdapter);
+//        Retrofit.Builder builder = new Retrofit.Builder();
+//        builder.baseUrl("http://m.weather.com")
+//                .addConverterFactory(GsonConverterFactory.create())
+////                .addConverterFactory(ScalarsConverterFactory.create())
+//                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+//                .callFactory(genericClient());
+//        Retrofit mRetrofit = builder.build();
+//        Call<JsonObject> weather = mRetrofit.create(HttpApi.class).getWeather();
+//        weather.enqueue(new Callback<JsonObject>() {
+//            @Override
+//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                response.body();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JsonObject> call, Throwable t) {
+//                t.toString();
+//            }
+//        });
+    }
+
+    public static OkHttpClient genericClient() {
+        Cache cache = new Cache(new File(App.getContext().getCacheDir(), "jsxjxCache"),
+                1024 * 1024 * 100);
+        //日志拦截器
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String message) {
+//                Logger.t("http").e(message);
+            }
+        });
+
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .cache(cache)   //缓存
+                .retryOnConnectionFailure(false)
+                .addInterceptor(logging)
+//                .addInterceptor(headerInterceptor)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+
+        return httpClient;
     }
 
     public List<List<DesktopIconBean>> calculate(List<DesktopIconBean> list, int pageCount) {
@@ -344,7 +419,17 @@ public class NewMainActivity extends BaseActivity {
             desktopIconBean.setPackageName(event.getPackageName());
 //            mList.add(desktopIconBean);
             DaoUtil.getDesktopIconBeanDao().insert(desktopIconBean);
+        }
+        //刷新
+        int currentItem = viewpager.getCurrentItem();
+        mList = DaoUtil.querydata();
+        initView();
+        viewpager.setCurrentItem(currentItem);
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventBean event) {
+        if (event.getEvent().equals(EventBean.REFRESH_DESK)) {
             //刷新
             int currentItem = viewpager.getCurrentItem();
             mList = DaoUtil.querydata();
@@ -612,7 +697,31 @@ public class NewMainActivity extends BaseActivity {
                         String phoneNum = item.getPhoneNum();
                         CallUtil.call(mContext, phoneNum);
                     } else if (item.getIconType() == 4) {//亲情号码
-                        mContext.startActivity(new Intent(mContext, FamilyChoiseActivity.class));
+                        if (item.getMid() == 11) {
+                            if (item.getTitle().equals("亲情1")) {
+                                Intent intent = new Intent(mContext, ContactsListActivity.class);
+                                intent.putExtra("desk_id", item.getId());
+                                mContext.startActivity(intent);
+                            } else {
+                                FamilyDetailActivity.startActivity(NewMainActivity.this, item);
+                            }
+                        } else if (item.getMid() == 12) {
+                            if (item.getTitle().equals("亲情2")) {
+                                Intent intent = new Intent(mContext, ContactsListActivity.class);
+                                intent.putExtra("desk_id", item.getId());
+                                mContext.startActivity(intent);
+                            } else {
+                                FamilyDetailActivity.startActivity(NewMainActivity.this, item);
+                            }
+                        } else {
+                            if (item.getTitle().equals("亲情3")) {
+                                Intent intent = new Intent(mContext, ContactsListActivity.class);
+                                intent.putExtra("desk_id", item.getId());
+                                mContext.startActivity(intent);
+                            } else {
+                                FamilyDetailActivity.startActivity(NewMainActivity.this, item);
+                            }
+                        }
                     } else {//系统或用户程序跳转
                         Utils.startApp(mContext, item.getPackageName());
                     }

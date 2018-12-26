@@ -6,9 +6,12 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
-@Entity
-public class DesktopIconBean {
+import java.io.Serializable;
 
+@Entity
+public class DesktopIconBean implements Serializable{
+
+    private static final long serialVersionUID = -5803965975243328697L;
     @Id(autoincrement = true)
     private Long id;
     private int mid;

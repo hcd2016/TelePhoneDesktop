@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
@@ -23,9 +22,9 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -38,16 +37,20 @@ import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.ContactsBean;
+import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBean;
+import com.desktop.telephone.telephonedesktop.bean.FamilyIDBean;
 import com.desktop.telephone.telephonedesktop.desktop.bluetooth.LeadHintActivity;
 import com.desktop.telephone.telephonedesktop.desktop.bluetooth.android.bluetooth.client.pbap.BluetoothPbapClient;
 import com.desktop.telephone.telephonedesktop.desktop.bluetooth.android.vcard.VCardEntry;
 import com.desktop.telephone.telephonedesktop.desktop.dialog.ContactsDeleteDialog;
 import com.desktop.telephone.telephonedesktop.desktop.dialog.ProgressBarDialog;
+import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 import com.desktop.telephone.telephonedesktop.util.ContactsUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.DensityUtil;
 import com.desktop.telephone.telephonedesktop.util.PinYinUtils;
+import com.desktop.telephone.telephonedesktop.util.SPUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.TopSmoothScroller;
 import com.desktop.telephone.telephonedesktop.view.WordsView;
@@ -58,6 +61,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -97,6 +101,8 @@ public class ContactsListActivity extends BaseActivity {
     private ProgressBarDialog progressBarDilog;
     private AlertDialog alertDialog1;
     private PopupWindow popupWindow;
+    private Long deskId;
+    private List<FamilyIDBean> idList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -151,6 +157,10 @@ public class ContactsListActivity extends BaseActivity {
     }
 
     private void initView() {
+        idList = SPUtil.getList(ContactsListActivity.this, SPUtil.KEY_SHOW_FAMILY_LIST);
+        deskId = getIntent().getLongExtra("desk_id", -1);
+
+
         wordsView.setOnWordsChangeListener(new WordsView.OnWordsChangeListener() {
             @Override
             public void wordsChange(String words) {
@@ -168,10 +178,11 @@ public class ContactsListActivity extends BaseActivity {
                 updateListView(words);
             }
         });
-        list = new ArrayList<>();
-        list = ContactsUtil.getContactsName(this);
+        this.list = new ArrayList<>();
+        this.list = ContactsUtil.getContactsName(this);
+
         //对集合排序
-        Collections.sort(list, new Comparator<ContactsBean>() {
+        Collections.sort(this.list, new Comparator<ContactsBean>() {
             @Override
             public int compare(ContactsBean lhs, ContactsBean rhs) {
                 //根据拼音进行排序
@@ -192,8 +203,8 @@ public class ContactsListActivity extends BaseActivity {
 
                 //当滑动列表的时候，更新右侧字母列表的选中状态
                 int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
-                if (list.size() != 0 && pastVisiblesItems >= 0) {
-                    String s = PinYinUtils.getPinyin(list.get(pastVisiblesItems).getName()).substring(0, 1).toUpperCase();
+                if (ContactsListActivity.this.list.size() != 0 && pastVisiblesItems >= 0) {
+                    String s = PinYinUtils.getPinyin(ContactsListActivity.this.list.get(pastVisiblesItems).getName()).substring(0, 1).toUpperCase();
                     if (!s.matches("[A-Z]")) {
                         s = "#";
                     }
@@ -203,7 +214,7 @@ public class ContactsListActivity extends BaseActivity {
             }
         });
         recycleView.setLayoutManager(layoutManager);
-        myAdapter = new MyAdapter(list);
+        myAdapter = new MyAdapter(this.list);
         recycleView.setAdapter(myAdapter);
     }
 
@@ -260,7 +271,7 @@ public class ContactsListActivity extends BaseActivity {
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tv_header_icon.getLayoutParams();
                 layoutParams.width = DensityUtil.dip2px(ContactsListActivity.this, 50);
                 layoutParams.height = DensityUtil.dip2px(ContactsListActivity.this, 50);
-                layoutParams.setMargins(10,0,0,0);
+                layoutParams.setMargins(10, 0, 0, 0);
                 tv_header_icon.setLayoutParams(layoutParams);
                 tv_header_icon.setBackground(drawable);
             } else {
@@ -268,7 +279,7 @@ public class ContactsListActivity extends BaseActivity {
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tv_header_icon.getLayoutParams();
                 layoutParams.width = DensityUtil.dip2px(ContactsListActivity.this, 58);
                 layoutParams.height = DensityUtil.dip2px(ContactsListActivity.this, 58);
-                layoutParams.setMargins(0,0,0,0);
+                layoutParams.setMargins(0, 0, 0, 0);
                 tv_header_icon.setLayoutParams(layoutParams);
                 tv_header_icon.setBackgroundResource(R.drawable.iv_avatar_default);
             }
@@ -338,6 +349,64 @@ public class ContactsListActivity extends BaseActivity {
                     return false;
                 }
             });
+
+
+            //亲情号码处理:
+            ImageView iv_family_add = helper.getView(R.id.iv_family_add);
+            if (deskId != null && deskId != -1) {
+                iv_family_add.setVisibility(View.VISIBLE);
+
+                List<Long> temList = new ArrayList<>();
+                if (idList != null) {
+                    for (int i = 0; i < idList.size(); i++) {
+                        temList.add(idList.get(i).getShowId());
+                    }
+                }
+
+                if (idList != null && temList.contains(item.getId())) {
+                    iv_family_add.setImageResource(R.drawable.gouxuan);
+                } else {
+                    iv_family_add.setImageResource(R.drawable.add_icon);
+                    iv_family_add.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+//                        if (!item.isShowFamily) {//是add图标
+                            ContactsBean constacts_bean = ContactsUtil.getDetailFromContactID(ContactsListActivity.this, item);//通过id获取联系人号码
+                            DesktopIconBean desktopIconBean = DaoUtil.getDesktopIconBeanDao().load(deskId);
+                            desktopIconBean.setTitle(item.getName());
+                            desktopIconBean.setPhoneNum(constacts_bean.getPhone());
+                            desktopIconBean.setImg_id_name("family_header");
+                            DaoUtil.getDesktopIconBeanDao().update(desktopIconBean);//更新桌面数据库
+//                            item.isShowFamily = true;
+                            //保存选中
+                            if (idList == null) {
+                                idList = new ArrayList<>();
+                            }
+                            FamilyIDBean familyIDBean = new FamilyIDBean();
+                            familyIDBean.setDeskId(deskId);
+                            familyIDBean.setShowId(item.getId());
+                            idList.add(familyIDBean);
+                            SPUtil.putList(ContactsListActivity.this, SPUtil.KEY_SHOW_FAMILY_LIST, idList);
+
+
+                            EventBus.getDefault().post(new EventBean(EventBean.REFRESH_DESK));//通知桌面刷新
+                            finish();
+                            Utils.Toast("添加到桌面成功");
+
+//                        }
+                        }
+                    });
+                }
+
+//                if (item.isShowFamily) {
+//                    iv_family_add.setImageResource(R.drawable.gouxuan);
+//                } else {
+//                    iv_family_add.setImageResource(R.drawable.add_icon);
+//                }
+
+            } else {
+                iv_family_add.setVisibility(View.GONE);
+            }
         }
     }
 

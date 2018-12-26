@@ -29,6 +29,7 @@ public class ContactsBeanDao extends AbstractDao<ContactsBean, Long> {
         public final static Property Email = new Property(2, String.class, "email", false, "EMAIL");
         public final static Property Desc = new Property(3, String.class, "desc", false, "DESC");
         public final static Property Phone = new Property(4, String.class, "phone", false, "PHONE");
+        public final static Property IsShowFamily = new Property(5, boolean.class, "isShowFamily", false, "IS_SHOW_FAMILY");
     }
 
 
@@ -48,7 +49,8 @@ public class ContactsBeanDao extends AbstractDao<ContactsBean, Long> {
                 "\"NAME\" TEXT," + // 1: name
                 "\"EMAIL\" TEXT," + // 2: email
                 "\"DESC\" TEXT," + // 3: desc
-                "\"PHONE\" TEXT);"); // 4: phone
+                "\"PHONE\" TEXT," + // 4: phone
+                "\"IS_SHOW_FAMILY\" INTEGER NOT NULL );"); // 5: isShowFamily
     }
 
     /** Drops the underlying database table. */
@@ -85,6 +87,7 @@ public class ContactsBeanDao extends AbstractDao<ContactsBean, Long> {
         if (phone != null) {
             stmt.bindString(5, phone);
         }
+        stmt.bindLong(6, entity.getIsShowFamily() ? 1L: 0L);
     }
 
     @Override
@@ -115,6 +118,7 @@ public class ContactsBeanDao extends AbstractDao<ContactsBean, Long> {
         if (phone != null) {
             stmt.bindString(5, phone);
         }
+        stmt.bindLong(6, entity.getIsShowFamily() ? 1L: 0L);
     }
 
     @Override
@@ -129,7 +133,8 @@ public class ContactsBeanDao extends AbstractDao<ContactsBean, Long> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // email
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // desc
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // phone
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // phone
+            cursor.getShort(offset + 5) != 0 // isShowFamily
         );
         return entity;
     }
@@ -141,6 +146,7 @@ public class ContactsBeanDao extends AbstractDao<ContactsBean, Long> {
         entity.setEmail(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setDesc(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setPhone(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setIsShowFamily(cursor.getShort(offset + 5) != 0);
      }
     
     @Override

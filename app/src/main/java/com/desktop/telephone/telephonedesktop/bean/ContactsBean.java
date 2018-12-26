@@ -19,15 +19,25 @@ public class ContactsBean implements Serializable {
     public String email = "";//邮箱
     public String desc = "";//备注
     public String phone = "";//手机号
+    public boolean isShowFamily = false;
 
-    @Generated(hash = 2009764025)
+    public boolean isShowFamily() {
+        return isShowFamily;
+    }
+
+    public void setShowFamily(boolean showFamily) {
+        isShowFamily = showFamily;
+    }
+
+    @Generated(hash = 231460074)
     public ContactsBean(Long id, String name, String email, String desc,
-            String phone) {
+            String phone, boolean isShowFamily) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.desc = desc;
         this.phone = phone;
+        this.isShowFamily = isShowFamily;
     }
 
     @Generated(hash = 747317112)
@@ -72,5 +82,13 @@ public class ContactsBean implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean getIsShowFamily() {
+        return this.isShowFamily;
+    }
+
+    public void setIsShowFamily(boolean isShowFamily) {
+        this.isShowFamily = isShowFamily;
     }
 }
