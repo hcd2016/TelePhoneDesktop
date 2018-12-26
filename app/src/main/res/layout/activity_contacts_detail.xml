@@ -18,7 +18,7 @@
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsingToolbarLayout"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="300dp"
                 app:contentScrim="@color/colorAccent"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:title="张三">
@@ -43,15 +43,16 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="10dp">
+                    android:padding="15dp">
 
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/phone_icon_gray" />
 
                     <LinearLayout
@@ -66,7 +67,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_333333"
-                            android:textSize="24sp"
+                            android:textSize="28sp"
                             tools:text="15889479929" />
 
                         <TextView
@@ -75,7 +76,7 @@
                             android:layout_marginTop="5dp"
                             android:text="号码"
                             android:textColor="@color/text_666666"
-                            android:textSize="24sp" />
+                            android:textSize="28sp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -93,15 +94,16 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:layout_marginLeft="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="10dp">
+                        android:padding="15dp">
 
                         <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:src="@drawable/email" />
 
                         <LinearLayout
@@ -115,7 +117,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/text_333333"
-                                android:textSize="24sp"
+                                android:textSize="28sp"
                                 tools:text="zhangsan@163.com" />
 
                             <TextView
@@ -124,7 +126,7 @@
                                 android:layout_marginTop="5dp"
                                 android:text="邮箱"
                                 android:textColor="@color/text_666666"
-                                android:textSize="24sp" />
+                                android:textSize="28sp" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -142,15 +144,16 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:layout_marginLeft="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="10dp">
+                        android:padding="15dp">
 
                         <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:src="@drawable/desc" />
 
                         <LinearLayout
@@ -164,7 +167,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/text_333333"
-                                android:textSize="24sp"
+                                android:textSize="28sp"
                                 tools:text="今晚打老虎" />
 
                             <TextView
@@ -173,7 +176,7 @@
                                 android:layout_marginTop="5dp"
                                 android:text="备注"
                                 android:textColor="@color/text_666666"
-                                android:textSize="24sp" />
+                                android:textSize="28sp" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -191,8 +194,8 @@
 
 
     <LinearLayout
-        android:layout_marginRight="50dp"
-        android:layout_marginLeft="50dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginLeft="80dp"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -213,8 +216,8 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/edit_icon" />
 
             <TextView
@@ -223,7 +226,7 @@
                 android:layout_marginTop="5dp"
                 android:text="编辑"
                 android:textColor="@color/text_333333"
-                android:textSize="18sp" />
+                android:textSize="24sp" />
         </LinearLayout>
 
 
@@ -238,8 +241,8 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/delete_click_icon" />
 
             <TextView
@@ -248,7 +251,7 @@
                 android:layout_marginTop="5dp"
                 android:text="删除"
                 android:textColor="@color/text_333333"
-                android:textSize="18sp" />
+                android:textSize="24sp" />
         </LinearLayout>
     </LinearLayout>
 

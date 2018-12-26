@@ -123,7 +123,7 @@ public class FamilyDetailActivity extends BaseActivity {
 
                 break;
             case R.id.tv_btn_call:
-                CallUtil.call(this, tvNum.getText().toString());
+                CallUtil.call(this, tvNum.getText().toString(),false);
                 break;
         }
     }

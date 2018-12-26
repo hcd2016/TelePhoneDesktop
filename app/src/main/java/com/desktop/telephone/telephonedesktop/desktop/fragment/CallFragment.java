@@ -155,7 +155,7 @@ public class CallFragment extends Fragment {
 //                intent1.putExtra("isCalling", false);
 //                startActivity(intent1);
 
-                CallUtil.call(getActivity(),tvPhoneNum.getText().toString());
+                CallUtil.call(getActivity(),tvPhoneNum.getText().toString(),false);
                 phoneString = "";
                 tvPhoneNum.setText(phoneString);
                 break;

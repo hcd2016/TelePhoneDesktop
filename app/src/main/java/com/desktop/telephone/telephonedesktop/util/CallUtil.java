@@ -18,13 +18,13 @@ public class CallUtil {
      * @param context
      * @param phoneNum
      */
-    public static void call(Context context, String phoneNum) {//交换机待加
+    public static void call(Context context, String phoneNum,boolean isFromReciver) {//交换机待加
         boolean isHandFree = false;
-        boolean isCallingWithTalking = SPUtil.getInstance().getBoolean(SPUtil.KEY_CALLING_WITH_TALKING, false);
-        if (isCallingWithTalking) {
-            Utils.Toast("当前正在通话中,不能呼出");
-            return;
-        }
+//        boolean isCallingWithTalking = SPUtil.getInstance().getBoolean(SPUtil.KEY_CALLING_WITH_TALKING, false);
+//        if (isCallingWithTalking) {
+//            Utils.Toast("当前正在通话中,不能呼出");
+//            return;
+//        }
         if (TextUtils.isEmpty(phoneNum)) {
             Utils.Toast("呼叫号码不能为空");
             return;
@@ -44,7 +44,7 @@ public class CallUtil {
         context.sendBroadcast(intent);
 
         //跳转到呼叫中界面
-        CallingActivity.startActivity(context, phoneNum, true, isHandFree);
+        CallingActivity.startActivity(context, phoneNum, true, isHandFree,isFromReciver);
     }
 
     /**

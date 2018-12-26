@@ -22,9 +22,9 @@
             android:src="@drawable/arrow_left_white" />
 
         <TextView
+            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:text="联系人"
             android:textColor="@color/white"
             android:textSize="35sp" />
@@ -50,7 +50,7 @@
             android:layout_marginTop="50dp"
             android:textColor="@color/white"
             android:textSize="35sp"
-            android:text="张三"
+            tools:text="张三"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
@@ -59,7 +59,7 @@
             android:layout_marginTop="30dp"
             android:textSize="35sp"
             android:textColor="@color/white"
-            android:text="15889479929"
+            tools:text="15889479999"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

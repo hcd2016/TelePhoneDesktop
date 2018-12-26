@@ -93,7 +93,7 @@ public class ContactsDetailActivity extends BaseActivity {
         llPhoneContainer.setOnClickListener(new View.OnClickListener() {//拨打电话
             @Override
             public void onClick(View v) {
-                CallUtil.call(ContactsDetailActivity.this,constacts_bean.getPhone());
+                CallUtil.call(ContactsDetailActivity.this,constacts_bean.getPhone(),false);
             }
         });
     }

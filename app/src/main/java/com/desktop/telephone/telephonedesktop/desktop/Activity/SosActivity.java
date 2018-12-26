@@ -1,5 +1,7 @@
 package com.desktop.telephone.telephonedesktop.desktop.Activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
@@ -15,11 +17,15 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
+import com.desktop.telephone.telephonedesktop.bean.EvenCallRecordBean;
 import com.desktop.telephone.telephonedesktop.bean.SosBean;
 import com.desktop.telephone.telephonedesktop.desktop.dialog.SosAddDialog;
 import com.desktop.telephone.telephonedesktop.gen.SosBeanDao;
+import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,11 +56,11 @@ public class SosActivity extends BaseActivity {
     private void initView() {
         list = new ArrayList<>();
         List<SosBean> sosBeans = DaoUtil.getSosBeanDao().loadAll();
-        if (list != null && list.size() > 0) {
+        if (sosBeans != null && sosBeans.size() > 0) {
             list.addAll(sosBeans);
         }
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
         recycleView.setLayoutManager(gridLayoutManager);
         myAdapter = new MyAdapter(this.list);
         View view = View.inflate(this, R.layout.sos_foot_view, null);
@@ -99,6 +105,7 @@ public class SosActivity extends BaseActivity {
         finish();
     }
 
+    private AlertDialog alertDialog;
     class MyAdapter extends BaseQuickAdapter<SosBean, BaseViewHolder> {
 
         @BindView(R.id.tv_name)
@@ -113,12 +120,50 @@ public class SosActivity extends BaseActivity {
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, SosBean item) {
+        protected void convert(BaseViewHolder helper, final SosBean item) {
             helper.getView(R.id.carview).setBackgroundColor(Utils.getColorBgFromPosition(helper.getLayoutPosition()));
             helper.setText(R.id.tv_name, item.getName());
             helper.setText(R.id.tv_phone_num, item.getPhoneNum());
             helper.setText(R.id.tv_content, item.getSmsContent());
+            helper.getView(R.id.carview).setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View view) {
+                    alertDialog = new AlertDialog.Builder(SosActivity.this)
+                            .setTitle("删除记录")
+                            .setMessage("确定要删除这条记录吗?")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    list.remove(item);
+                                    DaoUtil.getSosBeanDao().delete(item);
+                                    notifyDataSetChanged();
+                                    Utils.Toast("删除成功");
+                                }
+                            })
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    alertDialog.dismiss();
+                                }
+                            })
+                            .create();
+                    alertDialog.show();
+                    return false;
+                }
+            });
+            helper.getView(R.id.carview).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CallUtil.call(SosActivity.this,item.getPhoneNum(),false);
+                }
+            });
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DaoUtil.closeDb();
+    }
 }

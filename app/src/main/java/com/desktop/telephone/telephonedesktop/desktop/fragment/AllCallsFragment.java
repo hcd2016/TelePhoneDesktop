@@ -152,7 +152,7 @@ public class AllCallsFragment extends Fragment {
             helper.getView(R.id.ll_item_container).setOnClickListener(new View.OnClickListener() {//点击事件
                 @Override
                 public void onClick(View view) {
-                    CallUtil.call(getActivity(),item.getPhoneNum());
+                    CallUtil.call(getActivity(),item.getPhoneNum(),false);
                 }
             });
         }

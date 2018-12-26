@@ -211,36 +211,36 @@ public class NewMainActivity extends BaseActivity {
                         }
                     }
                     break;
-                case 8://设置
-                    PackageManager pm1 = getPackageManager();
-                    //所有的安装在系统上的应用程序包信息。
-                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
-                    for (int j = 0; j < packInfos1.size(); j++) {
-                        PackageInfo packInfo = packInfos1.get(j);
-                        if (packInfo.packageName.equals("com.android.settings")) {
-                            moveItem.setIconType(2);
-                            moveItem.setTitle("设置");
-                            moveItem.setPackageName(packInfo.packageName);
-                            moveItem.setImg_id_name("settings_icon");
-//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
-                        }
-                    }
-                    break;
-//                case 8://相机 记得改上面size
+//                case 8://设置
 //                    PackageManager pm1 = getPackageManager();
 //                    //所有的安装在系统上的应用程序包信息。
 //                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
 //                    for (int j = 0; j < packInfos1.size(); j++) {
 //                        PackageInfo packInfo = packInfos1.get(j);
-////                        if (packInfo.packageName.equals("com.android.camera2")) {
-//                        if (packInfo.packageName.equals("com.android.camera")) {
+//                        if (packInfo.packageName.equals("com.android.settings")) {
 //                            moveItem.setIconType(2);
-//                            moveItem.setTitle("相机");
-//                            moveItem.setImg_id_name("photos_icon");
-////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
+//                            moveItem.setTitle("设置");
+//                            moveItem.setPackageName(packInfo.packageName);
+//                            moveItem.setImg_id_name("settings_icon");
+////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
 //                        }
 //                    }
 //                    break;
+                case 8://相机 记得改上面size
+                    PackageManager pm1 = getPackageManager();
+                    //所有的安装在系统上的应用程序包信息。
+                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
+                    for (int j = 0; j < packInfos1.size(); j++) {
+                        PackageInfo packInfo = packInfos1.get(j);
+                        if (packInfo.packageName.equals("com.android.camera2")) {
+//                        if (packInfo.packageName.equals("com.android.camera")) {
+                            moveItem.setIconType(2);
+                            moveItem.setTitle("相机");
+                            moveItem.setImg_id_name("photos_icon");
+//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
+                        }
+                    }
+                    break;
                 case 10:
 //                case 8:
                     //分机设置
@@ -492,23 +492,29 @@ public class NewMainActivity extends BaseActivity {
                 }
             }.run();
 
-//            //每一小时更新一次天气,获取不到隐藏
-//            new Runnable() {
-//                @Override
-//                public void run() {
-//                    weatherHandler.postDelayed(this, 1000 );
-//                    getWeather();
-//                    //设置天气
-//                    if (weatherBean != null && weatherBean.isSucess) {
-//                        ll_weather_container.setVisibility(View.VISIBLE);
-//                        tv_city.setText(weatherBean.city);
-//                        tv_weather.setText(weatherBean.weather);
-//                        tv_dushu.setText(weatherBean.dushu + "℃");
-//                    } else {
-//                        ll_weather_container.setVisibility(View.GONE);
-//                    }
-//                }
-//            }.run();
+            //每一小时更新一次天气,获取不到隐藏
+            new Runnable() {
+                @Override
+                public void run() {
+                    weatherHandler.postDelayed(this, 1000 );
+                    getWeather();
+                    //设置天气
+                    if (weatherBean != null && weatherBean.isSucess) {
+                        ll_weather_container.setVisibility(View.VISIBLE);
+                        tv_city.setText(weatherBean.city);
+                        tv_weather.setText(weatherBean.weather);
+                        tv_dushu.setText(weatherBean.dushu + "℃");
+                    } else {
+                        ll_weather_container.setVisibility(View.GONE);
+                    }
+                }
+            }.run();
+            ll_header_container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getWeather();
+                }
+            });
 
 
             MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(NewMainActivity.this, row);
@@ -695,7 +701,7 @@ public class NewMainActivity extends BaseActivity {
                         }
                     } else if (item.getIconType() == 3) {//一键拨号
                         String phoneNum = item.getPhoneNum();
-                        CallUtil.call(mContext, phoneNum);
+                        CallUtil.call(mContext, phoneNum,false);
                     } else if (item.getIconType() == 4) {//亲情号码
                         if (item.getMid() == 11) {
                             if (item.getTitle().equals("亲情1")) {

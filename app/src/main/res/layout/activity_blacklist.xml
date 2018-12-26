@@ -48,39 +48,40 @@
                 android:paddingTop="10dp"
                 android:text="模式选择"
                 android:textColor="@color/text_333333"
-                android:textSize="20sp" />
+                android:textSize="28sp" />
 
             <LinearLayout
+                android:gravity="center_vertical"
                 android:id="@+id/ll_normal_contianer"
                 android:background="@color/blue_2"
-                android:paddingRight="15dp"
+                android:paddingRight="30dp"
                 android:paddingLeft="15dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/tv_normal"
-                    android:padding="10dp"
+                    android:padding="15dp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="普通模式"
                     android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:textSize="24sp" />
                 <TextView
                     android:id="@+id/tv_btn_normal"
                     android:background="@drawable/shape_radus10_box"
                     android:padding="5dp"
                     android:textColor="@color/color_10"
-                    android:textSize="14sp"
-                    android:layout_marginRight="30dp"
+                    android:textSize="24sp"
+                    android:layout_marginRight="80dp"
                     android:text="启用该模式"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/tv_normal_status"
                     android:textColor="@color/color_7"
-                    android:textSize="14sp"
+                    android:textSize="24sp"
                     android:text="禁用中"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -93,34 +94,34 @@
             <LinearLayout
                 android:id="@+id/ll_black_container"
                 android:background="@color/white"
-                android:paddingRight="15dp"
+                android:paddingRight="30dp"
                 android:paddingLeft="15dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/tv_black"
-                    android:padding="10dp"
+                    android:padding="15dp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="黑名单模式"
                     android:textColor="@color/text_333333"
-                    android:textSize="14sp" />
+                    android:textSize="24sp" />
                 <TextView
                     android:id="@+id/tv_btn_black"
                     android:background="@drawable/shape_radus10_box"
                     android:padding="5dp"
                     android:textColor="@color/color_10"
-                    android:textSize="14sp"
-                    android:layout_marginRight="30dp"
+                    android:textSize="24sp"
+                    android:layout_marginRight="80dp"
                     android:text="启用该模式"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/tv_black_status"
                     android:textColor="@color/color_7"
-                    android:textSize="14sp"
+                    android:textSize="24sp"
                     android:text="禁用中"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -133,34 +134,34 @@
             <LinearLayout
                 android:id="@+id/ll_white_container"
                 android:background="@color/white"
-                android:paddingRight="15dp"
+                android:paddingRight="30dp"
                 android:paddingLeft="15dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/tv_white"
-                    android:padding="10dp"
+                    android:padding="15dp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="红名单模式"
                     android:textColor="@color/text_333333"
-                    android:textSize="14sp" />
+                    android:textSize="24sp" />
                 <TextView
                     android:id="@+id/tv_btn_white"
                     android:background="@drawable/shape_radus10_box"
                     android:padding="5dp"
                     android:textColor="@color/color_10"
-                    android:textSize="14sp"
-                    android:layout_marginRight="30dp"
+                    android:textSize="24sp"
+                    android:layout_marginRight="80dp"
                     android:text="启用该模式"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/tv_white_status"
                     android:textColor="@color/color_7"
-                    android:textSize="14sp"
+                    android:textSize="24sp"
                     android:text="禁用中"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -230,15 +231,15 @@
 
             <ImageView
                 android:src="@drawable/add"
-                android:layout_width="20dp"
-                android:layout_height="20dp" />
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
             <TextView
                 android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="添加"
                 android:textColor="@color/text_333333"
-                android:textSize="14sp" />
+                android:textSize="24sp" />
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

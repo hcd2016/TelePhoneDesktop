@@ -269,16 +269,16 @@ public class ContactsListActivity extends BaseActivity {
             if (Utils.isChineseA(last)) {
                 tv_header_icon.setText(last + "");
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tv_header_icon.getLayoutParams();
-                layoutParams.width = DensityUtil.dip2px(ContactsListActivity.this, 50);
-                layoutParams.height = DensityUtil.dip2px(ContactsListActivity.this, 50);
-                layoutParams.setMargins(10, 0, 0, 0);
+                layoutParams.width = DensityUtil.dip2px(ContactsListActivity.this, 74);
+                layoutParams.height = DensityUtil.dip2px(ContactsListActivity.this, 74);
+                layoutParams.setMargins(5, 0, 0, 0);
                 tv_header_icon.setLayoutParams(layoutParams);
                 tv_header_icon.setBackground(drawable);
             } else {
                 tv_header_icon.setText("");
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tv_header_icon.getLayoutParams();
-                layoutParams.width = DensityUtil.dip2px(ContactsListActivity.this, 58);
-                layoutParams.height = DensityUtil.dip2px(ContactsListActivity.this, 58);
+                layoutParams.width = DensityUtil.dip2px(ContactsListActivity.this, 80);
+                layoutParams.height = DensityUtil.dip2px(ContactsListActivity.this, 80);
                 layoutParams.setMargins(0, 0, 0, 0);
                 tv_header_icon.setLayoutParams(layoutParams);
                 tv_header_icon.setBackgroundResource(R.drawable.iv_avatar_default);
@@ -355,6 +355,7 @@ public class ContactsListActivity extends BaseActivity {
             ImageView iv_family_add = helper.getView(R.id.iv_family_add);
             if (deskId != null && deskId != -1) {
                 iv_family_add.setVisibility(View.VISIBLE);
+                wordsView.setVisibility(View.GONE);
 
                 List<Long> temList = new ArrayList<>();
                 if (idList != null) {
@@ -406,6 +407,7 @@ public class ContactsListActivity extends BaseActivity {
 
             } else {
                 iv_family_add.setVisibility(View.GONE);
+                wordsView.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -490,7 +492,7 @@ public class ContactsListActivity extends BaseActivity {
                             popupWindow.dismiss();
                         }
                     });
-                    popupWindow = new PopupWindow(popView, DensityUtil.dip2px(this, 125), LinearLayout.LayoutParams.WRAP_CONTENT);
+                    popupWindow = new PopupWindow(popView, DensityUtil.dip2px(this, 160), LinearLayout.LayoutParams.WRAP_CONTENT);
                     popupWindow.setBackgroundDrawable(new BitmapDrawable());
                     popupWindow.showAsDropDown(rlTitleContainer, 0, 0, Gravity.RIGHT);
                     break;

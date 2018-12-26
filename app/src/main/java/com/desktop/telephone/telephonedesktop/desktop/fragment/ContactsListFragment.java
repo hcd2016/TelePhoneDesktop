@@ -260,16 +260,16 @@ public class ContactsListFragment extends Fragment {
             if (Utils.isChineseA(last)) {
                 tv_header_icon.setText(last + "");
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tv_header_icon.getLayoutParams();
-                layoutParams.width = DensityUtil.dip2px(getActivity(), 95);
-                layoutParams.height = DensityUtil.dip2px(getActivity(), 95);
-                layoutParams.setMargins(10,0,0,0);
+                layoutParams.width = DensityUtil.dip2px(getActivity(), 74);
+                layoutParams.height = DensityUtil.dip2px(getActivity(), 74);
+                layoutParams.setMargins(5,0,0,0);
                 tv_header_icon.setLayoutParams(layoutParams);
                 tv_header_icon.setBackground(drawable);
             } else {
                 tv_header_icon.setText("");
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tv_header_icon.getLayoutParams();
-                layoutParams.width = DensityUtil.dip2px(getActivity(), 100);
-                layoutParams.height = DensityUtil.dip2px(getActivity(), 100);
+                layoutParams.width = DensityUtil.dip2px(getActivity(), 80);
+                layoutParams.height = DensityUtil.dip2px(getActivity(), 80);
                 layoutParams.setMargins(0,0,0,0);
                 tv_header_icon.setLayoutParams(layoutParams);
                 tv_header_icon.setBackgroundResource(R.drawable.iv_avatar_default);
@@ -400,7 +400,7 @@ public class ContactsListFragment extends Fragment {
                             popupWindow.dismiss();
                         }
                     });
-                    popupWindow = new PopupWindow(popView, DensityUtil.dip2px(getActivity(), 125), DensityUtil.dip2px(getActivity(), 80));
+                    popupWindow = new PopupWindow(popView, DensityUtil.dip2px(getActivity(), 160), DensityUtil.dip2px(getActivity(), 100));
                     popupWindow.setBackgroundDrawable(new BitmapDrawable());
 
                     int[] ints = new int[2];

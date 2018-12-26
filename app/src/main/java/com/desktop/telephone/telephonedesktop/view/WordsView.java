@@ -65,7 +65,7 @@ public class WordsView extends View {
 //        bgPaint = new Paint();
 //        bgPaint.setColor(Utils.getColor(R.color.colorPrimaryDark));
         wordsPaint = new Paint();
-        wordsPaint.setTextSize(DensityUtil.dip2px(context,18));
+        wordsPaint.setTextSize(DensityUtil.dip2px(context,24));
         wordsPaint.setFakeBoldText(true);
         wordsPaint.setColor(Utils.getColor(R.color.text_333333));
         for (int i = 0; i < words.length; i++) {

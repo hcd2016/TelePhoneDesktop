@@ -16,7 +16,7 @@
 
         <com.desktop.telephone.telephonedesktop.view.WordsView
             android:id="@+id/wordsView"
-            android:layout_width="35dp"
+            android:layout_width="45dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_gravity="right"
@@ -53,12 +53,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             <ImageView
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:src="@drawable/add"
                 android:layout_width="30dp"
                 android:layout_height="30dp" />
             <TextView
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="新建联系人"
@@ -74,12 +74,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:src="@drawable/menu_point_icon"
                     android:layout_width="30dp"
                     android:layout_height="30dp" />
                 <TextView
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="更多"

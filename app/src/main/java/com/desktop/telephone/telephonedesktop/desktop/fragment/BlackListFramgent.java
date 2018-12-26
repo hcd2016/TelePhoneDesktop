@@ -214,7 +214,7 @@ public class BlackListFramgent extends Fragment {
         blacklistDeleteDialog.setBtnClickListener(new BlacklistDeleteDialog.BtnClickListener() {
             @Override
             public void callClick() {//拨号
-                CallUtil.call(getActivity(),blackListInfoBean.getPhone());
+                CallUtil.call(getActivity(),blackListInfoBean.getPhone(),false);
             }
 
             @Override
@@ -307,8 +307,12 @@ public class BlackListFramgent extends Fragment {
             helper.setText(R.id.tv_date, item.getDate());
             if (item.getType() == 1) {
                 helper.setText(R.id.tv_desc, "黑名单号码");
+                helper.setTextColor(R.id.tv_desc,Utils.getColor(R.color.text_666666));
+                helper.setTextColor(R.id.tv_num,Utils.getColor(R.color.text_333333));
             } else {
                 helper.setText(R.id.tv_desc, "红名单号码");
+                helper.setTextColor(R.id.tv_desc,Utils.getColor(R.color.color_7));
+                helper.setTextColor(R.id.tv_num,Utils.getColor(R.color.color_7));
             }
         }
     }

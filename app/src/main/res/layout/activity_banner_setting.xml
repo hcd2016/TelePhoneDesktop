@@ -29,7 +29,7 @@
             android:layout_centerInParent="true"
             android:text="轮播设置"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="28sp" />
 
         <TextView
             android:id="@+id/tv_btn_save"
@@ -40,7 +40,7 @@
             android:layout_marginRight="20dp"
             android:text="保存"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="24sp" />
 
         <ImageView
             android:id="@+id/iv_selector_title"
@@ -81,7 +81,7 @@
                         android:layout_height="wrap_content"
                         android:text="是否开启轮播"
                         android:textColor="@color/text_333333"
-                        android:textSize="16sp" />
+                        android:textSize="24sp" />
 
                     <Switch
                         android:id="@+id/switch_off"
@@ -125,7 +125,7 @@
                             android:layout_height="wrap_content"
                             android:text="进入轮播时间"
                             android:textColor="@color/text_333333"
-                            android:textSize="16sp" />
+                            android:textSize="24sp" />
 
                         <EditText
                             android:id="@+id/et_banner_begin_time"
@@ -138,7 +138,7 @@
                             android:maxEms="5"
                             android:text="5"
                             android:textColor="@color/text_333333"
-                            android:textSize="20sp" />
+                            android:textSize="28sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -146,7 +146,7 @@
                             android:layout_marginRight="15dp"
                             android:text="分钟"
                             android:textColor="@color/text_333333"
-                            android:textSize="16sp" />
+                            android:textSize="24sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -160,7 +160,7 @@
                             android:layout_height="wrap_content"
                             android:text="轮播速度"
                             android:textColor="@color/text_333333"
-                            android:textSize="16sp" />
+                            android:textSize="24sp" />
 
                         <EditText
                             android:id="@+id/et_banner_speed"
@@ -172,10 +172,10 @@
                             android:gravity="center"
                             android:inputType="number"
                             android:text="3"
-                            android:textSize="20sp" />
+                            android:textSize="28sp" />
 
                         <TextView
-                            android:textSize="16sp"
+                            android:textSize="24sp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="秒一张"
@@ -194,12 +194,10 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:text="已加入轮播图列"
                     android:textColor="@color/text_333333"
-                    android:textSize="16sp" />
+                    android:textSize="24sp" />
 
                 <Button
                     android:id="@+id/btn_banner"
@@ -208,7 +206,7 @@
                     android:gravity="center"
                     android:text="轮播预览"
                     android:textColor="@color/text_333333"
-                    android:textSize="16sp" />
+                    android:textSize="24sp" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView

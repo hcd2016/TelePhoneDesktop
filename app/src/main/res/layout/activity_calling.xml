@@ -16,7 +16,7 @@
         android:gravity="center"
         android:text="呼叫中..."
         android:textColor="@color/white"
-        android:textSize="20sp" />
+        android:textSize="28sp" />
 
     <com.desktop.telephone.telephonedesktop.view.RoundImageView
         android:layout_width="150dp"
@@ -34,7 +34,7 @@
         android:layout_marginTop="50dp"
         android:gravity="center"
         android:textColor="@color/white"
-        android:textSize="25sp"
+        android:textSize="28sp"
         tools:text="中国移动通信" />
 
     <TextView
@@ -44,7 +44,7 @@
         android:layout_marginTop="5dp"
         android:gravity="center"
         android:textColor="@color/white"
-        android:textSize="25sp"
+        android:textSize="35sp"
         tools:text="10086" />
 
 
@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="invisible"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/tv_key_in"
@@ -65,7 +65,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:textColor="@color/white"
-            android:textSize="25sp"
+            android:textSize="28sp"
             tools:text="158878987979*#" />
 
         <LinearLayout
@@ -85,7 +85,7 @@
                 android:gravity="center"
                 android:text="1"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="32sp" />
 
             <TextView
                 android:id="@+id/tv_key2"
@@ -95,7 +95,7 @@
                 android:gravity="center"
                 android:text="2"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="32sp" />
 
             <TextView
                 android:id="@+id/tv_key3"
@@ -105,7 +105,7 @@
                 android:gravity="center"
                 android:text="3"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="32sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -125,7 +125,7 @@
                 android:gravity="center"
                 android:text="4"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="32sp" />
 
             <TextView
                 android:id="@+id/tv_key5"
@@ -135,7 +135,7 @@
                 android:gravity="center"
                 android:text="5"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="32sp" />
 
             <TextView
                 android:id="@+id/tv_key6"
@@ -145,7 +145,7 @@
                 android:gravity="center"
                 android:text="6"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="32sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -165,7 +165,7 @@
                 android:gravity="center"
                 android:text="7"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="32sp" />
 
             <TextView
                 android:id="@+id/tv_key8"
@@ -175,7 +175,7 @@
                 android:gravity="center"
                 android:text="8"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="32sp" />
 
             <TextView
                 android:id="@+id/tv_key9"
@@ -185,7 +185,7 @@
                 android:gravity="center"
                 android:text="9"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="32sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -205,7 +205,7 @@
                 android:gravity="center"
                 android:text="*"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="32sp" />
 
             <TextView
                 android:id="@+id/tv_key0"
@@ -215,7 +215,7 @@
                 android:gravity="center"
                 android:text="0"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="32sp" />
 
             <TextView
                 android:id="@+id/tv_key_jin"
@@ -225,7 +225,7 @@
                 android:gravity="center"
                 android:text="#"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="32sp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -249,8 +249,8 @@
 
             <ImageView
                 android:id="@+id/iv_audio_record"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/audio_record_icon" />
 
             <TextView
@@ -260,7 +260,7 @@
                 android:layout_marginTop="5dp"
                 android:text="录音"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="28sp" />
         </LinearLayout>
 
         <!--免提-->
@@ -274,8 +274,8 @@
 
             <ImageView
                 android:id="@+id/iv_hand_free"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/hands_free_icon" />
 
             <TextView
@@ -285,7 +285,7 @@
                 android:layout_marginTop="5dp"
                 android:text="免提"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="28sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -298,8 +298,8 @@
 
             <ImageView
                 android:id="@+id/iv_key_bord"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/open_keybord" />
 
             <TextView
@@ -309,7 +309,7 @@
                 android:layout_marginTop="5dp"
                 android:text="打开键盘"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="28sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -332,8 +332,8 @@
             tools:visibility="visible"
             android:visibility="gone"
             android:id="@+id/iv_answer"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/phone_answer_icon" />
         </LinearLayout>
 
@@ -347,8 +347,8 @@
             android:layout_height="match_parent">
         <ImageView
             android:id="@+id/iv_hand_up"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/hand_up_icon"
             android:visibility="gone"
             tools:visibility="visible" />

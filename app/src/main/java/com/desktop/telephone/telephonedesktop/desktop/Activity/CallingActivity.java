@@ -153,7 +153,7 @@ public class CallingActivity extends BaseActivity {
         isCalling = getIntent().getBooleanExtra("isCalling", false);
         isHandFree = getIntent().getBooleanExtra("isHandFree", false);
         setViewData();
-        registerReceivers();
+//        registerReceivers();
     }
 
     //相关广播注册
@@ -165,9 +165,9 @@ public class CallingActivity extends BaseActivity {
         registerReceiver(callingConnectReciver, intentFilter);
     }
 
-    private void unRegisterReceivers() {
-        unregisterReceiver(callingConnectReciver);
-    }
+//    private void unRegisterReceivers() {
+//        unregisterReceiver(callingConnectReciver);
+//    }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -576,7 +576,7 @@ public class CallingActivity extends BaseActivity {
                         return;
                     }
                     ivHandFree.setImageResource(R.drawable.hands_free_icon);
-                    CallUtil.handFreeControl(this, 0);
+//                    CallUtil.handFreeControl(this, 0);
                     ivHandUp.setVisibility(View.GONE);
                     llIvHandUp.setVisibility(View.GONE);
                     CallUtil.handFreeControl(this, 0);//通知系统打开或关闭免提
@@ -692,8 +692,11 @@ public class CallingActivity extends BaseActivity {
      * @param isCalling  是否是主动呼叫
      * @param isHandFree 是否是免提呼叫
      */
-    public static void startActivity(Context context, String phoneNum, boolean isCalling, boolean isHandFree) {
+    public static void startActivity(Context context, String phoneNum, boolean isCalling, boolean isHandFree, boolean isFromReciver) {
         Intent intent = new Intent(context, CallingActivity.class);
+        if (isFromReciver) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
         intent.putExtra("phoneNum", phoneNum);
         intent.putExtra("isCalling", isCalling);
         intent.putExtra("isHandFree", isHandFree);
@@ -707,9 +710,9 @@ public class CallingActivity extends BaseActivity {
         audioRecordHandler.removeCallbacksAndMessages(null);
         audioRecordHandler.removeCallbacksAndMessages(null);
         EventBus.getDefault().unregister(this);
-        unRegisterReceivers();
+//        unRegisterReceivers();
         SPUtil.getInstance().saveBoolean("isShowCallingActivity", false);//保存当前是否打开通话界面
-        SPUtil.getInstance().saveBoolean(SPUtil.KEY_CALLING_WITH_TALKING, false);
+//        SPUtil.getInstance().saveBoolean(SPUtil.KEY_CALLING_WITH_TALKING, false);
 
         //保存通话记录 0为已拨,1为已接,2为未接,3为主动挂断(没有主动挂断)
         int status = callingRecordStatus;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="125dp"
-    android:layout_height="80dp"
+    android:layout_width="160dp"
+    android:layout_height="100dp"
     android:background="@color/bg_gray"
     android:orientation="vertical">
     <TextView
@@ -10,7 +10,7 @@
         android:padding="5dp"
         android:gravity="center"
         android:textColor="@color/text_333333"
-        android:textSize="18sp"
+        android:textSize="28sp"
         android:text="导入"
         android:layout_weight="1"
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
         android:id="@+id/tv_daochu"
         android:padding="5dp"
         android:gravity="center"
-        android:textSize="18sp"
+        android:textSize="28sp"
         android:textColor="@color/text_333333"
         android:text="导出"
         android:layout_weight="1"

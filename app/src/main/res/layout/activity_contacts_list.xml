@@ -27,15 +27,15 @@
             android:layout_centerInParent="true"
             android:text="联系人"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="28sp" />
         <ImageView
             android:id="@+id/iv_menu"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/menu"
-            android:layout_width="25dp"
-            android:layout_height="25dp" />
+            android:layout_width="35dp"
+            android:layout_height="35dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -86,17 +86,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             <ImageView
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="5dp"
                 android:src="@drawable/add"
-                android:layout_width="20dp"
-                android:layout_height="20dp" />
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
             <TextView
                 android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="新建联系人"
                 android:textColor="@color/text_333333"
-                android:textSize="20sp" />
+                android:textSize="24sp" />
             </LinearLayout>
 
         </LinearLayout>

@@ -75,7 +75,7 @@ public class Utils {
         appIconIdMap.put("photos_icon", R.drawable.photos_desk_icon);//相机
         appIconIdMap.put("settings_icon", R.drawable.settings_desk_icon);//设置
         appIconIdMap.put("add_contact_icon", R.drawable.add_contact_icon);//亲情添加
-        appIconIdMap.put("family_header", R.drawable.iv_avatar);//亲情头像
+        appIconIdMap.put("family_header", R.drawable.family_header_icon);//亲情头像
     }
 
 
