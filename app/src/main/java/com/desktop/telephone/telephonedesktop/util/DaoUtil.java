@@ -61,7 +61,8 @@ public class DaoUtil {
     public static List<DesktopIconBean> querydata() {
         Query<DesktopIconBean> nQuery = getDesktopIconBeanDao().queryBuilder()
 //                .where(UserDao.Properties.Name.eq("user1"))//.where(UserDao.Properties.Id.notEq(999))
-                .orderAsc(DesktopIconBeanDao.Properties.Id)//.limit(5)//orderDesc
+//                .orderAsc(DesktopIconBeanDao.Properties.Id)//.limit(5)//orderDesc
+                .orderAsc(DesktopIconBeanDao.Properties.Mid)//.limit(5)//orderDesc
                 .build();
         return nQuery.list();
     }

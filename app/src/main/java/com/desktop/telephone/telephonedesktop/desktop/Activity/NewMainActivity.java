@@ -25,6 +25,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -39,6 +40,7 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
+import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.App;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
@@ -272,6 +274,7 @@ public class NewMainActivity extends BaseActivity {
                     moveItem.setImg_id_name("add_contact_icon");
                     break;
             }
+            moveItem.setMid(i);
             moveItem.setIconBgColor(Utils.getColorBgFromPosition(i));
             defaultList.add(moveItem);
         }
@@ -486,6 +489,7 @@ public class NewMainActivity extends BaseActivity {
     class MyPagerAdapter extends PagerAdapter {
         List<List<DesktopIconBean>> list;
         private RecyclerView recycleView;
+        private GridAdapter gridAdapter;
 
         public MyPagerAdapter(List<List<DesktopIconBean>> list) {
             this.list = list;
@@ -562,36 +566,48 @@ public class NewMainActivity extends BaseActivity {
             MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(NewMainActivity.this, row);
             //            gridLayoutManager.setScrollEnabled(false);
             recycleView.setLayoutManager(gridLayoutManager);
-            List<DesktopIconBean> dataList = list.get(position);
-            final GridAdapter gridAdapter = adpterList.get(position);
+            final List<DesktopIconBean> dataList = list.get(position);
+            gridAdapter = adpterList.get(position);
 
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemDragAndSwipeCallback(gridAdapter));
             itemTouchHelper.attachToRecyclerView(recycleView);
 
-//            // 开启拖拽
-//            gridAdapter.enableDragItem(itemTouchHelper, R.id.rl_item_container, true);
-//            gridAdapter.setOnItemDragListener(new OnItemDragListener() {
-//                @Override
-//                public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
+            // 开启拖拽
+            gridAdapter.enableDragItem(itemTouchHelper, R.id.rl_item_container, true);
+            gridAdapter.setOnItemDragListener(new OnItemDragListener() {
+                @Override
+                public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
 //                    isEdit = true;
-//                    viewHolder.itemView.findViewById(R.id.delete_iv).setVisibility(View.VISIBLE);
+                    viewHolder.itemView.findViewById(R.id.delete_iv).setVisibility(View.VISIBLE);
 //                    Utils.Toast("长按了");
 //                    gridAdapter.notifyDataSetChanged();
-//                }
-//
-//                @Override
-//                public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
+                }
+
+                @Override
+                public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
+                    Log.i("onItemDragMoving","source.getAdapterPosition()======"+source.getAdapterPosition());
+                    Log.i("onItemDragMoving","from==="+from);
+                    Log.i("onItemDragMoving","to======"+to);
+                    DesktopIconBean desktopIconBean = dataList.get(from);
+                    DesktopIconBean toDesktopIconBean = dataList.get(to);
+                    int temp = desktopIconBean.getMid();
+                    desktopIconBean.setMid(toDesktopIconBean.getMid());
+                    toDesktopIconBean.setMid(temp);
+                    DaoUtil.getDesktopIconBeanDao().update(desktopIconBean);
+                    DaoUtil.getDesktopIconBeanDao().update(toDesktopIconBean);
+
+
 //                    Utils.Toast("位置换了");
-//                    source.itemView.findViewById(R.id.delete_iv).setVisibility(View.GONE);
+                    source.itemView.findViewById(R.id.delete_iv).setVisibility(View.GONE);
 //                    gridAdapter.notifyDataSetChanged();
-//                }
-//
-//                @Override
-//                public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
-//                    Log.i("myList", mList.toString());
-//                }
-//
-//            });
+                }
+
+                @Override
+                public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
+                    Log.i("myList", mList.toString());
+                }
+
+            });
             recycleView.setAdapter(gridAdapter);
 
 //            header_view.setHeight(viewHeight / line);
@@ -788,7 +804,7 @@ public class NewMainActivity extends BaseActivity {
             delete_iv.setOnClickListener(new View.OnClickListener() {//删除
                 @Override
                 public void onClick(View view) {
-                    if (item.getIconType() == 0 || item.getIconType() == 1) {
+                    if (item.getIconType() == 0 || item.getIconType() == 1 || item.getIconType() == 4) {
                         Toast.makeText(mContext, "该应用为系统应用，不能卸载", Toast.LENGTH_SHORT).show();
                         return;
                     } else if (item.getIconType() == 3) {//是一键拨号
