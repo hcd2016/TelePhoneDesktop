@@ -3,6 +3,8 @@ package com.desktop.telephone.telephonedesktop.base;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -13,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 
 import com.desktop.telephone.telephonedesktop.MainActivity;
+import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.CallingActivity;
 import com.desktop.telephone.telephonedesktop.desktop.dialog.AlertFragmentDialog;
 import com.desktop.telephone.telephonedesktop.http.HttpApi;
@@ -22,6 +25,15 @@ import com.desktop.telephone.telephonedesktop.util.Constant;
 import com.desktop.telephone.telephonedesktop.util.SPUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.CountTimer;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import okhttp3.internal.Util;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BaseActivity extends AppCompatActivity {
     public CountTimer countTimerView;
@@ -30,14 +42,22 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //设置屏幕长亮
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        //设置屏幕长亮
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+//                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//固定竖屏
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            getWindow().setNavigationBarColor(Utils.getColor(R.color.colorPrimary));
+//            //getWindow().setNavigationBarColor(getResources().getColor(R.color.black));
+//            //getWindow().setNavigationBarColor(Color.BLUE);
+//        }
         if(this instanceof CallingActivity ){
             isShowBanner = false;
         }
     }
+
+
+
 
 //    /**
 //     * 版本更新检查
@@ -72,41 +92,41 @@ public class BaseActivity extends AppCompatActivity {
 //                                    .setCancel(false)
 //                                    .build();
 //
-////                            new AlertFragmentDialog.Builder(MainActivity.this)
-////                                    .setTitle("发现新版本")
-////                                    .setContent(description)
-////                                    .setLeftBtnText("立即更新")
-////                                    .setLeftCallBack(new AlertFragmentDialog.LeftClickCallBack() {
-////                                        @Override
-////                                        public void dialogLeftBtnClick() {
-////                                            AppUpdateUtil.getInstance().downLoadApk(MainActivity.this, url, "xiaowei_credit", noticeTitle, authority, force);
-////                                        }
-////                                    })
-////                                    .setCancel(false)
-////                                    .build();
+//                            new AlertFragmentDialog.Builder(MainActivity.this)
+//                                    .setTitle("发现新版本")
+//                                    .setContent(description)
+//                                    .setLeftBtnText("立即更新")
+//                                    .setLeftCallBack(new AlertFragmentDialog.LeftClickCallBack() {
+//                                        @Override
+//                                        public void dialogLeftBtnClick() {
+//                                            AppUpdateUtil.getInstance().downLoadApk(MainActivity.this, url, "xiaowei_credit", noticeTitle, authority, force);
+//                                        }
+//                                    })
+//                                    .setCancel(false)
+//                                    .build();
 //                        } else {//非强制更新
-////                            long lastTime = SpUtil.getLong(Constant.LAST_UPDATE_SHOW_TIME);
-////                            long currentTimeMillis = System.currentTimeMillis();
-////                            if (lastTime == 0 || currentTimeMillis - lastTime > 1000 * 60 * 60 * 24) {//未取消过 或 取消间隔大于1天
-////                                new AlertFragmentDialog.Builder(MainActivity.this)
-////                                        .setTitle("更新提示")
-////                                        .setContent(description)
-////                                        .setRightBtnText("立即更新")
-////                                        .setRightCallBack(new AlertFragmentDialog.RightClickCallBack() {
-////                                            @Override
-////                                            public void dialogRightBtnClick() {
-////                                                AppUpdateUtil.getInstance().downLoadApk(MainActivity.this, url, "xiaowei_credit", noticeTitle, authority, force);
-////                                            }
-////                                        })
-////                                        .setLeftBtnText("暂不更新")
-////                                        .setLeftCallBack(new AlertFragmentDialog.LeftClickCallBack() {
-////                                            @Override
-////                                            public void dialogLeftBtnClick() {
-////                                                SpUtil.putLong(Constant.LAST_UPDATE_SHOW_TIME, System.currentTimeMillis());//记录上次取消时间
-////                                            }
-////                                        })
-////                                        .setCancel(false)
-////                                        .build();
+//                            long lastTime = SpUtil.getLong(Constant.LAST_UPDATE_SHOW_TIME);
+//                            long currentTimeMillis = System.currentTimeMillis();
+//                            if (lastTime == 0 || currentTimeMillis - lastTime > 1000 * 60 * 60 * 24) {//未取消过 或 取消间隔大于1天
+//                                new AlertFragmentDialog.Builder(MainActivity.this)
+//                                        .setTitle("更新提示")
+//                                        .setContent(description)
+//                                        .setRightBtnText("立即更新")
+//                                        .setRightCallBack(new AlertFragmentDialog.RightClickCallBack() {
+//                                            @Override
+//                                            public void dialogRightBtnClick() {
+//                                                AppUpdateUtil.getInstance().downLoadApk(MainActivity.this, url, "xiaowei_credit", noticeTitle, authority, force);
+//                                            }
+//                                        })
+//                                        .setLeftBtnText("暂不更新")
+//                                        .setLeftCallBack(new AlertFragmentDialog.LeftClickCallBack() {
+//                                            @Override
+//                                            public void dialogLeftBtnClick() {
+//                                                SpUtil.putLong(Constant.LAST_UPDATE_SHOW_TIME, System.currentTimeMillis());//记录上次取消时间
+//                                            }
+//                                        })
+//                                        .setCancel(false)
+//                                        .build();
 //                            }
 //                        }
 //                    }

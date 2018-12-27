@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -45,6 +46,7 @@ import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBean;
 import com.desktop.telephone.telephonedesktop.bean.WeatherBean;
+import com.desktop.telephone.telephonedesktop.desktop.service.ScreenBannerService;
 import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 import com.desktop.telephone.telephonedesktop.http.HttpApi;
@@ -65,6 +67,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -83,6 +86,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewMainActivity extends BaseActivity {
+    private static PowerManager.WakeLock wakeLock;
     @BindView(R.id.viewpager)
     ViewPager viewpager;
     private int line = 4;//行
@@ -105,6 +109,7 @@ public class NewMainActivity extends BaseActivity {
         ButterKnife.bind(this);
         initIconData();
         initView();
+        screenControl();
         CallUtil.showCallerIds(this, 1);
     }
 
@@ -211,36 +216,36 @@ public class NewMainActivity extends BaseActivity {
                         }
                     }
                     break;
-//                case 8://设置
-//                    PackageManager pm1 = getPackageManager();
-//                    //所有的安装在系统上的应用程序包信息。
-//                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
-//                    for (int j = 0; j < packInfos1.size(); j++) {
-//                        PackageInfo packInfo = packInfos1.get(j);
-//                        if (packInfo.packageName.equals("com.android.settings")) {
-//                            moveItem.setIconType(2);
-//                            moveItem.setTitle("设置");
-//                            moveItem.setPackageName(packInfo.packageName);
-//                            moveItem.setImg_id_name("settings_icon");
-////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
-//                        }
-//                    }
-//                    break;
-                case 8://相机 记得改上面size
+                case 8://设置
                     PackageManager pm1 = getPackageManager();
                     //所有的安装在系统上的应用程序包信息。
                     List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
                     for (int j = 0; j < packInfos1.size(); j++) {
                         PackageInfo packInfo = packInfos1.get(j);
-                        if (packInfo.packageName.equals("com.android.camera2")) {
-//                        if (packInfo.packageName.equals("com.android.camera")) {
+                        if (packInfo.packageName.equals("com.android.settings")) {
                             moveItem.setIconType(2);
-                            moveItem.setTitle("相机");
-                            moveItem.setImg_id_name("photos_icon");
-//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
+                            moveItem.setTitle("设置");
+                            moveItem.setPackageName(packInfo.packageName);
+                            moveItem.setImg_id_name("settings_icon");
+//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
                         }
                     }
                     break;
+//                case 8://相机 记得改上面size
+//                    PackageManager pm1 = getPackageManager();
+//                    //所有的安装在系统上的应用程序包信息。
+//                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
+//                    for (int j = 0; j < packInfos1.size(); j++) {
+//                        PackageInfo packInfo = packInfos1.get(j);
+//                        if (packInfo.packageName.equals("com.android.camera2")) {
+////                        if (packInfo.packageName.equals("com.android.camera")) {
+//                            moveItem.setIconType(2);
+//                            moveItem.setTitle("相机");
+//                            moveItem.setImg_id_name("photos_icon");
+////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
+//                        }
+//                    }
+//                    break;
                 case 10:
 //                case 8:
                     //分机设置
@@ -305,6 +310,43 @@ public class NewMainActivity extends BaseActivity {
 //                t.toString();
 //            }
 //        });
+    }
+
+
+    //开关屏幕常亮
+    public static void keepScreenOn(Context context, boolean on) {
+        if (on) {
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "==KeepScreenOn==");
+            wakeLock.acquire();
+        } else {
+            if (wakeLock != null) {
+                wakeLock.release();
+                wakeLock = null;
+            }
+        }
+    }
+
+
+    private Handler screenHandler = new Handler();
+
+    /**
+     * 屏幕常亮控制
+     */
+    public void screenControl() {
+        new Runnable() {
+            @Override
+            public void run() {
+                screenHandler.postDelayed(this, 1000 * 60 * 30);
+                Calendar calendar = Calendar.getInstance();
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                if (hour < 23 && hour >= 7) {//当前是白天时段,设为白天
+                    keepScreenOn(NewMainActivity.this, true);
+                } else {//设为黑夜
+                    keepScreenOn(NewMainActivity.this, false);
+                }
+            }
+        }.run();
     }
 
     public static OkHttpClient genericClient() {
@@ -496,7 +538,7 @@ public class NewMainActivity extends BaseActivity {
             new Runnable() {
                 @Override
                 public void run() {
-                    weatherHandler.postDelayed(this, 1000 );
+                    weatherHandler.postDelayed(this, 1000 * 60 * 60);
                     getWeather();
                     //设置天气
                     if (weatherBean != null && weatherBean.isSucess) {
@@ -701,7 +743,7 @@ public class NewMainActivity extends BaseActivity {
                         }
                     } else if (item.getIconType() == 3) {//一键拨号
                         String phoneNum = item.getPhoneNum();
-                        CallUtil.call(mContext, phoneNum,false);
+                        CallUtil.call(mContext, phoneNum, false);
                     } else if (item.getIconType() == 4) {//亲情号码
                         if (item.getMid() == 11) {
                             if (item.getTitle().equals("亲情1")) {

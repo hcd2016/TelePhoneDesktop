@@ -10,7 +10,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent i = new Intent(context, ScreenBannerService.class);
+        Intent i = new Intent(context, ScreenBannerService.class);//收到广播再启动服务,实现无限执行
         context.startService(i);
     }
 }
