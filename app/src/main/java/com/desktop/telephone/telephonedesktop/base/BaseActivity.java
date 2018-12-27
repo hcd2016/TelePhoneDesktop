@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import com.desktop.telephone.telephonedesktop.MainActivity;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.CallingActivity;
+import com.desktop.telephone.telephonedesktop.desktop.Activity.NewMainActivity;
 import com.desktop.telephone.telephonedesktop.desktop.dialog.AlertFragmentDialog;
 import com.desktop.telephone.telephonedesktop.http.HttpApi;
 import com.desktop.telephone.telephonedesktop.http.RetrofitUtil;
@@ -54,12 +55,10 @@ public class BaseActivity extends AppCompatActivity {
         if(this instanceof CallingActivity ){
             isShowBanner = false;
         }
+
     }
 
-
-
-
-//    /**
+    //    /**
 //     * 版本更新检查
 //     */
 //    private void checkVersionUpdate() {

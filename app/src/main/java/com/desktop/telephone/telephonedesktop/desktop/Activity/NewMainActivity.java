@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -25,6 +26,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,6 +115,7 @@ public class NewMainActivity extends BaseActivity {
         initView();
         screenControl();
         CallUtil.showCallerIds(this, 1);
+        registerHomeKeyReceiver(this);
     }
 
     /**
@@ -141,6 +144,41 @@ public class NewMainActivity extends BaseActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.BLACK);
             window.setNavigationBarColor(Color.BLACK);
+        }
+    }
+
+    //自定义的广播接收者
+    private HomeWatcherReceiver mHomeKeyReceiver = null;
+
+    //注册广播接收者，监听Home键
+    private void registerHomeKeyReceiver(Context context) {
+        mHomeKeyReceiver = new HomeWatcherReceiver();
+        IntentFilter homeFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        context.registerReceiver(mHomeKeyReceiver, homeFilter);
+    }
+
+    //取消监听广播接收者
+    private void unregisterHomeKeyReceiver(Context context) {
+        if (null != mHomeKeyReceiver) {
+            context.unregisterReceiver(mHomeKeyReceiver);
+        }
+    }
+
+    class HomeWatcherReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+                String reason = intent.getStringExtra("reason");
+                if (reason != null) {
+                    if (reason.equals("homekey")) {
+                        //按Home按键
+                        Intent intent1 = new Intent(context, NewMainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent1);
+                    }
+                }
+            }
         }
     }
 
@@ -218,36 +256,36 @@ public class NewMainActivity extends BaseActivity {
                         }
                     }
                     break;
-                case 8://设置
-                    PackageManager pm1 = getPackageManager();
-                    //所有的安装在系统上的应用程序包信息。
-                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
-                    for (int j = 0; j < packInfos1.size(); j++) {
-                        PackageInfo packInfo = packInfos1.get(j);
-                        if (packInfo.packageName.equals("com.android.settings")) {
-                            moveItem.setIconType(2);
-                            moveItem.setTitle("设置");
-                            moveItem.setPackageName(packInfo.packageName);
-                            moveItem.setImg_id_name("settings_icon");
-//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
-                        }
-                    }
-                    break;
-//                case 8://相机 记得改上面size
+//                case 8://设置
 //                    PackageManager pm1 = getPackageManager();
 //                    //所有的安装在系统上的应用程序包信息。
 //                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
 //                    for (int j = 0; j < packInfos1.size(); j++) {
 //                        PackageInfo packInfo = packInfos1.get(j);
-//                        if (packInfo.packageName.equals("com.android.camera2")) {
-////                        if (packInfo.packageName.equals("com.android.camera")) {
+//                        if (packInfo.packageName.equals("com.android.settings")) {
 //                            moveItem.setIconType(2);
-//                            moveItem.setTitle("相机");
-//                            moveItem.setImg_id_name("photos_icon");
-////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
+//                            moveItem.setTitle("设置");
+//                            moveItem.setPackageName(packInfo.packageName);
+//                            moveItem.setImg_id_name("settings_icon");
+////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
 //                        }
 //                    }
 //                    break;
+                case 8://相机 记得改上面size
+                    PackageManager pm1 = getPackageManager();
+                    //所有的安装在系统上的应用程序包信息。
+                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
+                    for (int j = 0; j < packInfos1.size(); j++) {
+                        PackageInfo packInfo = packInfos1.get(j);
+                        if (packInfo.packageName.equals("com.android.camera2")) {
+//                        if (packInfo.packageName.equals("com.android.camera")) {
+                            moveItem.setIconType(2);
+                            moveItem.setTitle("相机");
+                            moveItem.setImg_id_name("photos_icon");
+//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
+                        }
+                    }
+                    break;
                 case 10:
 //                case 8:
                     //分机设置
@@ -340,10 +378,15 @@ public class NewMainActivity extends BaseActivity {
         new Runnable() {
             @Override
             public void run() {
-                screenHandler.postDelayed(this, 1000 * 60 * 30);
-                Calendar calendar = Calendar.getInstance();
-                int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                if (hour < 23 && hour >= 7) {//当前是白天时段,设为白天
+                screenHandler.postDelayed(this, 1000 * 30 );
+                Date date = new Date(System.currentTimeMillis());
+                SimpleDateFormat sDateFormat = new SimpleDateFormat("HH:mm");
+                String time= sDateFormat.format(date);
+//                Calendar calendar = Calendar.getInstance();
+//                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                String[] split = time.split(":");
+
+                if (Integer.parseInt(split[0]) < 23 && Integer.parseInt(split[0]) >= 7) {//当前是白天时段,设为白天
                     keepScreenOn(NewMainActivity.this, true);
                 } else {//设为黑夜
                     keepScreenOn(NewMainActivity.this, false);
@@ -376,7 +419,8 @@ public class NewMainActivity extends BaseActivity {
         return httpClient;
     }
 
-    public List<List<DesktopIconBean>> calculate(List<DesktopIconBean> list, int pageCount) {
+    public List<List<DesktopIconBean>> calculate(List<DesktopIconBean> list,
+                                                 int pageCount) {
         List<List<DesktopIconBean>> myList = new ArrayList<>();
         int size = list.size();
         if (size <= pageCount - row) {//小于=一页
@@ -447,6 +491,8 @@ public class NewMainActivity extends BaseActivity {
             //刷新
             int currentItem = viewpager.getCurrentItem();
             mList = DaoUtil.querydata();
+            adpterList = null;
+            myPagerAdapter = null;
             initView();
             viewpager.setCurrentItem(currentItem);
 
@@ -464,12 +510,16 @@ public class NewMainActivity extends BaseActivity {
             desktopIconBean.setPackageName(event.getPackageName());
 //            mList.add(desktopIconBean);
             DaoUtil.getDesktopIconBeanDao().insert(desktopIconBean);
+
+            //刷新
+            int currentItem = viewpager.getCurrentItem();
+            mList = DaoUtil.querydata();
+            adpterList = null;
+            myPagerAdapter = null;
+            initView();
+            viewpager.setCurrentItem(currentItem);
         }
-        //刷新
-        int currentItem = viewpager.getCurrentItem();
-        mList = DaoUtil.querydata();
-        initView();
-        viewpager.setCurrentItem(currentItem);
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -478,6 +528,8 @@ public class NewMainActivity extends BaseActivity {
             //刷新
             int currentItem = viewpager.getCurrentItem();
             mList = DaoUtil.querydata();
+            adpterList = null;
+            myPagerAdapter = null;
             initView();
             viewpager.setCurrentItem(currentItem);
         }
@@ -564,7 +616,7 @@ public class NewMainActivity extends BaseActivity {
 
 
             MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(NewMainActivity.this, row);
-            //            gridLayoutManager.setScrollEnabled(false);
+            gridLayoutManager.setScrollEnabled(false);
             recycleView.setLayoutManager(gridLayoutManager);
             final List<DesktopIconBean> dataList = list.get(position);
             gridAdapter = adpterList.get(position);
@@ -572,8 +624,12 @@ public class NewMainActivity extends BaseActivity {
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemDragAndSwipeCallback(gridAdapter));
             itemTouchHelper.attachToRecyclerView(recycleView);
 
-            // 开启拖拽
-            gridAdapter.enableDragItem(itemTouchHelper, R.id.rl_item_container, true);
+            if (position != 0) {
+                // 开启拖拽
+                gridAdapter.enableDragItem(itemTouchHelper, R.id.rl_item_container, true);
+            }
+
+            final int firstMid = dataList.get(0).getMid();
             gridAdapter.setOnItemDragListener(new OnItemDragListener() {
                 @Override
                 public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
@@ -585,16 +641,19 @@ public class NewMainActivity extends BaseActivity {
 
                 @Override
                 public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
-                    Log.i("onItemDragMoving","source.getAdapterPosition()======"+source.getAdapterPosition());
-                    Log.i("onItemDragMoving","from==="+from);
-                    Log.i("onItemDragMoving","to======"+to);
-                    DesktopIconBean desktopIconBean = dataList.get(from);
-                    DesktopIconBean toDesktopIconBean = dataList.get(to);
-                    int temp = desktopIconBean.getMid();
-                    desktopIconBean.setMid(toDesktopIconBean.getMid());
-                    toDesktopIconBean.setMid(temp);
-                    DaoUtil.getDesktopIconBeanDao().update(desktopIconBean);
-                    DaoUtil.getDesktopIconBeanDao().update(toDesktopIconBean);
+//                    Log.i("onItemDragMoving","source.getAdapterPosition()======"+source.getAdapterPosition());
+//                    Log.i("onItemDragMoving","from==="+from);
+//                    Log.i("onItemDragMoving","to======"+to);
+//
+//
+//
+//                    DesktopIconBean desktopIconBean = dataList.get(from);
+//                    DesktopIconBean toDesktopIconBean = dataList.get(to);
+//                    int temp = desktopIconBean.getMid();
+//                    desktopIconBean.setMid(toDesktopIconBean.getMid());
+//                    toDesktopIconBean.setMid(temp);
+//                    DaoUtil.getDesktopIconBeanDao().update(desktopIconBean);
+//                    DaoUtil.getDesktopIconBeanDao().update(toDesktopIconBean);
 
 
 //                    Utils.Toast("位置换了");
@@ -605,6 +664,11 @@ public class NewMainActivity extends BaseActivity {
                 @Override
                 public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
                     Log.i("myList", mList.toString());
+
+                    for (int i = 0; i < dataList.size(); i++) {
+                        dataList.get(i).setMid(firstMid + i);
+                        DaoUtil.getDesktopIconBeanDao().update(dataList.get(i));
+                    }
                 }
 
             });

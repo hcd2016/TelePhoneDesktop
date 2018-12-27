@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -24,6 +25,7 @@ import com.desktop.telephone.telephonedesktop.desktop.Activity.CallingActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.ContactsListActivity;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.SPUtil;
+import com.desktop.telephone.telephonedesktop.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -182,7 +184,11 @@ public class CallFragment extends Fragment {
             helper.getView(R.id.ll_item_container).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tvPhoneNum.setText(phoneString += item.getNum());
+                    if(phoneString.length() > 35) {
+                        Utils.Toast("您输入的号码过长");
+                    }else {
+                        tvPhoneNum.setText(phoneString += item.getNum());
+                    }
                 }
             });
         }
