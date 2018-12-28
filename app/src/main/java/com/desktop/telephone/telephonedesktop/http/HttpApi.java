@@ -29,34 +29,31 @@ import rx.Observable;
  *
  */
 public interface HttpApi {
-    public static String baseUrl = "http://47.107.128.41:8080";
+    public static String baseUrl = "http://47.107.128.41:8080/";
 
-    //查询提交
-    @FormUrlEncoded
-    @POST("funs/getcreditreport")
-    Call<JsonObject> commitQuery(@Field("userName") String userName,
-                                 @Field("idno") String idno,
-                                 @Field("phone") String phone,
-                                 @Field("captcha") String captcha,
-                                 @Field("RCaptchaKey") String RCaptchaKey,
-                                 @Field("platform") String platform);
+//    //查询提交
+//    @FormUrlEncoded
+//    @POST("funs/getcreditreport")
+//    Call<JsonObject> commitQuery(@Field("userName") String userName,
+//                                 @Field("idno") String idno,
+//                                 @Field("phone") String phone,
+//                                 @Field("captcha") String captcha,
+//                                 @Field("RCaptchaKey") String RCaptchaKey,
+//                                 @Field("platform") String platform);
 
     /**
      * ---------------------------------------------------------------------------------------------------
      */
+//
+//    //版本更新检查
+//    @FormUrlEncoded
+//    @POST("version/update")
+//    Call<JsonObject> checkUpdateVersion(@Query("appversion") String appVersion, @Query("platform") String platform);
 
-    //版本更新检查
     @FormUrlEncoded
-    @POST("version/update")
-    Call<JsonObject> checkUpdateVersion(@Query("appversion") String appVersion, @Query("platform") String platform);
-
-    //检测借款金额是否超出限制
-    @GET("credit-loan/check-limit")
-    Call<JsonObject> checkLimit();
-
-    //检测借款金额是否超出限制
-    @FormUrlEncoded
-    @POST(".cn")
-    Call<JsonObject> getWeather();
+    @POST("/sms/send")
+    Call<JsonObject> sendSms(@Field("toTels") String toTels,
+                             @Field("fromTel") String fromTel
+    );
 
 }

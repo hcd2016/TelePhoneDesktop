@@ -84,7 +84,7 @@ public class SosActivity extends BaseActivity {
                             return;
                         }
                         if (TextUtils.isEmpty(content)) {
-                            Utils.Toast("发送内容不能为空");
+                            Utils.Toast("本机号码不能为空");
                             return;
                         }
                         SosBean sosBean = new SosBean(null, name, phoneNum, content);

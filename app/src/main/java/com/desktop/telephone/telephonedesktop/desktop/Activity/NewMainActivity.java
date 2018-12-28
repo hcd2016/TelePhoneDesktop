@@ -189,6 +189,9 @@ public class NewMainActivity extends BaseActivity {
 //        DaoUtil.getDesktopIconBeanDao().deleteAll();
         defaultList = new ArrayList<>();
 //        for (int i = 0; i < 11; i++) {
+        PackageManager pm = getPackageManager();
+        //所有的安装在系统上的应用程序包信息。
+        List<PackageInfo> packInfos = pm.getInstalledPackages(0);
         for (int i = 0; i < 14; i++) {
             DesktopIconBean moveItem = new DesktopIconBean();
             moveItem.setMid(i);
@@ -242,9 +245,9 @@ public class NewMainActivity extends BaseActivity {
                     moveItem.setImg_id_name("all_apps_icon");
                     break;
                 case 9://设置
-                    PackageManager pm = getPackageManager();
-                    //所有的安装在系统上的应用程序包信息。
-                    List<PackageInfo> packInfos = pm.getInstalledPackages(0);
+//                    PackageManager pm = getPackageManager();
+//                    //所有的安装在系统上的应用程序包信息。
+//                    List<PackageInfo> packInfos = pm.getInstalledPackages(0);
                     for (int j = 0; j < packInfos.size(); j++) {
                         PackageInfo packInfo = packInfos.get(j);
                         if (packInfo.packageName.equals("com.android.settings")) {
@@ -256,36 +259,85 @@ public class NewMainActivity extends BaseActivity {
                         }
                     }
                     break;
-//                case 8://设置
+                case 8://设置
 //                    PackageManager pm1 = getPackageManager();
 //                    //所有的安装在系统上的应用程序包信息。
 //                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
-//                    for (int j = 0; j < packInfos1.size(); j++) {
-//                        PackageInfo packInfo = packInfos1.get(j);
-//                        if (packInfo.packageName.equals("com.android.settings")) {
+                    for (int j = 0; j < packInfos.size(); j++) {
+                        PackageInfo packInfo = packInfos.get(j);
+                        if (packInfo.packageName.equals("com.android.settings")) {
+                            moveItem.setIconType(2);
+                            moveItem.setTitle("设置");
+                            moveItem.setPackageName(packInfo.packageName);
+                            moveItem.setImg_id_name("settings_icon");
+//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+                        }
+                    }
+                    break;
+//                case 0://相机 记得改上面size
+////                    PackageManager pm1 = getPackageManager();
+////                    //所有的安装在系统上的应用程序包信息。
+////                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
+//                    for (int j = 0; j < packInfos.size(); j++) {
+//                        PackageInfo packInfo = packInfos.get(j);
+//                        if (packInfo.packageName.equals("com.android.camera2")) {
+////                        if (packInfo.packageName.equals("com.android.camera")) {
 //                            moveItem.setIconType(2);
-//                            moveItem.setTitle("设置");
+//                            moveItem.setTitle("相机");
+//                            moveItem.setImg_id_name("photos_icon");
+////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
+//                        }
+//                    }
+//                    break;
+//
+//                case 8://浏览器
+//                    for (int j = 0; j < packInfos.size(); j++) {
+//                        PackageInfo packInfo = packInfos.get(j);
+//                        if (packInfo.packageName.equals("com.android.browser")) {
+//                            moveItem.setIconType(2);
+//                            moveItem.setTitle("上网");
 //                            moveItem.setPackageName(packInfo.packageName);
-//                            moveItem.setImg_id_name("settings_icon");
+////                            moveItem.setImg_id_name("settings_icon");
 ////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
 //                        }
 //                    }
 //                    break;
-                case 8://相机 记得改上面size
-                    PackageManager pm1 = getPackageManager();
-                    //所有的安装在系统上的应用程序包信息。
-                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
-                    for (int j = 0; j < packInfos1.size(); j++) {
-                        PackageInfo packInfo = packInfos1.get(j);
-                        if (packInfo.packageName.equals("com.android.camera2")) {
-//                        if (packInfo.packageName.equals("com.android.camera")) {
-                            moveItem.setIconType(2);
-                            moveItem.setTitle("相机");
-                            moveItem.setImg_id_name("photos_icon");
-//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
-                        }
-                    }
-                    break;
+//                case 8://日历
+//                    for (int j = 0; j < packInfos.size(); j++) {
+//                        PackageInfo packInfo = packInfos.get(j);
+//                        if (packInfo.packageName.equals("com.android.calendar")) {
+//                            moveItem.setIconType(2);
+//                            moveItem.setTitle("黄历");
+//                            moveItem.setPackageName(packInfo.packageName);
+////                            moveItem.setImg_id_name("settings_icon");
+////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+//                        }
+//                    }
+//                    break;
+//                case 8://音乐
+//                    for (int j = 0; j < packInfos.size(); j++) {
+//                        PackageInfo packInfo = packInfos.get(j);
+//                        if (packInfo.packageName.equals("com.android.music")) {
+//                            moveItem.setIconType(2);
+//                            moveItem.setTitle("音乐");
+//                            moveItem.setPackageName(packInfo.packageName);
+////                            moveItem.setImg_id_name("settings_icon");
+////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+//                        }
+//                    }
+//                    break;
+//                case 8://微信
+//                    for (int j = 0; j < packInfos.size(); j++) {
+//                        PackageInfo packInfo = packInfos.get(j);
+//                        if (packInfo.packageName.equals("com.tencent.mm")) {
+//                            moveItem.setIconType(2);
+//                            moveItem.setTitle("微信");
+//                            moveItem.setPackageName(packInfo.packageName);
+////                            moveItem.setImg_id_name("settings_icon");
+////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+//                        }
+//                    }
+//                    break;
                 case 10:
 //                case 8:
                     //分机设置
@@ -378,10 +430,10 @@ public class NewMainActivity extends BaseActivity {
         new Runnable() {
             @Override
             public void run() {
-                screenHandler.postDelayed(this, 1000 * 30 );
+                screenHandler.postDelayed(this, 1000 * 30);
                 Date date = new Date(System.currentTimeMillis());
                 SimpleDateFormat sDateFormat = new SimpleDateFormat("HH:mm");
-                String time= sDateFormat.format(date);
+                String time = sDateFormat.format(date);
 //                Calendar calendar = Calendar.getInstance();
 //                int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 String[] split = time.split(":");
