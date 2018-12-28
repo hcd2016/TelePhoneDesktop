@@ -34,7 +34,7 @@ public class AudioRecordDialog extends TBaseDialog {
 
     public AudioRecordDialog(Context context) {
         super(context, R.layout.dialog_audio_record);
-        setWindowParam(0.8f, WindowManager.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM, 0);
+        setWindowParam(0.6f, WindowManager.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM, 0);
     }
 
     public void setData(BlackListInfoBean blackListInfoBean) {

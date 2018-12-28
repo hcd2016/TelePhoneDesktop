@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
+import android.view.Window;
 import android.view.WindowManager;
 
 import com.desktop.telephone.telephonedesktop.MainActivity;
@@ -42,22 +43,40 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        translucentStatus();
         super.onCreate(savedInstanceState);
 //        //设置屏幕长亮
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
 //                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//固定竖屏
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            getWindow().setNavigationBarColor(Utils.getColor(R.color.colorPrimary));
+////            getWindow().setNavigationBarColor(Utils.getColor(R.color.colorPrimary));
 //            //getWindow().setNavigationBarColor(getResources().getColor(R.color.black));
-//            //getWindow().setNavigationBarColor(Color.BLUE);
+//            getWindow().setNavigationBarColor(Color.WHITE);
 //        }
-        if(this instanceof CallingActivity ){
-            isShowBanner = false;
-        }
+//        if(this instanceof CallingActivity ){
+//            isShowBanner = false;
+//        }
+
 
     }
 
+    //透明状态栏
+    public void translucentStatus() {
+        //透明状态栏
+        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Utils.getColor(R.color.text_666666));
+            window.setNavigationBarColor(Utils.getColor(R.color.text_666666));
+        }
+    }
     //    /**
 //     * 版本更新检查
 //     */

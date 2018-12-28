@@ -269,16 +269,16 @@ public class ContactsListActivity extends BaseActivity {
             if (Utils.isChineseA(last)) {
                 tv_header_icon.setText(last + "");
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tv_header_icon.getLayoutParams();
-                layoutParams.width = DensityUtil.dip2px(ContactsListActivity.this, 74);
-                layoutParams.height = DensityUtil.dip2px(ContactsListActivity.this, 74);
+                layoutParams.width = DensityUtil.dip2px(ContactsListActivity.this, 54);
+                layoutParams.height = DensityUtil.dip2px(ContactsListActivity.this, 54);
                 layoutParams.setMargins(5, 0, 0, 0);
                 tv_header_icon.setLayoutParams(layoutParams);
                 tv_header_icon.setBackground(drawable);
             } else {
                 tv_header_icon.setText("");
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tv_header_icon.getLayoutParams();
-                layoutParams.width = DensityUtil.dip2px(ContactsListActivity.this, 80);
-                layoutParams.height = DensityUtil.dip2px(ContactsListActivity.this, 80);
+                layoutParams.width = DensityUtil.dip2px(ContactsListActivity.this, 60);
+                layoutParams.height = DensityUtil.dip2px(ContactsListActivity.this, 60);
                 layoutParams.setMargins(0, 0, 0, 0);
                 tv_header_icon.setLayoutParams(layoutParams);
                 tv_header_icon.setBackgroundResource(R.drawable.iv_avatar_default);

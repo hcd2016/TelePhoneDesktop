@@ -81,19 +81,19 @@ public class CallRecordsFragment extends Fragment {
                 resetStaus();
                 switch (i) {
                     case 0:
-                        tvBtnAllCalls.setTextColor(Utils.getColor(R.color.white));
+                        tvBtnAllCalls.setTextColor(Utils.getColor(R.color.colorPrimary));
                         tvBtnAllCalls.setBackgroundResource(R.drawable.shape_radius30_left);
                         break;
                     case 1:
-                        tvBtnDialedCalls.setTextColor(Utils.getColor(R.color.white));
-                        tvBtnDialedCalls.setBackgroundResource(R.color.colorPrimaryDark);
+                        tvBtnDialedCalls.setTextColor(Utils.getColor(R.color.colorPrimary));
+                        tvBtnDialedCalls.setBackgroundResource(R.color.color_tonghua1);
                         break;
                     case 2:
-                        tvBtnReceivedCalls.setTextColor(Utils.getColor(R.color.white));
-                        tvBtnReceivedCalls.setBackgroundResource(R.color.colorPrimaryDark);
+                        tvBtnReceivedCalls.setTextColor(Utils.getColor(R.color.colorPrimary));
+                        tvBtnReceivedCalls.setBackgroundResource(R.color.color_tonghua1);
                         break;
                     case 3:
-                        tvBtnMissedCalls.setTextColor(Utils.getColor(R.color.white));
+                        tvBtnMissedCalls.setTextColor(Utils.getColor(R.color.colorPrimary));
                         tvBtnMissedCalls.setBackgroundResource(R.drawable.shape_radius30_right);
                         break;
                 }
@@ -122,22 +122,22 @@ public class CallRecordsFragment extends Fragment {
         resetStaus();
         switch (view.getId()) {
             case R.id.tv_btn_all_calls://全部通话
-                tvBtnAllCalls.setTextColor(Utils.getColor(R.color.white));
+                tvBtnAllCalls.setTextColor(Utils.getColor(R.color.colorPrimary));
                 tvBtnAllCalls.setBackgroundResource(R.drawable.shape_radius30_left);
                 viewpager.setCurrentItem(0);
                 break;
             case R.id.tv_btn_dialed_calls://已拨电话
-                tvBtnDialedCalls.setTextColor(Utils.getColor(R.color.white));
-                tvBtnDialedCalls.setBackgroundResource(R.color.colorPrimaryDark);
+                tvBtnDialedCalls.setTextColor(Utils.getColor(R.color.colorPrimary));
+                tvBtnDialedCalls.setBackgroundResource(R.color.color_tonghua1);
                 viewpager.setCurrentItem(1);
                 break;
             case R.id.tv_btn_received_calls://已接电话
-                tvBtnReceivedCalls.setTextColor(Utils.getColor(R.color.white));
-                tvBtnReceivedCalls.setBackgroundResource(R.color.colorPrimaryDark);
+                tvBtnReceivedCalls.setTextColor(Utils.getColor(R.color.colorPrimary));
+                tvBtnReceivedCalls.setBackgroundResource(R.color.color_tonghua1);
                 viewpager.setCurrentItem(2);
                 break;
             case R.id.tv_btn_missed_calls://未接电话
-                tvBtnMissedCalls.setTextColor(Utils.getColor(R.color.white));
+                tvBtnMissedCalls.setTextColor(Utils.getColor(R.color.colorPrimary));
                 tvBtnMissedCalls.setBackgroundResource(R.drawable.shape_radius30_right);
                 viewpager.setCurrentItem(3);
                 break;

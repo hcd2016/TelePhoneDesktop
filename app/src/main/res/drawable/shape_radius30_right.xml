@@ -4,6 +4,6 @@
     <corners
         android:bottomRightRadius="30dp"
         android:topRightRadius="30dp" />
-    <solid android:color="@color/colorPrimaryDark" />
+    <solid android:color="@color/color_tonghua1" />
 
 </shape>

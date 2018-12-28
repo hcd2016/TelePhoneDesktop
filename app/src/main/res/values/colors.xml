@@ -6,9 +6,12 @@
         <!--<color name="colorPrimary">#1296db</color>-->
         <!--<color name="colorPrimaryDark">#1296db</color>-->
         <!--<color name="colorAccent">#1296db</color>-->
-        <color name="colorPrimary">#1274F5</color>
-        <color name="colorPrimaryDark">#1274F5</color>
-        <color name="colorAccent">#1274F5</color>
+        <!--<color name="colorPrimary">#1274F5</color>-->
+        <!--<color name="colorPrimaryDark">#1274F5</color>-->
+        <!--<color name="colorAccent">#1274F5</color>-->
+        <color name="colorPrimary">#519afa</color>
+        <color name="colorPrimaryDark">#519afa</color>
+        <color name="colorAccent">#519afa</color>
         <!--<color name="colorAccent">#1296db</color>-->
 
         <color name="transparent">#00000000</color>
@@ -60,6 +63,7 @@
         <drawable name="trans">@color/color_hei_8</drawable>
 
         <color name="bg_gray">#ebebeb</color>
+        <color name="bg_gray1">#f7f7f7</color>
         <color name="bg_gray2">#eeeeee</color>
         <color name="normal_text_color">#1c1c1c</color>
         <color name="assist_text_color">#4c4c4c</color>
@@ -272,9 +276,14 @@
     <color name="color_3">#37bf5a</color>
     <color name="color_6">#21B9FC</color>
     <color name="color_7">#DA2E1E</color>
-    <color name="color_8">#CAA209</color>
+    <color name="color_8">#49C004</color>
     <color name="color_9">#1274F5</color>
     <color name="color_10">#49C004</color>
     <color name="color_11">#1274F5</color>
+
+
+    <color name="color_tonghua1">#D5E9FA</color>
+    <color name="color_tonghua2">#0A67D9</color>
+    <color name="text_black333">#2e2d2d</color>
 
     </resources>

@@ -1,29 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_item_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/selctor_item_click_gray_white"
-    android:id="@+id/ll_item_container"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_num"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="6"
-        android:textColor="@color/text_333333"
-        android:textSize="45sp"
-        android:textStyle="bold"
-        android:typeface="monospace" />
+        android:background="@drawable/shape_gray_kuang"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <TextView
-        android:paddingBottom="15dp"
-        android:id="@+id/tv_letter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="ABC"
-        android:textColor="@color/text_666666"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tv_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="6"
+            android:textColor="@color/text_333333"
+            android:textSize="40dp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
+
+        <TextView
+            android:id="@+id/tv_letter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingBottom="10dp"
+            android:text="ABC"
+            android:textColor="@color/text_666666"
+            android:textSize="20sp" />
+    </LinearLayout>
 </LinearLayout>

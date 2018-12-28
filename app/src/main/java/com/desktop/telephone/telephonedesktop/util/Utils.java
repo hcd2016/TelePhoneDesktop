@@ -66,6 +66,7 @@ public class Utils {
     static {
         appIconIdMap.put("phone_icon", R.drawable.phone_icon);//电话
         appIconIdMap.put("call_records_icon", R.drawable.call_records_icon);//联系人
+//        appIconIdMap.put("photo_icon", R.drawable.photo_icon);//相册
         appIconIdMap.put("photo_icon", R.drawable.photo_icon);//相册
         appIconIdMap.put("blacklist_icon", R.drawable.blacklist_icon);//黑红名单
 //        appIconIdMap.put("one_key", R.drawable.one_key);//一键拨号
@@ -78,6 +79,8 @@ public class Utils {
         appIconIdMap.put("settings_icon", R.drawable.settings_desk_icon);//设置
         appIconIdMap.put("add_contact_icon", R.drawable.add_contact_icon);//亲情添加
         appIconIdMap.put("family_header", R.drawable.family_header_icon);//亲情头像
+        appIconIdMap.put("weixin_icon", R.drawable.weixin_icon);//weixin
+        appIconIdMap.put("intent_icon", R.drawable.intent_icon);//intent_icon
     }
 
 
@@ -90,11 +93,11 @@ public class Utils {
             case 2:
                 return Utils.getColor(R.color.color_3);
             case 3:
-                return Utils.getColor(R.color.dimgray);
+                return Utils.getColor(R.color.color_6);
             case 4:
                 return Utils.getColor(R.color.coral);
             case 5:
-                return Utils.getColor(R.color.color_6);
+                return Utils.getColor(R.color.dimgray);
             case 6:
                 return Utils.getColor(R.color.color_7);
             case 7:
@@ -330,7 +333,7 @@ public class Utils {
         endTime.minute = endMin;
 
         if (!startTime.before(endTime)) {
-        // 跨天的特殊情况（比如22:00-8:00）
+            // 跨天的特殊情况（比如22:00-8:00）
             startTime.set(startTime.toMillis(true) - aDayInMillis);
             result = !now.before(startTime) && !now.after(endTime); // startTime <= now <= endTime
             Time startTimeInThisDay = new Time();
@@ -339,7 +342,7 @@ public class Utils {
                 result = true;
             }
         } else {
-        // 普通情况(比如 8:00 - 14:00)
+            // 普通情况(比如 8:00 - 14:00)
             result = !now.before(startTime) && !now.after(endTime); // startTime <= now <= endTime
         }
         return result;

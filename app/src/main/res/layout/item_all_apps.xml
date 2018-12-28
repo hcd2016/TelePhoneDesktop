@@ -10,12 +10,12 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="30dp">
+        android:padding="15dp">
 
         <ImageView
             android:id="@+id/iv_app_icon"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@mipmap/ic_launcher" />
 
         <TextView
@@ -26,13 +26,13 @@
             android:layout_weight="1"
             android:text="应用程序"
             android:textColor="@color/text_333333"
-            android:textSize="30sp" />
+            android:textSize="24sp" />
 
         <ImageView
             android:layout_marginRight="20dp"
             android:id="@+id/iv_add_or_remove"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/add_icon" />
     </LinearLayout>
 

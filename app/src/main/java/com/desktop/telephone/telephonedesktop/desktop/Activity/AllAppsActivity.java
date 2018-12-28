@@ -175,7 +175,7 @@ public class AllAppsActivity extends BaseActivity {
             Drawable icon = packInfo.applicationInfo.loadIcon(pm);
             String name = packInfo.applicationInfo.loadLabel(pm).toString();
 
-            if (packname.equals("com.android.settings") || packname.equals("com.android.camera2")) {//去除相机和设置
+            if (packname.equals("com.android.settings") || packname.equals("com.android.camera2") || packname.equals("com.tencent.mm") || packname.equals("com.android.browser")) {//去除相机和设置
                 continue;
             }
 

@@ -1,5 +1,6 @@
 package com.desktop.telephone.telephonedesktop.desktop.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -142,8 +143,8 @@ public class NewMainActivity extends BaseActivity {
 //                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 //                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.BLACK);
-            window.setNavigationBarColor(Color.BLACK);
+            window.setStatusBarColor(Utils.getColor(R.color.text_black333));
+            window.setNavigationBarColor(Utils.getColor(R.color.text_black333));
         }
     }
 
@@ -186,47 +187,47 @@ public class NewMainActivity extends BaseActivity {
      * 桌面数据添加
      */
     private void initIconData() {
-//        DaoUtil.getDesktopIconBeanDao().deleteAll();
+        DaoUtil.getDesktopIconBeanDao().deleteAll();
         defaultList = new ArrayList<>();
 //        for (int i = 0; i < 11; i++) {
         PackageManager pm = getPackageManager();
         //所有的安装在系统上的应用程序包信息。
         List<PackageInfo> packInfos = pm.getInstalledPackages(0);
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < 16; i++) {
             DesktopIconBean moveItem = new DesktopIconBean();
             moveItem.setMid(i);
             switch (i) {
-                case 0:
+                case 8:
                     //电话
                     moveItem.setIconType(1);
                     moveItem.setTitle("电话");
                     moveItem.setImg_id_name("phone_icon");
                     break;
-                case 1:
+                case 7:
                     //联系人
                     moveItem.setIconType(1);
                     moveItem.setTitle("联系人");
                     moveItem.setImg_id_name("call_records_icon");
                     break;
-                case 2:
+                case 3:
                     //相册
                     moveItem.setIconType(1);
-                    moveItem.setTitle("相册");
+                    moveItem.setTitle("图库");
                     moveItem.setImg_id_name("photo_icon");
                     break;
-                case 3:
+                case 5:
                     //黑红名单
                     moveItem.setIconType(1);
                     moveItem.setTitle("黑红名单");
                     moveItem.setImg_id_name("blacklist_icon");
                     break;
-                case 4:
+                case 14:
                     //录音
                     moveItem.setIconType(1);
                     moveItem.setTitle("录音");
                     moveItem.setImg_id_name("record_icon");
                     break;
-                case 5:
+                case 15:
                     //通话记录
                     moveItem.setIconType(1);
                     moveItem.setTitle("通话记录");
@@ -238,13 +239,13 @@ public class NewMainActivity extends BaseActivity {
                     moveItem.setTitle("紧急呼叫");
                     moveItem.setImg_id_name("sos_icon");
                     break;
-                case 7:
+                case 9:
                     //所有应用
                     moveItem.setIconType(1);
                     moveItem.setTitle("所有应用");
                     moveItem.setImg_id_name("all_apps_icon");
                     break;
-                case 9://设置
+                case 1://设置
 //                    PackageManager pm = getPackageManager();
 //                    //所有的安装在系统上的应用程序包信息。
 //                    List<PackageInfo> packInfos = pm.getInstalledPackages(0);
@@ -274,7 +275,7 @@ public class NewMainActivity extends BaseActivity {
 //                        }
 //                    }
 //                    break;
-                case 8://相机 记得改上面size
+                case 0://相机 记得改上面size
 //                    PackageManager pm1 = getPackageManager();
 //                    //所有的安装在系统上的应用程序包信息。
 //                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
@@ -284,24 +285,26 @@ public class NewMainActivity extends BaseActivity {
 //                        if (packInfo.packageName.equals("com.android.camera")) {
                             moveItem.setIconType(2);
                             moveItem.setTitle("相机");
+                            moveItem.setPackageName(packInfo.packageName);
                             moveItem.setImg_id_name("photos_icon");
 //                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
                         }
                     }
                     break;
 //
-//                case 8://浏览器
-//                    for (int j = 0; j < packInfos.size(); j++) {
-//                        PackageInfo packInfo = packInfos.get(j);
-//                        if (packInfo.packageName.equals("com.android.browser")) {
-//                            moveItem.setIconType(2);
-//                            moveItem.setTitle("上网");
-//                            moveItem.setPackageName(packInfo.packageName);
-////                            moveItem.setImg_id_name("settings_icon");
-////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
-//                        }
-//                    }
-//                    break;
+                case 4://浏览器
+                    for (int j = 0; j < packInfos.size(); j++) {
+                        PackageInfo packInfo = packInfos.get(j);
+                        if (packInfo.packageName.equals("com.android.browser")) {
+                            moveItem.setIconType(2);
+                            moveItem.setTitle("上网");
+                            moveItem.setImg_id_name("intent_icon");
+                            moveItem.setPackageName(packInfo.packageName);
+//                            moveItem.setImg_id_name("settings_icon");
+//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+                        }
+                    }
+                    break;
 //                case 8://日历
 //                    for (int j = 0; j < packInfos.size(); j++) {
 //                        PackageInfo packInfo = packInfos.get(j);
@@ -326,18 +329,19 @@ public class NewMainActivity extends BaseActivity {
 //                        }
 //                    }
 //                    break;
-//                case 8://微信
-//                    for (int j = 0; j < packInfos.size(); j++) {
-//                        PackageInfo packInfo = packInfos.get(j);
-//                        if (packInfo.packageName.equals("com.tencent.mm")) {
-//                            moveItem.setIconType(2);
-//                            moveItem.setTitle("微信");
-//                            moveItem.setPackageName(packInfo.packageName);
-////                            moveItem.setImg_id_name("settings_icon");
-////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
-//                        }
-//                    }
-//                    break;
+                case 2://微信
+                    for (int j = 0; j < packInfos.size(); j++) {
+                        PackageInfo packInfo = packInfos.get(j);
+                        if (packInfo.packageName.equals("com.tencent.mm")) {
+                            moveItem.setIconType(2);
+                            moveItem.setTitle("微信");
+                            moveItem.setPackageName(packInfo.packageName);
+                            moveItem.setImg_id_name("weixin_icon");
+//                            moveItem.setImg_id_name("settings_icon");
+//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+                        }
+                    }
+                    break;
                 case 10:
 //                case 8:
                     //分机设置
@@ -407,6 +411,7 @@ public class NewMainActivity extends BaseActivity {
 
 
     //开关屏幕常亮
+    @SuppressLint("InvalidWakeLockTag")
     public static void keepScreenOn(Context context, boolean on) {
         if (on) {
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -424,7 +429,7 @@ public class NewMainActivity extends BaseActivity {
     private Handler screenHandler = new Handler();
 
     /**
-     * 屏幕常亮控制
+     * 屏幕常亮控制g
      */
     public void screenControl() {
         new Runnable() {
@@ -646,7 +651,7 @@ public class NewMainActivity extends BaseActivity {
             new Runnable() {
                 @Override
                 public void run() {
-                    weatherHandler.postDelayed(this, 1000 * 60 * 60);
+                    weatherHandler.postDelayed(this, 1000 *3);
                     getWeather();
                     //设置天气
                     if (weatherBean != null && weatherBean.isSucess) {
@@ -665,6 +670,7 @@ public class NewMainActivity extends BaseActivity {
                     getWeather();
                 }
             });
+            ll_header_container.setVisibility(View.VISIBLE);
 
 
             MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(NewMainActivity.this, row);
@@ -824,7 +830,7 @@ public class NewMainActivity extends BaseActivity {
             rl_item_container.setBackground(drawable);
 
             if (item.getIconType() == 0 || item.getIconType() == 2) {
-                if (item.getTitle().equals("设置") || item.getTitle().equals("相机")) {
+                if (item.getTitle().equals("设置") || item.getTitle().equals("相机") ||item.getTitle().equals("微信") ||item.getTitle().equals("上网")) {
                     content_iv.setImageResource(imgUrl);
                 } else {
                     byte[] app_icon = item.getApp_icon();
@@ -848,7 +854,7 @@ public class NewMainActivity extends BaseActivity {
                                 CallActivity.startActivity(0, mContext);
 //                                mContext.startActivity(new Intent(mContext,NewMainActivity.class));
                                 break;
-                            case "相册":
+                            case "图库":
                                 mContext.startActivity(new Intent(mContext, PhotosActivity.class));
                                 break;
                             case "紧急呼叫":
@@ -903,6 +909,7 @@ public class NewMainActivity extends BaseActivity {
                             }
                         }
                     } else {//系统或用户程序跳转
+                        String packageName = item.getPackageName();
                         Utils.startApp(mContext, item.getPackageName());
                     }
                 }

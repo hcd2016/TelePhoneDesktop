@@ -102,16 +102,16 @@ public class BlacklistActivity extends BaseActivity {
         //初始化
         if(modeStatus == 0) {
             llNormalContianer.performClick();
-            tvNormalStatus.setTextColor(Utils.getColor(R.color.color_3));
-            tvNormalStatus.setText("启用中");
+            tvNormalStatus.setTextColor(Utils.getColor(R.color.colorPrimary));
+            tvNormalStatus.setText("启用");
         }else if(modeStatus == 1) {
             llBlackContainer.performClick();
-            tvBlackStatus.setTextColor(Utils.getColor(R.color.color_3));
-            tvBlackStatus.setText("启用中");
+            tvBlackStatus.setTextColor(Utils.getColor(R.color.colorPrimary));
+            tvBlackStatus.setText("启用");
         }else {
             llWhiteContainer.performClick();
-            tvWhiteStatus.setTextColor(Utils.getColor(R.color.color_3));
-            tvWhiteStatus.setText("启用中");
+            tvWhiteStatus.setTextColor(Utils.getColor(R.color.colorPrimary));
+            tvWhiteStatus.setText("启用");
         }
 
 //        //初始化:
@@ -143,16 +143,16 @@ public class BlacklistActivity extends BaseActivity {
                 break;
             case R.id.ll_normal_contianer://普通模式选中
                 resetItem();
-                llNormalContianer.setBackgroundColor(Utils.getColor(R.color.blue_2));
-                tvNormal.setTextColor(Utils.getColor(R.color.white));
+                llNormalContianer.setBackgroundColor(Utils.getColor(R.color.color_tonghua1));
+                tvNormal.setTextColor(Utils.getColor(R.color.colorPrimary));
                 tvBtnNormal.setVisibility(View.VISIBLE);
 
                 viewpager.setVisibility(View.GONE);
                 break;
             case R.id.ll_black_container://黑名单模式选中
                 resetItem();
-                llBlackContainer.setBackgroundColor(Utils.getColor(R.color.blue_2));
-                tvBlack.setTextColor(Utils.getColor(R.color.white));
+                llBlackContainer.setBackgroundColor(Utils.getColor(R.color.color_tonghua1));
+                tvBlack.setTextColor(Utils.getColor(R.color.colorPrimary));
                 tvBtnBlack.setVisibility(View.VISIBLE);
 
                 viewpager.setVisibility(View.VISIBLE);
@@ -160,8 +160,8 @@ public class BlacklistActivity extends BaseActivity {
                 break;
             case R.id.ll_white_container://白名单模式选中
                 resetItem();
-                llWhiteContainer.setBackgroundColor(Utils.getColor(R.color.blue_2));
-                tvWhite.setTextColor(Utils.getColor(R.color.white));
+                llWhiteContainer.setBackgroundColor(Utils.getColor(R.color.color_tonghua1));
+                tvWhite.setTextColor(Utils.getColor(R.color.colorPrimary));
                 tvBtnWhite.setVisibility(View.VISIBLE);
 
                 viewpager.setVisibility(View.VISIBLE);
@@ -170,8 +170,8 @@ public class BlacklistActivity extends BaseActivity {
             case R.id.tv_btn_normal://普通模式启用
                 resetStatus();
                 modeStatus = 0;
-                tvNormalStatus.setTextColor(Utils.getColor(R.color.color_3));
-                tvNormalStatus.setText("启用中");
+                tvNormalStatus.setTextColor(Utils.getColor(R.color.colorPrimary));
+                tvNormalStatus.setText("启用");
 
                 BlackListFileUtil.setModeChangeFile(modeStatus);//保存模式对应文件处理,在保存数据库之前调用
                 systemStatusBeans.get(0).setBlackListModeType(modeStatus);
@@ -181,8 +181,8 @@ public class BlacklistActivity extends BaseActivity {
             case R.id.tv_btn_black://黑名单模式启用
                 resetStatus();
                 modeStatus = 1;
-                tvBlackStatus.setTextColor(Utils.getColor(R.color.color_3));
-                tvBlackStatus.setText("启用中");
+                tvBlackStatus.setTextColor(Utils.getColor(R.color.colorPrimary));
+                tvBlackStatus.setText("启用");
 
                 BlackListFileUtil.setModeChangeFile(modeStatus);//保存模式对应文件处理,在保存数据库之前调用
                 systemStatusBeans.get(0).setBlackListModeType(modeStatus);
@@ -192,8 +192,8 @@ public class BlacklistActivity extends BaseActivity {
             case R.id.tv_btn_white://白名单模式启用
                 resetStatus();
                 modeStatus = 2;
-                tvWhiteStatus.setTextColor(Utils.getColor(R.color.color_3));
-                tvWhiteStatus.setText("启用中");
+                tvWhiteStatus.setTextColor(Utils.getColor(R.color.colorPrimary));
+                tvWhiteStatus.setText("启用");
 
                 BlackListFileUtil.setModeChangeFile(modeStatus);//保存模式对应文件处理,在保存数据库之前调用
                 systemStatusBeans.get(0).setBlackListModeType(modeStatus);
@@ -204,9 +204,9 @@ public class BlacklistActivity extends BaseActivity {
     }
 
     private void resetStatus() {
-        tvNormalStatus.setTextColor(Utils.getColor(R.color.color_7));
-        tvBlackStatus.setTextColor(Utils.getColor(R.color.color_7));
-        tvWhiteStatus.setTextColor(Utils.getColor(R.color.color_7));
+        tvNormalStatus.setTextColor(Utils.getColor(R.color.gray_d5d));
+        tvBlackStatus.setTextColor(Utils.getColor(R.color.gray_d5d));
+        tvWhiteStatus.setTextColor(Utils.getColor(R.color.gray_d5d));
 
         tvNormalStatus.setText("禁用中");
         tvBlackStatus.setText("禁用中");

@@ -91,7 +91,7 @@
                     android:layout_marginTop="5dp"
                     android:text="删除"
                     android:textColor="@color/text_999999"
-                    android:textSize="24sp" />
+                    android:textSize="22sp" />
 
             </LinearLayout>
 
@@ -116,7 +116,7 @@
                     android:layout_marginTop="5dp"
                     android:text="全选"
                     android:textColor="@color/text_333333"
-                    android:textSize="24sp" />
+                    android:textSize="22sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -140,7 +140,7 @@
                     android:layout_marginTop="5dp"
                     android:text="加入轮播"
                     android:textColor="@color/text_999999"
-                    android:textSize="24sp" />
+                    android:textSize="22sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -162,7 +162,7 @@
                     android:layout_marginTop="5dp"
                     android:text="轮播设置"
                     android:textColor="@color/text_333333"
-                    android:textSize="24sp" />
+                    android:textSize="22sp" />
             </LinearLayout>
 
         </LinearLayout>

@@ -109,7 +109,7 @@ public class CallFragment extends Fragment {
                     break;
                 case 10:
                     callNumBean.setNum("*");
-                    callNumBean.setLetter("");
+                    callNumBean.setLetter("(P)");
                     break;
                 case 11:
                     callNumBean.setNum("0");
@@ -117,7 +117,7 @@ public class CallFragment extends Fragment {
                     break;
                 case 12:
                     callNumBean.setNum("#");
-                    callNumBean.setLetter("");
+                    callNumBean.setLetter("(W)");
                     break;
             }
             list.add(callNumBean);
