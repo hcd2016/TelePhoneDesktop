@@ -5,15 +5,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 //import com.lidroid.xutils.DbUtils;
 import com.desktop.telephone.telephonedesktop.db.DBManager;
+import com.desktop.telephone.telephonedesktop.desktop.Activity.CallActivity;
 import com.desktop.telephone.telephonedesktop.gen.DaoMaster;
 import com.desktop.telephone.telephonedesktop.gen.DaoSession;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
+import com.desktop.telephone.telephonedesktop.http.RetrofitUtil;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
+import com.desktop.telephone.telephonedesktop.util.weather.ParaseJsonUtils;
+import com.google.gson.JsonObject;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class App extends Application {
     private static Context context;
@@ -60,6 +72,7 @@ public class App extends Application {
             }
         });
     }
+
 
 
     /**

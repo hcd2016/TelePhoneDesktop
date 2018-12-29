@@ -23,6 +23,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 import rx.Observable;
 
 /**
@@ -49,11 +50,13 @@ public interface HttpApi {
 //    @FormUrlEncoded
 //    @POST("version/update")
 //    Call<JsonObject> checkUpdateVersion(@Query("appversion") String appVersion, @Query("platform") String platform);
-
     @FormUrlEncoded
     @POST("/sms/send")
     Call<JsonObject> sendSms(@Field("toTels") String toTels,
                              @Field("fromTel") String fromTel
     );
+
+    @GET("http://wthrcdn.etouch.cn/weather_mini")
+    Call<JsonObject> getWeather(@Query("city") String city );
 
 }
