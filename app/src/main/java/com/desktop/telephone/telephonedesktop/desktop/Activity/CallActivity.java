@@ -3,7 +3,6 @@ package com.desktop.telephone.telephonedesktop.desktop.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,28 +14,46 @@ import android.support.v4.view.ViewPager;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.desktop.fragment.CallFragment;
 import com.desktop.telephone.telephonedesktop.desktop.fragment.CallRecordsFragment;
 import com.desktop.telephone.telephonedesktop.desktop.fragment.ContactsListFragment;
+import com.desktop.telephone.telephonedesktop.http.RetrofitUtil;
+import com.desktop.telephone.telephonedesktop.util.DensityUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
+import com.desktop.telephone.telephonedesktop.util.weather.ParaseJsonUtils;
+import com.desktop.telephone.telephonedesktop.view.PagerSlidingTabStrip;
+import com.google.gson.JsonObject;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CallActivity extends BaseActivity {
     @BindView(R.id.tablayout)
     TabLayout tablayout;
     @BindView(R.id.viewpager)
     ViewPager viewpager;
+    @BindView(R.id.tabStrip)
+    PagerSlidingTabStrip tabStrip;
     private List<String> tabs;
     public static final String HAND_OFF = "com.tongen.action.handle.off";//手柄放下
     public static final String HAND_ON = "com.tongen.action.handle.on";//手柄抬起
@@ -51,6 +68,7 @@ public class CallActivity extends BaseActivity {
         EventBus.getDefault().register(this);
         initView();
     }
+
     //透明状态栏
     public void translucentStatus() {
         //透明状态栏
@@ -68,7 +86,6 @@ public class CallActivity extends BaseActivity {
         }
     }
 
-
     private void initView() {
         tabs = new ArrayList<>();
         tabs.add("拨号");
@@ -77,6 +94,11 @@ public class CallActivity extends BaseActivity {
 
         CallAdapter callAdapter = new CallAdapter(getSupportFragmentManager());
         viewpager.setAdapter(callAdapter);
+
+        tabStrip.setTextSize(DensityUtil.dip2px(this, 28));
+        tabStrip.setTextColor(Utils.getColor(R.color.text_333333));
+        tabStrip.setViewPager(viewpager);
+
         tablayout.setupWithViewPager(viewpager);
         int type = getIntent().getIntExtra("type", 0);//0为拨号,1为通话记录,2为联系人
         viewpager.setCurrentItem(type);
@@ -85,7 +107,7 @@ public class CallActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if(intent != null) {
+        if (intent != null) {
             int type = intent.getIntExtra("type", 0);
             viewpager.setCurrentItem(type);
         }

@@ -23,6 +23,16 @@
             app:tabTextAppearance="@style/TablayoutTextSize30"
             app:tabTextColor="@color/text_333333" />
 
+    <com.desktop.telephone.telephonedesktop.view.PagerSlidingTabStrip
+        app:pstsTextAllCaps="false"
+        app:pstsShouldExpand="true"
+        app:pstsDividerColor="@color/transparent"
+        android:id="@+id/tabStrip"
+        app:pstsIndicatorHeight="2dp"
+        app:pstsIndicatorColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"/>
+
         <!--<View-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="2dp"-->
