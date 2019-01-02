@@ -81,6 +81,7 @@ public class Utils {
         appIconIdMap.put("family_header", R.drawable.family_header_icon);//亲情头像
         appIconIdMap.put("weixin_icon", R.drawable.weixin_icon);//weixin
         appIconIdMap.put("intent_icon", R.drawable.intent_icon);//intent_icon
+        appIconIdMap.put("rili_icon", R.drawable.rili_icon);//日历
     }
 
 

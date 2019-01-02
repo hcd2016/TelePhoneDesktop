@@ -59,6 +59,7 @@ import com.desktop.telephone.telephonedesktop.http.RetrofitUtil;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.DensityUtil;
+import com.desktop.telephone.telephonedesktop.util.SPUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.util.weather.GetLocationUtils;
 import com.desktop.telephone.telephonedesktop.util.weather.ParaseJsonUtils;
@@ -306,7 +307,7 @@ public class NewMainActivity extends BaseActivity {
      * 桌面数据添加
      */
     private void initIconData() {
-        DaoUtil.getDesktopIconBeanDao().deleteAll();
+//        DaoUtil.getDesktopIconBeanDao().deleteAll();
         defaultList = new ArrayList<>();
 //        for (int i = 0; i < 11; i++) {
         PackageManager pm = getPackageManager();
@@ -412,15 +413,31 @@ public class NewMainActivity extends BaseActivity {
                     }
                     break;
                 case 2://微信
+                    boolean isHaveWeiXin = false;
                     for (int j = 0; j < packInfos.size(); j++) {
                         PackageInfo packInfo = packInfos.get(j);
                         if (packInfo.packageName.equals("com.tencent.mm")) {
-                            moveItem.setIconType(2);
-                            moveItem.setTitle("微信");
-                            moveItem.setPackageName(packInfo.packageName);
-                            moveItem.setImg_id_name("weixin_icon");
+                            isHaveWeiXin = true;
 //                            moveItem.setImg_id_name("settings_icon");
 //                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+                        }
+                    }
+                    SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_HAVE_WEIXIN,isHaveWeiXin);
+                    if (isHaveWeiXin) {
+                        moveItem.setIconType(2);
+                        moveItem.setTitle("微信");
+                        moveItem.setPackageName("com.tencent.mm");
+                        moveItem.setImg_id_name("weixin_icon");
+                    } else {
+                        for (int j = 0; j < packInfos.size(); j++) {
+                            PackageInfo packInfo = packInfos.get(j);
+                            if (packInfo.packageName.equals("com.android.calendar")) {
+                                moveItem.setIconType(1);
+                                moveItem.setTitle("日历");
+                                moveItem.setPackageName("com.android.calendar");
+                                moveItem.setImg_id_name("rili_icon");
+//                                moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+                            }
                         }
                     }
                     break;
@@ -836,14 +853,55 @@ public class NewMainActivity extends BaseActivity {
             rl_item_container.setBackground(drawable);
 
             if (item.getIconType() == 0 || item.getIconType() == 2) {
-                if (item.getTitle().equals("设置") || item.getTitle().equals("相机") || item.getTitle().equals("微信") || item.getTitle().equals("上网")) {
+                if (item.getTitle().equals("设置") || item.getTitle().equals("相机") ||  item.getTitle().equals("上网")) {
                     content_iv.setImageResource(imgUrl);
                 } else {
-                    byte[] app_icon = item.getApp_icon();
-                    Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
-                    BitmapDrawable bd = new BitmapDrawable(bmp);
-                    content_iv.setImageDrawable(bd);
+                    if(item.getTitle().equals("微信")) {
+                        if(SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {
+                            content_iv.setImageResource(imgUrl);
+                        }else {
+                            byte[] app_icon = item.getApp_icon();
+                            Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
+                            BitmapDrawable bd = new BitmapDrawable(bmp);
+                            content_iv.setImageDrawable(bd);
+                        }
+                    }else if(item.getTitle().equals("日历")){
+                        if(SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {
+                            byte[] app_icon = item.getApp_icon();
+                            Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
+                            BitmapDrawable bd = new BitmapDrawable(bmp);
+                            content_iv.setImageDrawable(bd);
+                        }else {
+                            content_iv.setImageResource(imgUrl);
+                        }
+                    }else {
+                        byte[] app_icon = item.getApp_icon();
+                        Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
+                        BitmapDrawable bd = new BitmapDrawable(bmp);
+                        content_iv.setImageDrawable(bd);
+                    }
                 }
+//                if(SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {
+//                    if(item.getTitle().equals("微信")) {
+//                        content_iv.setImageResource(imgUrl);
+//                    }
+//                    if(item.getTitle().equals("日历")) {
+//                        byte[] app_icon = item.getApp_icon();
+//                        Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
+//                        BitmapDrawable bd = new BitmapDrawable(bmp);
+//                        content_iv.setImageDrawable(bd);
+//                    }
+//                }else {
+//                    if(item.getTitle().equals("微信")) {
+//                        byte[] app_icon = item.getApp_icon();
+//                        Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
+//                        BitmapDrawable bd = new BitmapDrawable(bmp);
+//                        content_iv.setImageDrawable(bd);
+//                    }
+//                    if(item.getTitle().equals("日历")) {
+//                        content_iv.setImageResource(imgUrl);
+//                    }
+//                }
             } else if (item.getIconType() == 3) {//一键拨号
                 content_iv.setImageResource(R.drawable.one_key);
             } else {

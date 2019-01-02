@@ -32,6 +32,7 @@ public class SPUtil {
     public static final String KEY_IS_SHOW_COMMING_CALL_NUM = "key_is_show_comming_call_num";//是否显示来电
     public static final String KEY_IS_SEND_COMMING_CALL = "key_is_send_comming_call";//第一次是否发送过来电
     public static final String KEY_INTERCHANGER_SETTING = "key_interchanger_setting";//第一次是否发送过来电
+    public static final String KEY_IS_HAVE_WEIXIN = "key_is_have_weixin";//第一次是否发送过来电
 
     public static final String KEY_SHOW_FAMILY_LIST = "key_show_family_list";//显示亲情list
 

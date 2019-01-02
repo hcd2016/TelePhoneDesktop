@@ -23,6 +23,7 @@ import com.desktop.telephone.telephonedesktop.base.App;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
+import com.desktop.telephone.telephonedesktop.util.SPUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -175,8 +176,18 @@ public class AllAppsActivity extends BaseActivity {
             Drawable icon = packInfo.applicationInfo.loadIcon(pm);
             String name = packInfo.applicationInfo.loadLabel(pm).toString();
 
-            if (packname.equals("com.android.settings") || packname.equals("com.android.camera2") || packname.equals("com.tencent.mm") || packname.equals("com.android.browser")) {//去除相机和设置
+            if (packname.equals("com.android.settings") || packname.equals("com.android.camera2") || packname.equals("com.android.browser")) {//去除相机和设置
                 continue;
+            }
+
+            if (SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {
+                if (packname.equals("com.tencent.mm")) {
+                    continue;
+                }
+            } else {
+                if (packname.equals("com.android.calendar")) {
+                    continue;
+                }
             }
 
             //应用程序信息的标记 相当于用户提交的答卷

@@ -172,6 +172,13 @@
                 <action android:name="com.tongen.SOS_CONTROL" />
             </intent-filter>
         </receiver>
+        <!-- 应用安装广播 -->
+        <receiver android:name=".desktop.recevier.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
 
         <!--百度地图-->
         <meta-data
