@@ -11,7 +11,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -19,7 +18,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -27,7 +25,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.format.DateFormat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,10 +53,8 @@ import com.desktop.telephone.telephonedesktop.bean.AppInfoBean;
 import com.desktop.telephone.telephonedesktop.bean.DesktopIconBean;
 import com.desktop.telephone.telephonedesktop.bean.EventBean;
 import com.desktop.telephone.telephonedesktop.bean.WeatherBean;
-import com.desktop.telephone.telephonedesktop.desktop.service.ScreenBannerService;
 import com.desktop.telephone.telephonedesktop.gen.AppInfoBeanDao;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
-import com.desktop.telephone.telephonedesktop.http.HttpApi;
 import com.desktop.telephone.telephonedesktop.http.RetrofitUtil;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
@@ -72,12 +68,12 @@ import com.google.gson.JsonObject;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -91,9 +87,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewMainActivity extends BaseActivity {
     private static PowerManager.WakeLock wakeLock;
@@ -108,7 +101,6 @@ public class NewMainActivity extends BaseActivity {
     private List<List<DesktopIconBean>> lists;
     private BroadcastReceiver deletePackageReceiver;
     private MyPagerAdapter myPagerAdapter;
-    private WeatherBean weatherBean;
     private LocationClient locationClient;
 
     @Override
@@ -144,7 +136,7 @@ public class NewMainActivity extends BaseActivity {
 //可选，默认gcj02，设置返回的定位结果坐标系，如果配合百度地图使用，建议设置为bd09ll;
         locationOption.setCoorType("gcj02");
 //可选，默认0，即仅定位一次，设置发起连续定位请求的间隔需要大于等于1000ms才是有效的
-        locationOption.setScanSpan(1000 * 5);
+        locationOption.setScanSpan(1000 * 60 * 10);
 //可选，设置是否需要地址信息，默认不需要
         locationOption.setIsNeedAddress(true);
 ////可选，设置是否需要地址描述
@@ -191,39 +183,72 @@ public class NewMainActivity extends BaseActivity {
             //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
             int errorCode = location.getLocType();
 
+            View view = myPagerAdapter.getHeaderItemView();
+            final LinearLayout ll_weather_container = view.findViewById(R.id.ll_weather_container);
+            final TextView tv_weather = view.findViewById(R.id.tv_weather);
+            final TextView tv_city = view.findViewById(R.id.tv_city);
+            final TextView tv_dushu = view.findViewById(R.id.tv_dushu);
+            final ImageView iv_weather = view.findViewById(R.id.iv_weather);
 
             String cityCode = location.getCityCode();
             String city = location.getCity();
-            if (city.contains("市")) {
-                city = city.replace("市", "");
+            tv_city.setText(city);
+            if (TextUtils.isEmpty(city)) {
+                ll_weather_container.setVisibility(View.GONE);
+                return;
+            } else {
+                if (city.contains("市")) {
+                    city = city.replace("市", "");
+                }
             }
+
 //            String weatherInfo = getWeatherInfo(city);
             Call<JsonObject> call = RetrofitUtil.create().getWeather(city);
             call.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     ParaseJsonUtils.parasrWeather(NewMainActivity.this, response.body().toString());
+                    String weatherInfo = "";
+                    WeatherBean weatherBean = null;
+                    String desc = "";
+                    try {
+                        JSONObject object = new JSONObject(response.body().toString());
+                        JSONObject data = object.getJSONObject("data");
+                        JSONArray weatherArray = data.getJSONArray("forecast");
+                        for (int i = 0; i < 1; i++) {
+                            JSONObject today = weatherArray.getJSONObject(i);
+                            desc = today.optString("type");
+                        }
+                        tv_weather.setText(desc);
+                        tv_dushu.setText(data.optString("wendu") + "℃");
+                        ll_weather_container.setVisibility(View.VISIBLE);
+                        if (!TextUtils.isEmpty(desc)) {
+                            if (desc.contains("雨")) {
+                                iv_weather.setImageResource(R.drawable.weather_yu);
+                            } else if (desc.contains("晴")) {
+                                iv_weather.setImageResource(R.drawable.weather_qing);
+                            } else if (desc.contains("雪")) {
+                                iv_weather.setImageResource(R.drawable.weather_xue);
+                            } else {
+                                iv_weather.setImageResource(R.drawable.weather_yin);
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        ll_weather_container.setVisibility(View.GONE);
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
                     t.toString();
+                    ll_weather_container.setVisibility(View.GONE);
                 }
             });
         }
     }
 
-    /**
-     * 获取天气
-     */
-    private void getWeather() {
-        GetLocationUtils.getCityByLocation(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(WeatherBean weatherBean) {//获取天气完成
-        this.weatherBean = weatherBean;
-    }
 
     //透明状态栏
     public void translucentStatus() {
@@ -287,8 +312,8 @@ public class NewMainActivity extends BaseActivity {
         PackageManager pm = getPackageManager();
         //所有的安装在系统上的应用程序包信息。
         List<PackageInfo> packInfos = pm.getInstalledPackages(0);
-//        for (int i = 0; i < 16; i++) {
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 16; i++) {
+//        for (int i = 0; i < 15; i++) {
             DesktopIconBean moveItem = new DesktopIconBean();
             moveItem.setMid(i);
             switch (i) {
@@ -322,8 +347,8 @@ public class NewMainActivity extends BaseActivity {
                     moveItem.setTitle("录音");
                     moveItem.setImg_id_name("record_icon");
                     break;
-//                case 15:
-                case 0:
+                case 15:
+//                case 0:
                     //通话记录
                     moveItem.setIconType(1);
                     moveItem.setTitle("通话记录");
@@ -356,39 +381,23 @@ public class NewMainActivity extends BaseActivity {
                         }
                     }
                     break;
-//                case 8://设置
-////                    PackageManager pm1 = getPackageManager();
-////                    //所有的安装在系统上的应用程序包信息。
-////                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
-//                    for (int j = 0; j < packInfos.size(); j++) {
-//                        PackageInfo packInfo = packInfos.get(j);
-//                        if (packInfo.packageName.equals("com.android.settings")) {
-//                            moveItem.setIconType(2);
-//                            moveItem.setTitle("设置");
-//                            moveItem.setPackageName(packInfo.packageName);
-//                            moveItem.setImg_id_name("settings_icon");
-////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
-//                        }
-//                    }
-//                    break;
+                case 0://相机 记得改上面size
+//                    PackageManager pm1 = getPackageManager();
+//                    //所有的安装在系统上的应用程序包信息。
+//                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
+                    for (int j = 0; j < packInfos.size(); j++) {
+                        PackageInfo packInfo = packInfos.get(j);
+                        if (packInfo.packageName.equals("com.android.camera2")) {
+//                        if (packInfo.packageName.equals("com.android.camera")) {
+                            moveItem.setIconType(2);
+                            moveItem.setTitle("相机");
+                            moveItem.setPackageName(packInfo.packageName);
+                            moveItem.setImg_id_name("photos_icon");
+//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
+                        }
+                    }
+                    break;
 
-//                case 0://相机 记得改上面size
-////                    PackageManager pm1 = getPackageManager();
-////                    //所有的安装在系统上的应用程序包信息。
-////                    List<PackageInfo> packInfos1 = pm1.getInstalledPackages(0);
-//                    for (int j = 0; j < packInfos.size(); j++) {
-//                        PackageInfo packInfo = packInfos.get(j);
-//                        if (packInfo.packageName.equals("com.android.camera2")) {
-////                        if (packInfo.packageName.equals("com.android.camera")) {
-//                            moveItem.setIconType(2);
-//                            moveItem.setTitle("相机");
-//                            moveItem.setPackageName(packInfo.packageName);
-//                            moveItem.setImg_id_name("photos_icon");
-////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm1)));
-//                        }
-//                    }
-//                    break;
-//
                 case 4://浏览器
                     for (int j = 0; j < packInfos.size(); j++) {
                         PackageInfo packInfo = packInfos.get(j);
@@ -402,30 +411,6 @@ public class NewMainActivity extends BaseActivity {
                         }
                     }
                     break;
-//                case 8://日历
-//                    for (int j = 0; j < packInfos.size(); j++) {
-//                        PackageInfo packInfo = packInfos.get(j);
-//                        if (packInfo.packageName.equals("com.android.calendar")) {
-//                            moveItem.setIconType(2);
-//                            moveItem.setTitle("黄历");
-//                            moveItem.setPackageName(packInfo.packageName);
-////                            moveItem.setImg_id_name("settings_icon");
-////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
-//                        }
-//                    }
-//                    break;
-//                case 8://音乐
-//                    for (int j = 0; j < packInfos.size(); j++) {
-//                        PackageInfo packInfo = packInfos.get(j);
-//                        if (packInfo.packageName.equals("com.android.music")) {
-//                            moveItem.setIconType(2);
-//                            moveItem.setTitle("音乐");
-//                            moveItem.setPackageName(packInfo.packageName);
-////                            moveItem.setImg_id_name("settings_icon");
-////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
-//                        }
-//                    }
-//                    break;
                 case 2://微信
                     for (int j = 0; j < packInfos.size(); j++) {
                         PackageInfo packInfo = packInfos.get(j);
@@ -485,25 +470,6 @@ public class NewMainActivity extends BaseActivity {
         }
         myPagerAdapter = new MyPagerAdapter(lists);
         viewpager.setAdapter(myPagerAdapter);
-//        Retrofit.Builder builder = new Retrofit.Builder();
-//        builder.baseUrl("http://m.weather.com")
-//                .addConverterFactory(GsonConverterFactory.create())
-////                .addConverterFactory(ScalarsConverterFactory.create())
-//                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-//                .callFactory(genericClient());
-//        Retrofit mRetrofit = builder.build();
-//        Call<JsonObject> weather = mRetrofit.create(HttpApi.class).getWeather();
-//        weather.enqueue(new Callback<JsonObject>() {
-//            @Override
-//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-//                response.body();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<JsonObject> call, Throwable t) {
-//                t.toString();
-//            }
-//        });
     }
 
 
@@ -696,6 +662,16 @@ public class NewMainActivity extends BaseActivity {
         List<List<DesktopIconBean>> list;
         private RecyclerView recycleView;
         private GridAdapter gridAdapter;
+        public View headerItemView;
+
+        public View getHeaderItemView() {
+            return headerItemView;
+        }
+
+        public void setHeaderItemView(View headerItemView) {
+            this.headerItemView = headerItemView;
+        }
+
 
         public MyPagerAdapter(List<List<DesktopIconBean>> list) {
             this.list = list;
@@ -719,10 +695,10 @@ public class NewMainActivity extends BaseActivity {
             final TextView tv_time = view.findViewById(R.id.tv_time);
             final TextView tv_date = view.findViewById(R.id.tv_date);
             LinearLayout ll_header_container = view.findViewById(R.id.ll_header_container);
-            final LinearLayout ll_weather_container = view.findViewById(R.id.ll_weather_container);
-            final TextView tv_weather = view.findViewById(R.id.tv_weather);
-            final TextView tv_city = view.findViewById(R.id.tv_city);
-            final TextView tv_dushu = view.findViewById(R.id.tv_dushu);
+
+            if (position == 0) {
+                setHeaderItemView(view);
+            }
 
             //剩余高度
             int viewHeight = Utils.getScreenHeight(NewMainActivity.this) - getStatusBarHeight() - ((line + 3) * DensityUtil.dip2px(NewMainActivity.this, 2));
@@ -743,31 +719,6 @@ public class NewMainActivity extends BaseActivity {
                     tv_date.setText(dateFm.format(date));
                 }
             }.run();
-//
-//            //每一小时更新一次天气,获取不到隐藏
-//            new Runnable() {
-//                @Override
-//                public void run() {
-//                    weatherHandler.postDelayed(this, 1000 *3);
-//                    getWeather();
-//                    //设置天气
-//                    if (weatherBean != null && weatherBean.isSucess) {
-//                        ll_weather_container.setVisibility(View.VISIBLE);
-//                        tv_city.setText(weatherBean.city);
-//                        tv_weather.setText(weatherBean.weather);
-//                        tv_dushu.setText(weatherBean.dushu + "℃");
-//                    } else {
-//                        ll_weather_container.setVisibility(View.GONE);
-//                    }
-//                }
-//            }.run();
-//            ll_header_container.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    getWeather();
-//                }
-//            });
-//            ll_header_container.setVisibility(View.VISIBLE);
 
 
             MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(NewMainActivity.this, row);
@@ -788,32 +739,12 @@ public class NewMainActivity extends BaseActivity {
             gridAdapter.setOnItemDragListener(new OnItemDragListener() {
                 @Override
                 public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
-//                    isEdit = true;
                     viewHolder.itemView.findViewById(R.id.delete_iv).setVisibility(View.VISIBLE);
-//                    Utils.Toast("长按了");
-//                    gridAdapter.notifyDataSetChanged();
                 }
 
                 @Override
                 public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
-//                    Log.i("onItemDragMoving","source.getAdapterPosition()======"+source.getAdapterPosition());
-//                    Log.i("onItemDragMoving","from==="+from);
-//                    Log.i("onItemDragMoving","to======"+to);
-//
-//
-//
-//                    DesktopIconBean desktopIconBean = dataList.get(from);
-//                    DesktopIconBean toDesktopIconBean = dataList.get(to);
-//                    int temp = desktopIconBean.getMid();
-//                    desktopIconBean.setMid(toDesktopIconBean.getMid());
-//                    toDesktopIconBean.setMid(temp);
-//                    DaoUtil.getDesktopIconBeanDao().update(desktopIconBean);
-//                    DaoUtil.getDesktopIconBeanDao().update(toDesktopIconBean);
-
-
-//                    Utils.Toast("位置换了");
                     source.itemView.findViewById(R.id.delete_iv).setVisibility(View.GONE);
-//                    gridAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -897,28 +828,6 @@ public class NewMainActivity extends BaseActivity {
 
             tv_title.setText(item.getTitle());
             int imgUrl = Utils.getAppIconId(item.getImg_id_name());
-//            //颜色设置:
-//            switch (item.getTitle()) {
-//                case "电话":
-//                    rl_item_container.setBackgroundColor(item.getIconBgColor());
-//                    break;
-//                case "相册":
-//                    break;
-//                case "紧急呼叫":
-//                    break;
-//                case "录音":
-//                    break;
-//                case "黑红名单":
-//                    break;
-//                case "联系人":
-//                    break;
-//                case "通话记录":
-//                    break;
-//                case "所有应用":
-//                    break;
-//                case "分机设置":
-//                    break;
-//            }
 
             GradientDrawable drawable = new GradientDrawable();
             drawable.setShape(GradientDrawable.RECTANGLE);
@@ -1102,24 +1011,4 @@ public class NewMainActivity extends BaseActivity {
         DaoUtil.closeDb();
     }
 
-//    OnItemSwipeListener onItemSwipeListener = new OnItemSwipeListener() {
-//        @Override
-//        public void onItemSwipeStart(RecyclerView.ViewHolder viewHolder, int pos) {}
-//        @Override
-//        public void clearView(RecyclerView.ViewHolder viewHolder, int pos) {}
-//        @Override
-//        public void onItemSwiped(RecyclerView.ViewHolder viewHolder, int pos) {}
-//    };
-//
-//    ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
-//    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
-//itemTouchHelper.attachToRecyclerView(mRecyclerView);
-//
-//// 开启拖拽
-//mAdapter.enableDragItem(itemTouchHelper, R.id.textView, true);
-//mAdapter.setOnItemDragListener(onItemDragListener);
-//
-//// 开启滑动删除
-//mAdapter.enableSwipeItem();
-//mAdapter.setOnItemSwipeListener(onItemSwipeListener);
 }

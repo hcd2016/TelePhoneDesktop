@@ -11,17 +11,17 @@
         <!--android:layout_height="65dp">-->
 
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tablayout"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:background="@color/white"
-            app:tabIndicatorColor="@color/colorPrimary"
-            app:tabIndicatorHeight="2dp"
-            app:tabMode="fixed"
-            app:tabSelectedTextColor="@color/colorPrimary"
-            app:tabTextAppearance="@style/TablayoutTextSize30"
-            app:tabTextColor="@color/text_333333" />
+        <!--<android.support.design.widget.TabLayout-->
+            <!--android:id="@+id/tablayout"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="65dp"-->
+            <!--android:background="@color/white"-->
+            <!--app:tabIndicatorColor="@color/colorPrimary"-->
+            <!--app:tabIndicatorHeight="2dp"-->
+            <!--app:tabMode="fixed"-->
+            <!--app:tabSelectedTextColor="@color/colorPrimary"-->
+            <!--app:tabTextAppearance="@style/TablayoutTextSize30"-->
+            <!--app:tabTextColor="@color/text_333333" />-->
 
     <com.desktop.telephone.telephonedesktop.view.PagerSlidingTabStrip
         app:pstsTextAllCaps="false"

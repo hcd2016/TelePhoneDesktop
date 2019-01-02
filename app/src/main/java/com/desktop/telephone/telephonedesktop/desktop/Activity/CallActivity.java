@@ -48,8 +48,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CallActivity extends BaseActivity {
-    @BindView(R.id.tablayout)
-    TabLayout tablayout;
+//    @BindView(R.id.tablayout)
+//    TabLayout tablayout;
     @BindView(R.id.viewpager)
     ViewPager viewpager;
     @BindView(R.id.tabStrip)
@@ -99,7 +99,7 @@ public class CallActivity extends BaseActivity {
         tabStrip.setTextColor(Utils.getColor(R.color.text_333333));
         tabStrip.setViewPager(viewpager);
 
-        tablayout.setupWithViewPager(viewpager);
+//        tablayout.setupWithViewPager(viewpager);
         int type = getIntent().getIntExtra("type", 0);//0为拨号,1为通话记录,2为联系人
         viewpager.setCurrentItem(type);
     }

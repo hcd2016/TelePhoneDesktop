@@ -39,6 +39,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:gravity="center"
             android:id="@+id/ll_weather_container"
             android:layout_centerVertical="true"
@@ -48,6 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
+                android:id="@+id/iv_weather"
                 android:src="@drawable/weather_yu"
                 android:layout_width="120dp"
                 android:layout_height="120dp" />
