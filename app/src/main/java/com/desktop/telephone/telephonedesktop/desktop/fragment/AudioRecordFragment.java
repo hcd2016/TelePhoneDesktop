@@ -28,6 +28,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
@@ -53,6 +54,7 @@ public class AudioRecordFragment extends Fragment {
     private AlertDialog alertDialog;
     private List<File> normalList;
     private List<File> callList;
+    private SimpleExoPlayer player;
 
     public static AudioRecordFragment newInstance(int type) {
         Bundle argz = new Bundle();
@@ -105,7 +107,15 @@ public class AudioRecordFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        releasePlayer();
         unbinder.unbind();
+    }
+
+    private void releasePlayer() {
+        if (player != null) {
+            player.release();
+            player = null;
+        }
     }
 
     public void startPlay(File file) {
@@ -117,7 +127,7 @@ public class AudioRecordFragment extends Fragment {
 // 创建跟踪器
         TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
 // 创建player
-        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
+        player = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
 // 绑定player
         playerView.setPlayer(player);
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getActivity(),
@@ -150,6 +160,7 @@ public class AudioRecordFragment extends Fragment {
 //                    Uri uri = Uri.fromFile(item);
 //                    intent.setDataAndType(uri, "audio/*");
 //                    startActivity(intent);
+                    playerView.setVisibility(View.VISIBLE);
                     startPlay(item);
                 }
             });

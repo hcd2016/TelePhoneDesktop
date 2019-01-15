@@ -49,7 +49,7 @@ public class TelephoneSettingActivity extends BaseActivity {
 //        } else {
 //            rbShow.setChecked(false);
 //        }
-        int time = SPUtil.getInstance().getInteger(SPUtil.KEY_INTERCHANGER_SETTING);
+        String time = SPUtil.getString(SPUtil.KEY_INTERCHANGER_SETTING);
         etInterchanger.setText(time + "");
         etInterchanger.setSelection(etInterchanger.getText().toString().length());
     }
@@ -61,10 +61,10 @@ public class TelephoneSettingActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_save://保存
-                if (TextUtils.isEmpty(etInterchanger.getText().toString())) {
-                    Utils.Toast("交换机参数不能为空");
-                    return;
-                }
+//                if (TextUtils.isEmpty(etInterchanger.getText().toString())) {
+//                    Utils.Toast("交换机参数不能为空");
+//                    return;
+//                }
 //                SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_SHOW_COMMING_CALL_NUM, rbShow.isChecked());
 //                if (rbShow.isChecked()) {
 //                    CallUtil.showCallerIds(this, 1);
@@ -72,8 +72,8 @@ public class TelephoneSettingActivity extends BaseActivity {
 //                    CallUtil.showCallerIds(this, 0);
 //                }
                 String s = etInterchanger.getText().toString();
-                SPUtil.getInstance().saveInteger(SPUtil.KEY_INTERCHANGER_SETTING, Integer.parseInt(s));
-                CallUtil.interchangerSetting(this, Integer.parseInt(s));
+                SPUtil.saveString(SPUtil.KEY_INTERCHANGER_SETTING, s);
+                CallUtil.interchangerSetting(this, s);
                 Utils.Toast("保存成功");
                 break;
         }

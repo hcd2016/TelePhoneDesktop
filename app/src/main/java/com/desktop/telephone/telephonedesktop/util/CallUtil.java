@@ -35,7 +35,7 @@ public class CallUtil {
         } else {
             isHandFree = false;
         }
-        int i = SPUtil.getInstance().getInteger(SPUtil.KEY_INTERCHANGER_SETTING);
+        String i = SPUtil.getString(SPUtil.KEY_INTERCHANGER_SETTING);
         Intent intent = new Intent();
         intent.setAction("com.tongen.Tel.APPLICATION_CALL");
         intent.putExtra("phoneNumber", i+"P" + phoneNum);
@@ -98,7 +98,7 @@ public class CallUtil {
     /**
      * 交换机设置提交
      */
-    public static void interchangerSetting(Context context, int time) {
+    public static void interchangerSetting(Context context, String time) {
         Intent intent = new Intent();
         intent.putExtra("time",time);
         intent.setAction("com.tongen.action.switch.time");

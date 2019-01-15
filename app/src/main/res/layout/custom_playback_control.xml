@@ -16,7 +16,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:background="#CC000000"
+    android:background="@color/colorPrimary"
     android:layoutDirection="ltr"
     android:orientation="vertical">
 
@@ -58,13 +58,6 @@
                 android:id="@id/exo_ffwd"
                 style="@style/ExoMediaButton.FastForward" />
 
-            <ImageButton
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/close_white_icon"
-                android:background="@color/transparent"
-                android:id="@+id/close"
-                android:layout_width="20dp"
-                android:layout_height="20dp" />
             <!--<ImageButton android:id="@id/exo_next"-->
             <!--style="@style/ExoMediaButton.Next"/>-->
 
@@ -108,5 +101,13 @@
         </LinearLayout>
     </LinearLayout>
 
-
+    <ImageButton
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/close_x_white"
+        android:background="@color/transparent"
+        android:id="@+id/close"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
 </RelativeLayout>
