@@ -2,6 +2,8 @@ package com.desktop.telephone.telephonedesktop.desktop.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,13 +13,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.record.AudioFileUtils;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,6 +46,8 @@ public class AudioRecordFragment extends Fragment {
     @BindView(R.id.recycleView)
     RecyclerView recycleView;
     Unbinder unbinder;
+    @BindView(R.id.player_view)
+    PlayerView playerView;
     private int type = 0;//0为普通录音,1为通话录音
     private MyAdapter myAdapter;
     private AlertDialog alertDialog;
@@ -80,7 +96,7 @@ public class AudioRecordFragment extends Fragment {
         } else {
             myAdapter = new MyAdapter(callList);
         }
-        View view = View.inflate(getActivity(),R.layout.empty_view,null);
+        View view = View.inflate(getActivity(), R.layout.empty_view, null);
         myAdapter.setEmptyView(view);
         recycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleView.setAdapter(myAdapter);
@@ -90,6 +106,28 @@ public class AudioRecordFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    public void startPlay(File file) {
+
+        // 得到默认合适的带宽
+        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+// 创建跟踪的工厂
+        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
+// 创建跟踪器
+        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+// 创建player
+        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
+// 绑定player
+        playerView.setPlayer(player);
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getActivity(),
+                Util.getUserAgent(getActivity(), "ExoPlayer"), bandwidthMeter);
+// 创建要播放的媒体的MediaSource
+        MediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.fromFile(file));
+// 准备播放器的MediaSource
+        player.prepare(mediaSource);
+// 当准备完毕后直接播放
+        player.setPlayWhenReady(true);
     }
 
     class MyAdapter extends BaseQuickAdapter<File, BaseViewHolder> {
@@ -105,7 +143,14 @@ public class AudioRecordFragment extends Fragment {
             helper.getView(R.id.ll_item_container).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Utils.openFile(item.getAbsolutePath(),getActivity());
+//                    Utils.openFile(item.getAbsolutePath(),getActivity());
+//                    Intent intent = new Intent(Intent.ACTION_VIEW);
+////                    String path = Environment.getExternalStorageDirectory().getPath()+ "/1.mp4";//该路径可以自定义
+////                    File file = new File(path);
+//                    Uri uri = Uri.fromFile(item);
+//                    intent.setDataAndType(uri, "audio/*");
+//                    startActivity(intent);
+                    startPlay(item);
                 }
             });
             helper.getView(R.id.ll_item_container).setOnLongClickListener(new View.OnLongClickListener() {
@@ -118,9 +163,9 @@ public class AudioRecordFragment extends Fragment {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Utils.removeFile(item.getAbsolutePath());
-                                    if(type == 0) {
+                                    if (type == 0) {
                                         normalList.remove(item);
-                                    }else {
+                                    } else {
                                         callList.remove(item);
                                     }
                                     Utils.Toast("删除成功");
