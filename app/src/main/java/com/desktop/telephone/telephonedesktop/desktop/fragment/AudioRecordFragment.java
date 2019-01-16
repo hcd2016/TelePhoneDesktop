@@ -138,6 +138,20 @@ public class AudioRecordFragment extends Fragment {
         player.prepare(mediaSource);
 // 当准备完毕后直接播放
         player.setPlayWhenReady(true);
+        playerView.findViewById(R.id.rl_btn_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        playerView.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.Toast("点击了关闭");
+                player.stop();
+                playerView.setVisibility(View.GONE);
+            }
+        });
     }
 
     class MyAdapter extends BaseQuickAdapter<File, BaseViewHolder> {

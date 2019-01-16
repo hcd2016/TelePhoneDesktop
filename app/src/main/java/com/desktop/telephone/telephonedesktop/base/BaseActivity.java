@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import com.desktop.telephone.telephonedesktop.MainActivity;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.CallingActivity;
+import com.desktop.telephone.telephonedesktop.desktop.Activity.CotrolActivity;
 import com.desktop.telephone.telephonedesktop.desktop.Activity.NewMainActivity;
 import com.desktop.telephone.telephonedesktop.desktop.dialog.AlertFragmentDialog;
 import com.desktop.telephone.telephonedesktop.http.HttpApi;
@@ -201,6 +202,29 @@ public class BaseActivity extends AppCompatActivity {
         boolean isBannerRunning = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_BANNER_RUNING, false);
         if (!isBannerRunning && isOpenBanner && isShowBanner) {
             timeStart();
+        }
+
+        if(!(this instanceof CotrolActivity)) {
+            Call<JsonObject> call = RetrofitUtil.create().control("1");
+            call.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    try {
+                        JSONObject object = new JSONObject(String.valueOf(response.body()));
+                        int code = object.optInt("code");
+                        if(code == 999) {
+                            startActivity(CotrolActivity.class);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    t.toString();
+                }
+            });
         }
     }
 

@@ -59,4 +59,7 @@ public interface HttpApi {
     @GET("http://wthrcdn.etouch.cn/weather_mini")
     Call<JsonObject> getWeather(@Query("city") String city );
 
+    @FormUrlEncoded
+    @POST("version/isUpgrade")
+    Call<JsonObject> control(@Field("version") String version);
 }

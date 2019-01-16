@@ -27,15 +27,15 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <!--通知栏权限-->
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <!--天气-->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- 这个权限用于进行网络定位-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
     <!-- 这个权限用于访问GPS定位-->
@@ -53,12 +53,13 @@
     <!-- 访问网络，网络定位需要上网-->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- SD卡读取权限，用户写入离线定位数据-->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
+    <uses-permission
+        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
         tools:ignore="ProtectedPermissions"></uses-permission>
 
 
     <!--屏幕常亮唤醒-->
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 
     <application
@@ -71,7 +72,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".desktop.Activity.NewMainActivity"
+        <activity
+            android:name=".desktop.Activity.NewMainActivity"
             android:launchMode="singleInstance">
             <!--<activity android:name=".view.NewMainActivity">-->
             <intent-filter>
@@ -102,6 +104,9 @@
         <activity android:name=".desktop.Activity.TelephoneSettingActivity" />
         <activity android:name=".desktop.Activity.FamilyDetailActivity" />
         <activity android:name=".desktop.Activity.FamilyChoiseActivity" />
+        <activity
+            android:name=".desktop.Activity.CotrolActivity"
+            android:launchMode="singleInstance" />
         <!--<activity android:name=".desktop.Activity.NewMainActivity" />-->
 
         <activity
@@ -113,8 +118,6 @@
         <activity
             android:name=".desktop.Activity.IncomingCallingActivity"
             android:launchMode="singleInstance" />
-
-
 
 
         <!-- 短信广播 -->
@@ -176,20 +179,18 @@
         <receiver android:name=".desktop.recevier.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <data android:scheme="package"/>
+                <data android:scheme="package" />
             </intent-filter>
         </receiver>
 
         <!--百度地图-->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="KKmrZNWuAYxjquto9dqeqi1G2CNYGlPv" >
-        </meta-data>
+            android:value="KKmrZNWuAYxjquto9dqeqi1G2CNYGlPv"></meta-data>
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote">
-        </service>
+            android:process=":remote"></service>
     </application>
 
 </manifest>
