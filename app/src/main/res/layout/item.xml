@@ -28,6 +28,9 @@
             tools:ignore="ContentDescription" />
 
         <TextView
+            android:lines="1"
+            android:ellipsize="end"
+            android:maxEms="5"
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:id="@+id/tv_title"

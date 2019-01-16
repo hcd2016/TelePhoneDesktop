@@ -471,6 +471,24 @@ public class NewMainActivity extends BaseActivity {
             moveItem.setIconBgColor(Utils.getColorBgFromPosition(i));
             defaultList.add(moveItem);
         }
+        for (int j = 0; j < packInfos.size(); j++) {
+            PackageInfo packInfo = packInfos.get(j);
+            String packname = packInfo.packageName;
+            String appName = packInfo.applicationInfo.loadLabel(pm).toString();
+            if (packname.equals("com.chinatelecom.bestpayclient")
+                    || packname.equals("com.ximalaya.ting.android") || packname.equals("com.yidian.health")
+                    || packname.equals("com.sinyee.babybus.chants") || packname.equals("com.guangjun.cookbook")) {
+                DesktopIconBean desktopIconBean = new DesktopIconBean();
+                desktopIconBean.setIconType(2);
+                desktopIconBean.setTitle(appName);
+                desktopIconBean.setPackageName(packInfo.packageName);
+                desktopIconBean.setMid(defaultList.size());
+                desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(defaultList.size()));
+                desktopIconBean.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+                defaultList.add(desktopIconBean);
+            }
+        }
+
         mList = DaoUtil.querydata();
         if (mList == null || mList.size() == 0) {//数据库中没有列表(第一次安装)
             mList.addAll(defaultList);
