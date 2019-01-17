@@ -505,6 +505,7 @@ public class NewMainActivity extends BaseActivity {
         }
         myPagerAdapter = new MyPagerAdapter(lists);
         viewpager.setAdapter(myPagerAdapter);
+        CallUtil.interchangerSetting(this,"");
     }
 
 
@@ -876,7 +877,14 @@ public class NewMainActivity extends BaseActivity {
                 } else {
                     if(item.getTitle().equals("微信")) {
                         if(SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {
-                            content_iv.setImageResource(imgUrl);
+                            if(TextUtils.isEmpty(item.getImg_id_name())) {
+                                byte[] app_icon = item.getApp_icon();
+                                Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
+                                BitmapDrawable bd = new BitmapDrawable(bmp);
+                                content_iv.setImageDrawable(bd);
+                            }else {
+                                content_iv.setImageResource(imgUrl);
+                            }
                         }else {
                             byte[] app_icon = item.getApp_icon();
                             Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);

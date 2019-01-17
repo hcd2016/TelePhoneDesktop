@@ -68,5 +68,47 @@ public class BootReceiver extends BroadcastReceiver {
 //            }
 //
 //        }
+        if (intent.getAction().equals("android.intent.action.PACKAGE_ADDED")) {
+            PackageManager pm = context.getPackageManager();
+            String packageName = intent.getDataString().substring(8);
+            //所有的安装在系统上的应用程序包信息。
+            List<PackageInfo> packInfos = pm.getInstalledPackages(0);
+            for (int i = 0; i < packInfos.size(); i++) {
+                PackageInfo packInfo = packInfos.get(i);
+                //packInfo  相当于一个应用程序apk包的清单文件
+                String packname = packInfo.packageName;
+                Drawable icon = packInfo.applicationInfo.loadIcon(pm);
+                String name = packInfo.applicationInfo.loadLabel(pm).toString();
+
+                if (packname.equals(packageName)) {
+                    //添加到所有应用数据库
+                    AppInfoBean appInfoBean = new AppInfoBean();
+                    appInfoBean.setIconType(2);
+                    appInfoBean.setPackageName(packname);
+                    appInfoBean.setAppIcon(DaoUtil.drawableToByte(icon));
+                    appInfoBean.setAppName(name);
+                    appInfoBean.setId(null);
+                    appInfoBean.setIsShowDesktop(true);
+                    appInfoBean.setAppName(name);
+                    DaoUtil.getAppInfoBeanDao().insert(appInfoBean);
+
+//                    添加到桌面数据库
+                    DesktopIconBean desktopIconBean = new DesktopIconBean();
+                    desktopIconBean.setIconType(2);
+                    desktopIconBean.setTitle(name);
+                    desktopIconBean.setPackageName(packname);
+                    List<DesktopIconBean> list = DaoUtil.getDesktopIconBeanDao().loadAll();
+                    desktopIconBean.setMid(list.size());
+                    desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(list.size()));
+                    if (packageName.equals("com.tencent.mm")) {
+                        desktopIconBean.setImg_id_name("weixin_icon");
+                    } else {
+                        desktopIconBean.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+                    }
+                    DaoUtil.getDesktopIconBeanDao().insert(desktopIconBean);
+                    EventBus.getDefault().post(new EventBean(EventBean.REFRESH_DESK));
+                }
+            }
+        }
     }
 }
