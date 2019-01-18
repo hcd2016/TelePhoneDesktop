@@ -477,7 +477,7 @@ public class NewMainActivity extends BaseActivity {
             String appName = packInfo.applicationInfo.loadLabel(pm).toString();
             if (packname.equals("com.chinatelecom.bestpayclient")
                     || packname.equals("com.ximalaya.ting.android") || packname.equals("com.yidian.health")
-                    || packname.equals("com.sinyee.babybus.chants") || packname.equals("com.guangjun.cookbook")) {
+                    || packname.equals("com.sinyee.babybus.chants") || packname.equals("com.jcccp")) {
                 DesktopIconBean desktopIconBean = new DesktopIconBean();
                 desktopIconBean.setIconType(2);
                 desktopIconBean.setTitle(appName);

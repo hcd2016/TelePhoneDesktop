@@ -62,7 +62,7 @@ public class AllAppsActivity extends BaseActivity {
                 //预装应用
                 if (packname.equals("com.chinatelecom.bestpayclient")
                         || packname.equals("com.ximalaya.ting.android") || packname.equals("com.yidian.health")
-                        || packname.equals("com.sinyee.babybus.chants") || packname.equals("com.guangjun.cookbook")) {
+                        || packname.equals("com.sinyee.babybus.chants") || packname.equals("com.jcccp")) {
                     appInfoBean.isShowDesktop = true;
                 }
                 if (SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {

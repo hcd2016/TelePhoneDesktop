@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -174,6 +175,11 @@ public class AudioRecordFragment extends Fragment {
 //                    Uri uri = Uri.fromFile(item);
 //                    intent.setDataAndType(uri, "audio/*");
 //                    startActivity(intent);
+
+//                    Intent intent = new Intent(Intent.ACTION_VIEW);
+//                    intent.setDataAndType(Uri.parse(item.getAbsolutePath()), "video/wav");
+//                    startActivity(intent);
+
                     playerView.setVisibility(View.VISIBLE);
                     startPlay(item);
                 }
