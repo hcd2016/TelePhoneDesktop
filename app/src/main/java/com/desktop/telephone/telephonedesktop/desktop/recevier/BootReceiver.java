@@ -98,14 +98,23 @@ public class BootReceiver extends BroadcastReceiver {
                     desktopIconBean.setTitle(name);
                     desktopIconBean.setPackageName(packname);
                     List<DesktopIconBean> list = DaoUtil.getDesktopIconBeanDao().loadAll();
-                    desktopIconBean.setMid(list.size());
                     desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(list.size()));
-                    if (packageName.equals("com.tencent.mm")) {
+                    if (packageName.equals("com.tencent.mm")) {//是微信，安装到第二个位置
                         desktopIconBean.setImg_id_name("weixin_icon");
+                        desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(2));
+                        desktopIconBean.setMid(2);
+                        for (int j = 0; j < list.size(); j++) {
+                            if(list.get(j).getMid() >= 2) {//其他往后移
+                                list.get(j).setMid(list.get(j).getMid()+1);
+                                DaoUtil.getDesktopIconBeanDao().update(list.get(j));
+                            }
+                        }
                     } else {
                         desktopIconBean.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+                        desktopIconBean.setMid(list.size());
                     }
                     DaoUtil.getDesktopIconBeanDao().insert(desktopIconBean);
+
                     EventBus.getDefault().post(new EventBean(EventBean.REFRESH_DESK));
                 }
             }

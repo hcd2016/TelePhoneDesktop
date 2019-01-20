@@ -148,7 +148,6 @@ public class AudioRecordFragment extends Fragment {
         playerView.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.Toast("点击了关闭");
                 player.stop();
                 playerView.setVisibility(View.GONE);
             }
@@ -169,9 +168,9 @@ public class AudioRecordFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 //                    Utils.openFile(item.getAbsolutePath(),getActivity());
-//                    Intent intent = new Intent(Intent.ACTION_VIEW);
-////                    String path = Environment.getExternalStorageDirectory().getPath()+ "/1.mp4";//该路径可以自定义
-////                    File file = new File(path);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+//                    String path = Environment.getExternalStorageDirectory().getPath()+ "/1.mp4";//该路径可以自定义
+//                    File file = new File(path);
 //                    Uri uri = Uri.fromFile(item);
 //                    intent.setDataAndType(uri, "audio/*");
 //                    startActivity(intent);

@@ -80,13 +80,6 @@
         android:padding="15dp"
         android:text="交换机设置"
         android:textSize="25sp" />
-    <TextView
-        android:paddingBottom="15dp"
-        android:paddingLeft="35dp"
-        android:textSize="20sp"
-        android:text="(请输入0~9参数,不输入为取消设置)"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:padding="20dp"
@@ -99,11 +92,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="15dp"
-            android:text="交换机参数设置:"
+            android:text="加拨号码"
             android:textColor="@color/text_333333"
             android:textSize="24sp" />
 
         <EditText
+            android:inputType="number"
             android:maxLength="1"
             android:background="@null"
             android:id="@+id/et_interchanger"
@@ -112,14 +106,56 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:hint="请输入0-9类型参数"
+            android:hint="0-9,不输入为取消加拨"
             android:textSize="28sp" />
+    </LinearLayout>
+
+
+    <View
+        android:background="@color/gray_d5d"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <LinearLayout
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:text="交换机时间"
+            android:textColor="@color/text_333333"
+            android:textSize="24sp" />
+
+
+        <EditText
+            android:inputType="number"
+            android:id="@+id/et_time"
+            android:maxLength="1"
+            android:background="@null"
+            android:text="0"
+            android:digits="0123"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="请输入0~3参数"
+            android:textSize="28sp" />
+        <TextView
+            android:textColor="@color/text_333333"
+            android:textSize="24sp"
+            android:text="秒"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <TextView
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:id="@+id/tv_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

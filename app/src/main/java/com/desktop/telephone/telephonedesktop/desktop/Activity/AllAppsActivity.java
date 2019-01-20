@@ -59,21 +59,21 @@ public class AllAppsActivity extends BaseActivity {
             for (int i = 0; i < appInfos.size(); i++) {
                 AppInfoBean appInfoBean = appInfos.get(i);
                 String packname = appInfoBean.getPackageName();
-                //预装应用
-                if (packname.equals("com.chinatelecom.bestpayclient")
-                        || packname.equals("com.ximalaya.ting.android") || packname.equals("com.yidian.health")
-                        || packname.equals("com.sinyee.babybus.chants") || packname.equals("com.jcccp")) {
-                    appInfoBean.isShowDesktop = true;
-                }
-                if (SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {
-                    if (packname.equals("com.tencent.mm")) {
-                        appInfoBean.isShowDesktop = true;
-                    }
-                } else {
-                    if (packname.equals("com.android.calendar")) {
-                        appInfoBean.isShowDesktop = true;
-                    }
-                }
+//                //预装应用
+//                if (packname.equals("com.chinatelecom.bestpayclient")
+//                        || packname.equals("com.ximalaya.ting.android") || packname.equals("com.yidian.health")
+//                        || packname.equals("com.sinyee.babybus.chants") || packname.equals("com.jcccp")) {
+//                    appInfoBean.isShowDesktop = true;
+//                }
+//                if (SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {
+//                    if (packname.equals("com.tencent.mm")) {
+//                        appInfoBean.isShowDesktop = true;
+//                    }
+//                } else {
+//                    if (packname.equals("com.android.calendar")) {
+//                        appInfoBean.isShowDesktop = true;
+//                    }
+//                }
                 DaoUtil.getAppInfoBeanDao().insert(appInfoBean);
                 isShowDeskList.add(appInfoBean);
             }

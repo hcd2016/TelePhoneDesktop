@@ -60,6 +60,7 @@
 
     <!--屏幕常亮唤醒-->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
 
     <application
@@ -167,6 +168,12 @@
         <receiver android:name=".desktop.recevier.CallingWithTalking">
             <intent-filter>
                 <action android:name="com.tongen.Tel.calling" />
+            </intent-filter>
+        </receiver>
+        <!-- 点播呼叫成功 -->
+        <receiver android:name=".desktop.recevier.PointConnectReceiver">
+            <intent-filter>
+                <action android:name="com.tongen.Tel.OUTGOING_RINGING" />
             </intent-filter>
         </receiver>
         <!-- SOS -->

@@ -23,7 +23,7 @@ import butterknife.OnClick;
 public class TelephoneSettingActivity extends BaseActivity {
     @BindView(R.id.iv_back)
     ImageView ivBack;
-//    @BindView(R.id.tv_mode_desc)
+    //    @BindView(R.id.tv_mode_desc)
 //    TextView tvModeDesc;
 //    @BindView(R.id.rb_show)
 //    RadioButton rbShow;
@@ -33,6 +33,8 @@ public class TelephoneSettingActivity extends BaseActivity {
     EditText etInterchanger;
     @BindView(R.id.tv_save)
     TextView tvSave;
+    @BindView(R.id.et_time)
+    TextView etTime;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +54,9 @@ public class TelephoneSettingActivity extends BaseActivity {
         String time = SPUtil.getString(SPUtil.KEY_INTERCHANGER_SETTING);
         etInterchanger.setText(time + "");
         etInterchanger.setSelection(etInterchanger.getText().toString().length());
+
+        String mTime = SPUtil.getString(SPUtil.KEY_INTERCHANGER_TIME, "2");
+        etTime.setText(mTime);
     }
 
     @OnClick({R.id.iv_back, R.id.tv_save})
@@ -72,8 +77,12 @@ public class TelephoneSettingActivity extends BaseActivity {
 //                    CallUtil.showCallerIds(this, 0);
 //                }
                 String s = etInterchanger.getText().toString();
+                String time = etTime.getText().toString();
+                if (!TextUtils.isEmpty(time)) {
+                    CallUtil.interchangerSetting(this, time);
+                    SPUtil.saveString(SPUtil.KEY_INTERCHANGER_TIME, time);
+                }
                 SPUtil.saveString(SPUtil.KEY_INTERCHANGER_SETTING, s);
-                CallUtil.interchangerSetting(this, s);
                 Utils.Toast("保存成功");
                 break;
         }

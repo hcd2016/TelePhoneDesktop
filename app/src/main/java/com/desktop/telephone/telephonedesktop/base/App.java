@@ -18,6 +18,7 @@ import com.desktop.telephone.telephonedesktop.gen.DaoSession;
 import com.desktop.telephone.telephonedesktop.gen.DesktopIconBeanDao;
 import com.desktop.telephone.telephonedesktop.http.RetrofitUtil;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
+import com.desktop.telephone.telephonedesktop.util.SPUtil;
 import com.desktop.telephone.telephonedesktop.util.weather.ParaseJsonUtils;
 import com.google.gson.JsonObject;
 
@@ -43,36 +44,40 @@ public class App extends Application {
         intent.setAction("com.tongen.startDial");
         context.sendBroadcast(intent);
 
+        String time = SPUtil.getString(SPUtil.KEY_INTERCHANGER_TIME, "2");
+        CallUtil.interchangerSetting(context, time);
     }
 
     /**
-     * 获取全局上下文*/
+     * 获取全局上下文
+     */
     public static Context getContext() {
         return context;
     }
+
     private static DesktopIconBeanDao getDesktopIconBeanDao() {
         return DBManager.getInstance().getNewSession().getDesktopIconBeanDao();
     }
 
     /**
      * 批量插入或修改用户信息
-     * @param list      用户信息列表
+     *
+     * @param list 用户信息列表
      */
-    public void saveNLists(final List<DesktopIconBean> list){
-        if(list == null || list.isEmpty()){
+    public void saveNLists(final List<DesktopIconBean> list) {
+        if (list == null || list.isEmpty()) {
             return;
         }
         getDesktopIconBeanDao().getSession().runInTx(new Runnable() {
             @Override
             public void run() {
-                for(int i=0; i<list.size(); i++){
+                for (int i = 0; i < list.size(); i++) {
                     DesktopIconBean desktopIconBean = list.get(i);
                     getDesktopIconBeanDao().insertOrReplace(desktopIconBean);
                 }
             }
         });
     }
-
 
 
     /**

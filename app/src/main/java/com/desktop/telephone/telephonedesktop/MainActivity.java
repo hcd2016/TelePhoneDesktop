@@ -194,7 +194,11 @@ public class MainActivity extends BaseActivity {
                     break;
             }
 
-            moveItem.setIconBgColor(Utils.getColorBgFromPosition(i));
+            if(i >=2) {
+                moveItem.setIconBgColor(Utils.getColorBgFromPosition(i+1));
+            }else {
+                moveItem.setIconBgColor(Utils.getColorBgFromPosition(i));
+            }
 
             defaultList.add(moveItem);
         }

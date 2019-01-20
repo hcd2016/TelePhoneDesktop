@@ -31,7 +31,8 @@ public class SPUtil {
     public static final String KEY_CALLING_WITH_TALKING = "key_calling_with_talking";//通话过程中拨打电话
     public static final String KEY_IS_SHOW_COMMING_CALL_NUM = "key_is_show_comming_call_num";//是否显示来电
     public static final String KEY_IS_SEND_COMMING_CALL = "key_is_send_comming_call";//第一次是否发送过来电
-    public static final String KEY_INTERCHANGER_SETTING = "key_interchanger_setting";//第一次是否发送过来电
+    public static final String KEY_INTERCHANGER_SETTING = "key_interchanger_setting";//加拨号码
+    public static final String KEY_INTERCHANGER_TIME = "key_interchanger_time";//交换机时间
     public static final String KEY_IS_HAVE_WEIXIN = "key_is_have_weixin";//第一次是否发送过来电
 
     public static final String KEY_SHOW_FAMILY_LIST = "key_show_family_list";//显示亲情list
@@ -98,6 +99,11 @@ public class SPUtil {
         SharedPreferences sp = App.getContext().getSharedPreferences(SHARED_PREFERENCE_NAME,
                 Context.MODE_PRIVATE);
         return sp.getString(key, "");
+    }
+    public static String getString(String key,String defValue) {
+        SharedPreferences sp = App.getContext().getSharedPreferences(SHARED_PREFERENCE_NAME,
+                Context.MODE_PRIVATE);
+        return sp.getString(key, defValue);
     }
 
     public void deleteSpByKey(String key) {
