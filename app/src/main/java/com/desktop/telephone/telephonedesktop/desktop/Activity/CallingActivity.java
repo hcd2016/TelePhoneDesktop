@@ -493,7 +493,7 @@ public class CallingActivity extends BaseActivity {
         super.finish();
     }
 
-    private AudioRecorderCall audioRecorderCall;//通话录音
+//    private AudioRecorderCall audioRecorderCall;//通话录音
     public String keyInValue = "";
     private boolean isShowKeybord = false;
 
@@ -738,7 +738,9 @@ public class CallingActivity extends BaseActivity {
         super.onDestroy();
         isCallingStop = true;
         audioRecordHandler.removeCallbacksAndMessages(null);
-        audioRecordHandler.removeCallbacksAndMessages(null);
+        if(mediaRecordFunc != null) {
+            mediaRecordFunc.stopRecordAndFile();
+        }
         EventBus.getDefault().unregister(this);
 //        unRegisterReceivers();
         SPUtil.getInstance().saveBoolean("isShowCallingActivity", false);//保存当前是否打开通话界面
