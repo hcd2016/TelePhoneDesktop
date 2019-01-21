@@ -126,11 +126,18 @@ public class RecordAudioActivity extends BaseActivity {
 //                    }
                     if(mediaRecordFunc == null) {
                         mediaRecordFunc = new MediaRecordFunc(false);
+                        mediaRecordFunc.startRecordAndFile();
+                    }else {
+                        if(isPause) {
+                            mediaRecordFunc.resume();
+                        }else {
+                            mediaRecordFunc.startRecordAndFile();
+                        }
                     }
 //                    startRecord();
-                    mediaRecordFunc.startRecordAndFile();
 
                     isPause = false;
+                    isClick = true;
                     if (myRunnable == null) {
                         myRunnable = new MyRunnable();
                         myRunnable.run();
@@ -210,13 +217,18 @@ public class RecordAudioActivity extends BaseActivity {
         }
     }
 
+    private boolean isClick = false;
     private class MyRunnable implements Runnable {
         @Override
         public void run() {
             if (!isPause) {//需要播放
                 //递归调用本runable对象，实现每隔一秒一次执行任务
                 mhandle.postDelayed(this, 1000);
-                currentSecond = currentSecond + 1000;
+                if(isClick) {//解决一秒误差问题
+                    isClick = false;
+                }else {
+                    currentSecond = currentSecond + 1000;
+                }
                 tvTimer.setText(formatLongToTimeStr(currentSecond));
             }
         }
