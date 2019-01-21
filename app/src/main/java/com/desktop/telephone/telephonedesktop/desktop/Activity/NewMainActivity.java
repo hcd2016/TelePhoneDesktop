@@ -474,9 +474,9 @@ public class NewMainActivity extends BaseActivity {
                     break;
             }
             moveItem.setMid(i);
-            if(i>=2) {
-                moveItem.setIconBgColor(Utils.getColorBgFromPosition(i+1));
-            }else {
+            if (i >= 2) {
+                moveItem.setIconBgColor(Utils.getColorBgFromPosition(i + 1));
+            } else {
                 moveItem.setIconBgColor(Utils.getColorBgFromPosition(i));
             }
             defaultList.add(moveItem);
@@ -519,7 +519,6 @@ public class NewMainActivity extends BaseActivity {
 
 
     //开关屏幕常亮
-    @SuppressLint("InvalidWakeLockTag")
     public static void keepScreenOn(Context context, boolean on) {
         if (on) {
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -549,12 +548,16 @@ public class NewMainActivity extends BaseActivity {
                 String time = sDateFormat.format(date);
 //                Calendar calendar = Calendar.getInstance();
 //                int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                String[] split = time.split(":");
+                final String[] split = time.split(":");
 
                 if (Integer.parseInt(split[0]) < 23 && Integer.parseInt(split[0]) >= 7) {//当前是白天时段,设为白天
-                    keepScreenOn(NewMainActivity.this, true);
+                    if (wakeLock == null) {
+                        keepScreenOn(NewMainActivity.this, true);
+                    }
                 } else {//设为黑夜
-                    keepScreenOn(NewMainActivity.this, false);
+                    if (wakeLock != null) {
+                        keepScreenOn(NewMainActivity.this, false);
+                    }
                 }
             }
         }.run();
@@ -671,9 +674,9 @@ public class NewMainActivity extends BaseActivity {
                 desktopIconBean.setApp_icon(event.getAppIcon());
             }
 //            desktopIconBean.setMid(mList.size());
-            if(mList.size() >=2) {
-                desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(mList.size()+1));
-            }else {
+            if (mList.size() >= 2) {
+                desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(mList.size() + 1));
+            } else {
                 desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(mList.size()));
             }
             desktopIconBean.setPackageName(event.getPackageName());
@@ -683,8 +686,8 @@ public class NewMainActivity extends BaseActivity {
                 desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(2));
                 desktopIconBean.setMid(2);
                 for (int j = 0; j < mList.size(); j++) {
-                    if(mList.get(j).getMid() >= 2) {//其他往后移
-                        mList.get(j).setMid(mList.get(j).getMid()+1);
+                    if (mList.get(j).getMid() >= 2) {//其他往后移
+                        mList.get(j).setMid(mList.get(j).getMid() + 1);
                         DaoUtil.getDesktopIconBeanDao().update(mList.get(j));
                     }
                 }
@@ -972,7 +975,6 @@ public class NewMainActivity extends BaseActivity {
                         switch (item.getTitle()) {
                             case "电话":
                                 CallActivity.startActivity(0, mContext);
-//                                mContext.startActivity(new Intent(mContext,NewMainActivity.class));
                                 break;
                             case "图库":
                                 mContext.startActivity(new Intent(mContext, PhotosActivity.class));
