@@ -18,6 +18,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.util.Utils;
+import com.desktop.telephone.telephonedesktop.view.record.AudioFileFunc;
 import com.desktop.telephone.telephonedesktop.view.record.AudioFileUtils;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -74,7 +75,7 @@ public class AudioRecordFragment extends Fragment {
     }
 
     private void initView() {
-        List<File> wavFiles = AudioFileUtils.getWavFiles();
+        List<File> wavFiles = AudioFileFunc.getAmrFiles();
         Collections.reverse(wavFiles);
         //普通列表
         normalList = new ArrayList<>();
@@ -147,7 +148,6 @@ public class AudioRecordFragment extends Fragment {
         playerView.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.Toast("点击了关闭");
                 player.stop();
                 playerView.setVisibility(View.GONE);
             }

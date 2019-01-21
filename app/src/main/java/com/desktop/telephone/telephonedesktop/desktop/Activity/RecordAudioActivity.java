@@ -3,6 +3,7 @@ package com.desktop.telephone.telephonedesktop.desktop.Activity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -20,9 +21,11 @@ import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.BlackListInfoBean;
 import com.desktop.telephone.telephonedesktop.desktop.dialog.AudioRecordDialog;
 import com.desktop.telephone.telephonedesktop.util.Utils;
+import com.desktop.telephone.telephonedesktop.view.record.AudioFileFunc;
 import com.desktop.telephone.telephonedesktop.view.record.AudioFileUtils;
 import com.desktop.telephone.telephonedesktop.view.record.AudioRecorder;
 import com.desktop.telephone.telephonedesktop.view.record.AudioRecorder.Status;
+import com.desktop.telephone.telephonedesktop.view.record.MediaRecordFunc;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,8 +60,11 @@ public class RecordAudioActivity extends BaseActivity {
     LinearLayout llBtnComplete;
     private MyRunnable mRunnable;
     private MediaRecorder recorder;
-    private AudioRecorder audioRecorder;
+//    private AudioRecorder audioRecorder;
     private AudioRecordDialog audioRecordDialog;
+    private MediaRecorder mMediaRecorder;
+    private MediaRecordFunc mediaRecordFunc;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,17 +113,23 @@ public class RecordAudioActivity extends BaseActivity {
                     ivPause.setVisibility(View.GONE);
                     isPause = true;//暂停播放
                     myRunnable = null;
-                    pauseRecord();
+//                    pauseRecord();
+                    mediaRecordFunc.pause();
                 } else {//暂停或未开始播放,开始或继续播放
                     ivMicIcon.setVisibility(View.GONE);
                     tvTimer.setVisibility(View.VISIBLE);
                     ivPlay.setVisibility(View.GONE);
                     ivPause.setVisibility(View.VISIBLE);
-                    if (audioRecorder == null) {
-                        audioRecorder = new AudioRecorder();
-                        audioRecorder.createDefaultAudio(getCurrentTime());
+//                    if (audioRecorder == null) {
+//                        audioRecorder = new AudioRecorder();
+//                        audioRecorder.createDefaultAudio(getCurrentTime());
+//                    }
+                    if(mediaRecordFunc == null) {
+                        mediaRecordFunc = new MediaRecordFunc(false);
                     }
-                    startRecord();
+//                    startRecord();
+                    mediaRecordFunc.startRecordAndFile();
+
                     isPause = false;
                     if (myRunnable == null) {
                         myRunnable = new MyRunnable();
@@ -130,19 +142,24 @@ public class RecordAudioActivity extends BaseActivity {
                 startActivity(AudioRecordListActivity.class);
                 break;
             case R.id.ll_btn_complete://完成
-                if(audioRecorder == null || audioRecorder.getStatus().equals(Status.STATUS_NO_READY )
-                        || audioRecorder.getStatus().equals(Status.STATUS_READY )) {
+                if(mediaRecordFunc == null) {
                     Utils.Toast("你还没有开始录音");
                     return;
                 }
-
+//                if(audioRecorder == null || audioRecorder.getStatus().equals(Status.STATUS_NO_READY )
+//                        || audioRecorder.getStatus().equals(Status.STATUS_READY )) {
+//                    Utils.Toast("你还没有开始录音");
+//                    return;
+//                }
                 audioRecordDialog = new AudioRecordDialog(this);
                 audioRecordDialog.setOnAudioRecordDialogClickListener(new AudioRecordDialog.OnAudioRecordDialogClickListener() {
                     @Override
                     public void saveClick() {//保存
-                        stopRecord();
+//                        stopRecord();
+                        mediaRecordFunc.stopRecordAndFile();
+                        mediaRecordFunc = null;
                         //重置
-                        audioRecorder = null;
+//                        audioRecorder = null;
                         isPause = true;
                         currentSecond = 0;
                         myRunnable = null;
@@ -163,7 +180,9 @@ public class RecordAudioActivity extends BaseActivity {
                     public void deleteClick() {//删除
 //                        String fileName = audioRecorder.getFileName()+".wav";
                         //停止录音,删除文件,重置计时
-                        audioRecorder.canel();
+//                        audioRecorder.canel();
+                        mediaRecordFunc.canel();
+
 //                        List<File> wavFiles = AudioFileUtils.getWavFiles();
 //                        Iterator<File> it = wavFiles.iterator();
 //                        while (it.hasNext()) {
@@ -173,8 +192,9 @@ public class RecordAudioActivity extends BaseActivity {
 //                            }
 //                        }
                         //重置
-                        audioRecorder = null;
+//                        audioRecorder = null;
                         isPause = true;
+                        mediaRecordFunc = null;
                         currentSecond = 0;
                         myRunnable = null;
                         isPlaying = false;
@@ -202,17 +222,17 @@ public class RecordAudioActivity extends BaseActivity {
         }
     }
 
-    private void stopRecord() {
-        audioRecorder.stopRecord();
-    }
-
-    private void startRecord() {
-        audioRecorder.startRecord();
-    }
-
-    public void pauseRecord() {
-        audioRecorder.pauseRecord();
-    }
+//    private void stopRecord() {
+//        audioRecorder.stopRecord();
+//    }
+//
+//    private void startRecord() {
+//        audioRecorder.startRecord();
+//    }
+//
+//    public void pauseRecord() {
+//        audioRecorder.pauseRecord();
+//    }
 
     //计时器
     private Handler mhandle = new Handler();

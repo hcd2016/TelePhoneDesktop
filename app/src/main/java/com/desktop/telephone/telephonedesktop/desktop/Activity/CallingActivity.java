@@ -31,6 +31,7 @@ import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.SPUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 import com.desktop.telephone.telephonedesktop.view.record.AudioRecorderCall;
+import com.desktop.telephone.telephonedesktop.view.record.MediaRecordFunc;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -480,7 +481,8 @@ public class CallingActivity extends BaseActivity {
         }
     }
 
-    private AudioRecorderCall audioRecorderCall;//通话录音
+    //    private AudioRecorderCall audioRecorderCall;//通话录音
+    private MediaRecordFunc mediaRecordFunc;
     public String keyInValue = "";
     private boolean isShowKeybord = false;
 
@@ -550,10 +552,10 @@ public class CallingActivity extends BaseActivity {
             case R.id.ll_audio_record://录音
                 ivAudioRecord.setImageResource(R.drawable.audio_recording_icon);
                 isAudioRecordStop = false;
-                if (audioRecorderCall == null) {//未开启录音,开启录音
-                    audioRecorderCall = new AudioRecorderCall();
-                    audioRecorderCall.createDefaultAudio(getCurrentTime());
-                    audioRecorderCall.startRecord();
+
+                if (mediaRecordFunc == null) {//未开启录音,开启录音
+                    mediaRecordFunc = new MediaRecordFunc(true);
+                    mediaRecordFunc.startRecordAndFile();
                     if (audioRecordRunnable == null) {
                         audioRecordRunnable = new AudioRecordRunnable();
                         audioRecordRunnable.run();
@@ -562,11 +564,28 @@ public class CallingActivity extends BaseActivity {
                     ivAudioRecord.setImageResource(R.drawable.audio_record_icon);
                     tvAudioRecord.setText("录音");
                     isAudioRecordStop = true;
-                    audioRecorderCall.stopRecord();
-                    audioRecorderCall = null;
+                    mediaRecordFunc.stopRecordAndFile();
+                    mediaRecordFunc = null;
                     audioRecordRunnable = null;
                     audioRecordSecond = 0;
                 }
+//                if (audioRecorderCall == null) {//未开启录音,开启录音
+//                    audioRecorderCall = new AudioRecorderCall();
+//                    audioRecorderCall.createDefaultAudio(getCurrentTime());
+//                    audioRecorderCall.startRecord();
+//                    if (audioRecordRunnable == null) {
+//                        audioRecordRunnable = new AudioRecordRunnable();
+//                        audioRecordRunnable.run();
+//                    }
+//                } else {//录音中,结束录音
+//                    ivAudioRecord.setImageResource(R.drawable.audio_record_icon);
+//                    tvAudioRecord.setText("录音");
+//                    isAudioRecordStop = true;
+//                    audioRecorderCall.stopRecord();
+//                    audioRecorderCall = null;
+//                    audioRecordRunnable = null;
+//                    audioRecordSecond = 0;
+//                }
                 break;
             case R.id.ll_hand_free://免提
                 if (isHandFree) {//之前是免提,关闭免提
