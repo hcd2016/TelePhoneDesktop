@@ -38,7 +38,11 @@ public class CallUtil {
         String i = SPUtil.getString(SPUtil.KEY_INTERCHANGER_SETTING);
         Intent intent = new Intent();
         intent.setAction("com.tongen.Tel.APPLICATION_CALL");
-        intent.putExtra("phoneNumber", i+"P" + phoneNum);
+        if(!TextUtils.isEmpty(i)) {
+            intent.putExtra("phoneNumber", i+"P" + phoneNum);
+        }else {
+            intent.putExtra("phoneNumber", phoneNum);
+        }
         intent.putExtra("isSecret", false);
         intent.putExtra("tag", "");
         context.sendBroadcast(intent);
@@ -46,6 +50,22 @@ public class CallUtil {
         //跳转到呼叫中界面
         CallingActivity.startActivity(context, phoneNum, true, isHandFree,isFromReciver);
     }
+
+    /**
+     * 点播连接成功
+     */
+    public static void call(Context context, String phoneNum) {//交换机待加
+        boolean isHandFree;
+        int status = SPUtil.getInstance().getInteger(SPUtil.KEY_HAND_STATUS);
+        if (status == 0) {//手柄未抬起就免提呼叫
+            isHandFree = true;
+        } else {
+            isHandFree = false;
+        }
+        //跳转到呼叫中界面
+        CallingActivity.startActivity(context, phoneNum, true, isHandFree,true);
+    }
+
 
     /**
      * 通话中,拨号键盘点拨

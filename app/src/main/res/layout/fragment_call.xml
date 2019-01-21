@@ -16,7 +16,7 @@
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             tools:text="15889479929"
@@ -37,6 +37,7 @@
                 android:layout_height="wrap_content" />
 
             <LinearLayout
+                android:id="@+id/ll_bottom_container"
                 android:paddingTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

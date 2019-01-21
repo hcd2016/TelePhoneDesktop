@@ -32,7 +32,6 @@ public class DesktopIconBean implements Serializable{
     public void setIconBgColor(int iconBgColor) {
         this.iconBgColor = iconBgColor;
     }
-
     //    //正常模式下的item的Drawable Id
 //    private int img_normal;
 //    //按下模式下的item的Drawable Id

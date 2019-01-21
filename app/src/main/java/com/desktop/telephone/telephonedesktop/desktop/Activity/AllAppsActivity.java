@@ -57,8 +57,25 @@ public class AllAppsActivity extends BaseActivity {
         List<AppInfoBean> appInfos = getAppInfos(this);
         if (isShowDeskList == null || isShowDeskList.size() == 0) {
             for (int i = 0; i < appInfos.size(); i++) {
-                DaoUtil.getAppInfoBeanDao().insert(appInfos.get(i));
-                isShowDeskList.add(appInfos.get(i));
+                AppInfoBean appInfoBean = appInfos.get(i);
+                String packname = appInfoBean.getPackageName();
+//                //预装应用
+//                if (packname.equals("com.chinatelecom.bestpayclient")
+//                        || packname.equals("com.ximalaya.ting.android") || packname.equals("com.yidian.health")
+//                        || packname.equals("com.sinyee.babybus.chants") || packname.equals("com.jcccp")) {
+//                    appInfoBean.isShowDesktop = true;
+//                }
+//                if (SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {
+//                    if (packname.equals("com.tencent.mm")) {
+//                        appInfoBean.isShowDesktop = true;
+//                    }
+//                } else {
+//                    if (packname.equals("com.android.calendar")) {
+//                        appInfoBean.isShowDesktop = true;
+//                    }
+//                }
+                DaoUtil.getAppInfoBeanDao().insert(appInfoBean);
+                isShowDeskList.add(appInfoBean);
             }
         } else if (appInfos.size() > isShowDeskList.size()) {//有新安装包,添加到数据库
             for (AppInfoBean appinfo : appInfos) {
@@ -180,15 +197,15 @@ public class AllAppsActivity extends BaseActivity {
                 continue;
             }
 
-            if (SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {
-                if (packname.equals("com.tencent.mm")) {
-                    continue;
-                }
-            } else {
-                if (packname.equals("com.android.calendar")) {
-                    continue;
-                }
-            }
+//            if (SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {
+//                if (packname.equals("com.tencent.mm")) {
+//                    continue;
+//                }
+//            } else {
+//                if (packname.equals("com.android.calendar")) {
+//                    continue;
+//                }
+//            }
 
             //应用程序信息的标记 相当于用户提交的答卷
             int flags = packInfo.applicationInfo.flags;

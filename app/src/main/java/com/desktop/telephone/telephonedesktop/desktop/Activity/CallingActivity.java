@@ -181,9 +181,13 @@ public class CallingActivity extends BaseActivity {
                 setViewData();
                 break;
             case HAND_OFF://手柄放下
-                if (!isHandFree) {//手柄放下时不是免提状态才挂断电话
+//                if (!isHandFree) {//手柄放下时不是免提状态才挂断电话
                     finish();
-                }
+//                }
+
+//                else {
+//                    llHandFree.performClick();
+//                }
 //                else {//手柄放下时是免提状态,显示挂断按钮
 //                    ivHandUp.setVisibility(View.VISIBLE);
 //                }
@@ -483,6 +487,13 @@ public class CallingActivity extends BaseActivity {
 
     //    private AudioRecorderCall audioRecorderCall;//通话录音
     private MediaRecordFunc mediaRecordFunc;
+    @Override
+    public void finish() {
+        startActivity(NewMainActivity.class);
+        super.finish();
+    }
+
+    private AudioRecorderCall audioRecorderCall;//通话录音
     public String keyInValue = "";
     private boolean isShowKeybord = false;
 

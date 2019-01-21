@@ -27,6 +27,10 @@ import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.SPUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import retrofit2.CallAdapter;
 
 /**
  * 拨号fragment
@@ -48,6 +53,8 @@ public class CallFragment extends Fragment {
     RelativeLayout rlContactsContainer;
     @BindView(R.id.ll_call_container)
     LinearLayout llCallContainer;
+    @BindView(R.id.ll_bottom_container)
+    LinearLayout ll_bottom_container;
     @BindView(R.id.rl_delete_container)
     RelativeLayout rlDeleteContainer;
     private String phoneString = "";
@@ -62,12 +69,19 @@ public class CallFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getActivity(), R.layout.fragment_call, null);
         unbinder = ButterKnife.bind(this, view);
+        EventBus.getDefault().register(this);
         initView();
         return view;
     }
 
     private void initView() {
         List<CallNumBean> list = new ArrayList<>();
+        int status = SPUtil.getInstance().getInteger(SPUtil.KEY_HAND_STATUS);
+        if(status == 0) {
+            ll_bottom_container.setVisibility(View.VISIBLE);
+        }else {
+            ll_bottom_container.setVisibility(View.INVISIBLE);
+        }
         for (int i = 1; i < 13; i++) {
             CallNumBean callNumBean = new CallNumBean();
             switch (i) {
@@ -143,6 +157,26 @@ public class CallFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public static final String HAND_OFF = "com.tongen.action.handle.off";//手柄放下
+    public static final String HAND_ON = "com.tongen.action.handle.on";//手柄抬起
+    public static final String CALL_CONNECT= "com.tongen.Tel.OUTGOING_RINGING";//手柄抬起
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Intent event) {
+        switch (event.getAction()) {
+            case HAND_OFF://手柄放下
+                ll_bottom_container.setVisibility(View.VISIBLE);
+                break;
+            case HAND_ON://手柄抬起
+                ll_bottom_container.setVisibility(View.INVISIBLE);
+                break;
+            case CALL_CONNECT://连接成功
+                phoneString="";
+                getActivity().finish();
+                break;
+        }
     }
 
     @OnClick({R.id.tv_phone_num, R.id.rl_contacts_container, R.id.ll_call_container, R.id.rl_delete_container})
@@ -156,10 +190,13 @@ public class CallFragment extends Fragment {
 //                intent1.putExtra("phoneNum", "88888");
 //                intent1.putExtra("isCalling", false);
 //                startActivity(intent1);
-
-                CallUtil.call(getActivity(),tvPhoneNum.getText().toString(),false);
-                phoneString = "";
-                tvPhoneNum.setText(phoneString);
+                int status = SPUtil.getInstance().getInteger(SPUtil.KEY_HAND_STATUS);
+                if (status == 0) {
+                    CallUtil.call(getActivity(), tvPhoneNum.getText().toString(), false);
+                    phoneString = "";
+                    tvPhoneNum.setText(phoneString);
+                    getActivity().finish();
+                }
                 break;
             case R.id.rl_delete_container://回退
                 String string = tvPhoneNum.getText().toString();
@@ -168,8 +205,11 @@ public class CallFragment extends Fragment {
                     tvPhoneNum.setText(phoneString);
                 }
                 break;
+
         }
     }
+
+
 
     class CallAdapter extends BaseQuickAdapter<CallNumBean, BaseViewHolder> {
 
@@ -184,10 +224,14 @@ public class CallFragment extends Fragment {
             helper.getView(R.id.ll_item_container).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(phoneString.length() > 35) {
+                    if (phoneString.length() > 35) {
                         Utils.Toast("您输入的号码过长");
-                    }else {
+                    } else {
                         tvPhoneNum.setText(phoneString += item.getNum());
+                    }
+                    int status = SPUtil.getInstance().getInteger(SPUtil.KEY_HAND_STATUS);
+                    if(status == 1) {
+                        CallUtil.callingKeyIn(getActivity(), item.getNum());
                     }
                 }
             });

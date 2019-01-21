@@ -120,6 +120,12 @@ public class NewMainActivity extends BaseActivity {
     }
 
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        viewpager.setCurrentItem(0);
+    }
+
     /**
      * 初始化定位参数配置
      */
@@ -313,55 +319,55 @@ public class NewMainActivity extends BaseActivity {
         PackageManager pm = getPackageManager();
         //所有的安装在系统上的应用程序包信息。
         List<PackageInfo> packInfos = pm.getInstalledPackages(0);
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 15; i++) {
 //        for (int i = 0; i < 15; i++) {
             DesktopIconBean moveItem = new DesktopIconBean();
             moveItem.setMid(i);
             switch (i) {
-                case 8:
+                case 7:
                     //电话
                     moveItem.setIconType(1);
                     moveItem.setTitle("电话");
                     moveItem.setImg_id_name("phone_icon");
                     break;
-                case 7:
+                case 6:
                     //联系人
                     moveItem.setIconType(1);
                     moveItem.setTitle("联系人");
                     moveItem.setImg_id_name("call_records_icon");
                     break;
-                case 3:
+                case 2:
                     //相册
                     moveItem.setIconType(1);
                     moveItem.setTitle("图库");
                     moveItem.setImg_id_name("photo_icon");
                     break;
-                case 5:
+                case 4:
                     //黑红名单
                     moveItem.setIconType(1);
                     moveItem.setTitle("黑红名单");
                     moveItem.setImg_id_name("blacklist_icon");
                     break;
-                case 14:
+                case 13:
                     //录音
                     moveItem.setIconType(1);
                     moveItem.setTitle("录音");
                     moveItem.setImg_id_name("record_icon");
                     break;
-                case 15:
+                case 14:
 //                case 0:
                     //通话记录
                     moveItem.setIconType(1);
                     moveItem.setTitle("通话记录");
                     moveItem.setImg_id_name("address_list_icon");
                     break;
-                case 6:
+                case 5:
                     //sos
                     moveItem.setIconType(1);
                     moveItem.setTitle("紧急呼叫");
                     moveItem.setImg_id_name("sos_icon");
                     break;
-                case 9:
+                case 8:
                     //所有应用
                     moveItem.setIconType(1);
                     moveItem.setTitle("所有应用");
@@ -399,7 +405,7 @@ public class NewMainActivity extends BaseActivity {
                     }
                     break;
 
-                case 4://浏览器
+                case 3://浏览器
                     for (int j = 0; j < packInfos.size(); j++) {
                         PackageInfo packInfo = packInfos.get(j);
                         if (packInfo.packageName.equals("com.android.browser")) {
@@ -412,55 +418,55 @@ public class NewMainActivity extends BaseActivity {
                         }
                     }
                     break;
-                case 2://微信
-                    boolean isHaveWeiXin = false;
-                    for (int j = 0; j < packInfos.size(); j++) {
-                        PackageInfo packInfo = packInfos.get(j);
-                        if (packInfo.packageName.equals("com.tencent.mm")) {
-                            isHaveWeiXin = true;
-//                            moveItem.setImg_id_name("settings_icon");
-//                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
-                        }
-                    }
-                    SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_HAVE_WEIXIN,isHaveWeiXin);
-                    if (isHaveWeiXin) {
-                        moveItem.setIconType(2);
-                        moveItem.setTitle("微信");
-                        moveItem.setPackageName("com.tencent.mm");
-                        moveItem.setImg_id_name("weixin_icon");
-                    } else {
-                        for (int j = 0; j < packInfos.size(); j++) {
-                            PackageInfo packInfo = packInfos.get(j);
-                            if (packInfo.packageName.equals("com.android.calendar")) {
-                                moveItem.setIconType(1);
-                                moveItem.setTitle("日历");
-                                moveItem.setPackageName("com.android.calendar");
-                                moveItem.setImg_id_name("rili_icon");
-//                                moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
-                            }
-                        }
-                    }
-                    break;
-                case 10:
+//                case 2://微信
+//                    boolean isHaveWeiXin = false;
+//                    for (int j = 0; j < packInfos.size(); j++) {
+//                        PackageInfo packInfo = packInfos.get(j);
+//                        if (packInfo.packageName.equals("com.tencent.mm")) {
+//                            isHaveWeiXin = true;
+////                            moveItem.setImg_id_name("settings_icon");
+////                            moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+//                        }
+//                    }
+//                    SPUtil.getInstance().saveBoolean(SPUtil.KEY_IS_HAVE_WEIXIN, isHaveWeiXin);
+//                    if (isHaveWeiXin) {
+//                        moveItem.setIconType(2);
+//                        moveItem.setTitle("微信");
+//                        moveItem.setPackageName("com.tencent.mm");
+//                        moveItem.setImg_id_name("weixin_icon");
+//                    } else {
+//                        for (int j = 0; j < packInfos.size(); j++) {
+//                            PackageInfo packInfo = packInfos.get(j);
+//                            if (packInfo.packageName.equals("com.android.calendar")) {
+//                                moveItem.setIconType(1);
+//                                moveItem.setTitle("日历");
+//                                moveItem.setPackageName("com.android.calendar");
+//                                moveItem.setImg_id_name("rili_icon");
+////                                moveItem.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+//                            }
+//                        }
+//                    }
+//                    break;
+                case 9:
 //                case 8:
                     //分机设置
                     moveItem.setIconType(1);
                     moveItem.setTitle("分机设置");
                     moveItem.setImg_id_name("phone_setting");
                     break;
-                case 11:
+                case 10:
                     //亲情号码1
                     moveItem.setIconType(4);
                     moveItem.setTitle("亲情1");
                     moveItem.setImg_id_name("add_contact_icon");
                     break;
-                case 12:
+                case 11:
                     //亲情号码2
                     moveItem.setIconType(4);
                     moveItem.setTitle("亲情2");
                     moveItem.setImg_id_name("add_contact_icon");
                     break;
-                case 13:
+                case 12:
                     //亲情号码3
                     moveItem.setIconType(4);
                     moveItem.setTitle("亲情3");
@@ -468,9 +474,31 @@ public class NewMainActivity extends BaseActivity {
                     break;
             }
             moveItem.setMid(i);
-            moveItem.setIconBgColor(Utils.getColorBgFromPosition(i));
+            if(i>=2) {
+                moveItem.setIconBgColor(Utils.getColorBgFromPosition(i+1));
+            }else {
+                moveItem.setIconBgColor(Utils.getColorBgFromPosition(i));
+            }
             defaultList.add(moveItem);
         }
+//        for (int j = 0; j < packInfos.size(); j++) {
+//            PackageInfo packInfo = packInfos.get(j);
+//            String packname = packInfo.packageName;
+//            String appName = packInfo.applicationInfo.loadLabel(pm).toString();
+//            if (packname.equals("com.chinatelecom.bestpayclient")
+//                    || packname.equals("com.ximalaya.ting.android") || packname.equals("com.yidian.health")
+//                    || packname.equals("com.sinyee.babybus.chants") || packname.equals("com.jcccp")) {
+//                DesktopIconBean desktopIconBean = new DesktopIconBean();
+//                desktopIconBean.setIconType(2);
+//                desktopIconBean.setTitle(appName);
+//                desktopIconBean.setPackageName(packInfo.packageName);
+//                desktopIconBean.setMid(defaultList.size());
+//                desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(defaultList.size()));
+//                desktopIconBean.setApp_icon(DaoUtil.drawableToByte(packInfo.applicationInfo.loadIcon(pm)));
+//                defaultList.add(desktopIconBean);
+//            }
+//        }
+
         mList = DaoUtil.querydata();
         if (mList == null || mList.size() == 0) {//数据库中没有列表(第一次安装)
             mList.addAll(defaultList);
@@ -642,11 +670,29 @@ public class NewMainActivity extends BaseActivity {
             if (event.getIconType() != 3) {
                 desktopIconBean.setApp_icon(event.getAppIcon());
             }
-            desktopIconBean.setMid(mList.size());
-            desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(mList.size()));
+//            desktopIconBean.setMid(mList.size());
+            if(mList.size() >=2) {
+                desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(mList.size()+1));
+            }else {
+                desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(mList.size()));
+            }
             desktopIconBean.setPackageName(event.getPackageName());
-//            mList.add(desktopIconBean);
+
+            if (event.getPackageName().equals("com.tencent.mm")) {//是微信，安装到第二个位置
+                desktopIconBean.setImg_id_name("weixin_icon");
+                desktopIconBean.setIconBgColor(Utils.getColorBgFromPosition(2));
+                desktopIconBean.setMid(2);
+                for (int j = 0; j < mList.size(); j++) {
+                    if(mList.get(j).getMid() >= 2) {//其他往后移
+                        mList.get(j).setMid(mList.get(j).getMid()+1);
+                        DaoUtil.getDesktopIconBeanDao().update(mList.get(j));
+                    }
+                }
+            } else {
+                desktopIconBean.setMid(mList.size());
+            }
             DaoUtil.getDesktopIconBeanDao().insert(desktopIconBean);
+//            mList.add(desktopIconBean);
 
             //刷新
             int currentItem = viewpager.getCurrentItem();
@@ -853,28 +899,38 @@ public class NewMainActivity extends BaseActivity {
             rl_item_container.setBackground(drawable);
 
             if (item.getIconType() == 0 || item.getIconType() == 2) {
-                if (item.getTitle().equals("设置") || item.getTitle().equals("相机") ||  item.getTitle().equals("上网")) {
+                if (item.getTitle().equals("设置") || item.getTitle().equals("相机") || item.getTitle().equals("上网")) {
                     content_iv.setImageResource(imgUrl);
                 } else {
-                    if(item.getTitle().equals("微信")) {
-                        if(SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {
-                            content_iv.setImageResource(imgUrl);
-                        }else {
-                            byte[] app_icon = item.getApp_icon();
-                            Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
-                            BitmapDrawable bd = new BitmapDrawable(bmp);
-                            content_iv.setImageDrawable(bd);
-                        }
-                    }else if(item.getTitle().equals("日历")){
-                        if(SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {
-                            byte[] app_icon = item.getApp_icon();
-                            Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
-                            BitmapDrawable bd = new BitmapDrawable(bmp);
-                            content_iv.setImageDrawable(bd);
-                        }else {
-                            content_iv.setImageResource(imgUrl);
-                        }
-                    }else {
+                    if (item.getTitle().equals("微信")) {
+                        content_iv.setImageResource(imgUrl);
+//                        if (SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {
+//                            if (TextUtils.isEmpty(item.getImg_id_name())) {
+//                                byte[] app_icon = item.getApp_icon();
+//                                Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
+//                                BitmapDrawable bd = new BitmapDrawable(bmp);
+//                                content_iv.setImageDrawable(bd);
+//                            } else {
+//                                content_iv.setImageResource(imgUrl);
+//                            }
+//                        } else {
+//                            byte[] app_icon = item.getApp_icon();
+//                            Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
+//                            BitmapDrawable bd = new BitmapDrawable(bmp);
+//                            content_iv.setImageDrawable(bd);
+//                        }
+                    }
+//                    else if (item.getTitle().equals("日历")) {
+//                        if (SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_HAVE_WEIXIN)) {
+//                            byte[] app_icon = item.getApp_icon();
+//                            Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
+//                            BitmapDrawable bd = new BitmapDrawable(bmp);
+//                            content_iv.setImageDrawable(bd);
+//                        } else {
+//                            content_iv.setImageResource(imgUrl);
+//                        }
+//                    }
+                    else {
                         byte[] app_icon = item.getApp_icon();
                         Bitmap bmp = BitmapFactory.decodeByteArray(app_icon, 0, app_icon.length);
                         BitmapDrawable bd = new BitmapDrawable(bmp);

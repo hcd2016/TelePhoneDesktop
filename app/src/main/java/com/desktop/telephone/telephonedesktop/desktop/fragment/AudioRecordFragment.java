@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -168,12 +169,17 @@ public class AudioRecordFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 //                    Utils.openFile(item.getAbsolutePath(),getActivity());
-//                    Intent intent = new Intent(Intent.ACTION_VIEW);
-////                    String path = Environment.getExternalStorageDirectory().getPath()+ "/1.mp4";//该路径可以自定义
-////                    File file = new File(path);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+//                    String path = Environment.getExternalStorageDirectory().getPath()+ "/1.mp4";//该路径可以自定义
+//                    File file = new File(path);
 //                    Uri uri = Uri.fromFile(item);
 //                    intent.setDataAndType(uri, "audio/*");
 //                    startActivity(intent);
+
+//                    Intent intent = new Intent(Intent.ACTION_VIEW);
+//                    intent.setDataAndType(Uri.parse(item.getAbsolutePath()), "video/wav");
+//                    startActivity(intent);
+
                     playerView.setVisibility(View.VISIBLE);
                     startPlay(item);
                 }
