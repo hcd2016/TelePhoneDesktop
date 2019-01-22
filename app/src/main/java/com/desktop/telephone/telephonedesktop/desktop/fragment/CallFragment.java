@@ -77,9 +77,9 @@ public class CallFragment extends Fragment {
     private void initView() {
         List<CallNumBean> list = new ArrayList<>();
         int status = SPUtil.getInstance().getInteger(SPUtil.KEY_HAND_STATUS);
-        if(status == 0) {
+        if (status == 0) {
             ll_bottom_container.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             ll_bottom_container.setVisibility(View.INVISIBLE);
         }
         for (int i = 1; i < 13; i++) {
@@ -162,7 +162,8 @@ public class CallFragment extends Fragment {
 
     public static final String HAND_OFF = "com.tongen.action.handle.off";//手柄放下
     public static final String HAND_ON = "com.tongen.action.handle.on";//手柄抬起
-    public static final String CALL_CONNECT= "com.tongen.Tel.OUTGOING_RINGING";//手柄抬起
+    public static final String CALL_CONNECT = "com.tongen.Tel.OUTGOING_RINGING";//手柄抬起
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Intent event) {
         switch (event.getAction()) {
@@ -173,7 +174,7 @@ public class CallFragment extends Fragment {
                 ll_bottom_container.setVisibility(View.INVISIBLE);
                 break;
             case CALL_CONNECT://连接成功
-                phoneString="";
+                phoneString = "";
                 getActivity().finish();
                 break;
         }
@@ -210,7 +211,6 @@ public class CallFragment extends Fragment {
     }
 
 
-
     class CallAdapter extends BaseQuickAdapter<CallNumBean, BaseViewHolder> {
 
         public CallAdapter(@Nullable List<CallNumBean> data) {
@@ -227,11 +227,26 @@ public class CallFragment extends Fragment {
                     if (phoneString.length() > 35) {
                         Utils.Toast("您输入的号码过长");
                     } else {
+                        int status = SPUtil.getInstance().getInteger(SPUtil.KEY_HAND_STATUS);
+                        if (status == 1) {
+                            if (phoneString.length() == 0) {//拨第一个号码
+                                String s = SPUtil.getString(SPUtil.KEY_INTERCHANGER_SETTING);
+                                if (!TextUtils.isEmpty(s)) {//交换机设置不为空,先拨交换机,延迟半秒拨第一个号码
+                                    CallUtil.callingKeyIn(getActivity(), s);
+                                    tvPhoneNum.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            CallUtil.callingKeyIn(getActivity(), item.getNum());
+                                        }
+                                    }, 100);
+                                } else {
+                                    CallUtil.callingKeyIn(getActivity(), item.getNum());
+                                }
+                            } else {
+                                CallUtil.callingKeyIn(getActivity(), item.getNum());
+                            }
+                        }
                         tvPhoneNum.setText(phoneString += item.getNum());
-                    }
-                    int status = SPUtil.getInstance().getInteger(SPUtil.KEY_HAND_STATUS);
-                    if(status == 1) {
-                        CallUtil.callingKeyIn(getActivity(), item.getNum());
                     }
                 }
             });

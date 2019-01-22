@@ -24,6 +24,7 @@ import com.desktop.telephone.telephonedesktop.R;
 import com.desktop.telephone.telephonedesktop.base.BaseActivity;
 import com.desktop.telephone.telephonedesktop.bean.CallRecordBean;
 import com.desktop.telephone.telephonedesktop.bean.EvenCallRecordBean;
+import com.desktop.telephone.telephonedesktop.bean.SosBean;
 import com.desktop.telephone.telephonedesktop.desktop.recevier.CallingConnectReciver;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.ContactsUtil;
@@ -39,6 +40,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -121,6 +123,7 @@ public class CallingActivity extends BaseActivity {
     public static final String HAND_ON = "com.tongen.action.handle.on";//手柄抬起
     public static final String CALLING_MISSED = "com.tongen.Tel.INCOMING_MISSED";//来电未接广播
     public static final String INCOMMING_HAND_UP = "com.tongen.Tel.INCOMING_IDLE";//来电挂断
+    public static final String SOS = "com.tongen.SOS_CONTROL";//sos
     private String phoneNum;
     private CallingConnectReciver callingConnectReciver;
 
@@ -213,6 +216,18 @@ public class CallingActivity extends BaseActivity {
                 break;
             case INCOMMING_HAND_UP://来电挂断(对方挂断)
                 finish();
+                break;
+            case SOS://sos
+                final List<SosBean> sosBeans = DaoUtil.getSosBeanDao().loadAll();
+                if(sosBeans != null && sosBeans.size() != 0) {
+                    finish();
+                    tvCallName.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            CallUtil.call(CallingActivity.this, sosBeans.get(0).getPhoneNum(), false);
+                        }
+                    },2000);
+                }
                 break;
         }
     }
