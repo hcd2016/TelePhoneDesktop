@@ -36,7 +36,7 @@ public class CotrolActivity extends BaseActivity {
 
     @OnClick(R.id.tv_btn_try)
     public void onViewClicked() {
-        Call<JsonObject> call = RetrofitUtil.create().control("1");
+        Call<JsonObject> call = RetrofitUtil.create().control(Utils.getPackageCode(this));
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

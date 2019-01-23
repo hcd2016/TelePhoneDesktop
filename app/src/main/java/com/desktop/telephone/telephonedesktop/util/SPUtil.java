@@ -37,6 +37,8 @@ public class SPUtil {
 
     public static final String KEY_SHOW_FAMILY_LIST = "key_show_family_list";//显示亲情list
 
+    public static final String KEY_LAST_NOTICE_TIME = "key_last_notice_time";//上次更新提示时间
+
 
     public static final String SHARED_PREFERENCE_NAME = "sp_file";
     private static SPUtil uniqueInstance = null;

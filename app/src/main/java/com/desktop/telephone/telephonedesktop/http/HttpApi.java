@@ -61,5 +61,5 @@ public interface HttpApi {
 
     @FormUrlEncoded
     @POST("version/isUpgrade")
-    Call<JsonObject> control(@Field("version") String version);
+    Call<JsonObject> control(@Field("version") int version);
 }

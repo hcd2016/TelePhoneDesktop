@@ -1,6 +1,5 @@
 package com.desktop.telephone.telephonedesktop.desktop.Activity;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,6 +15,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -59,9 +60,7 @@ import com.desktop.telephone.telephonedesktop.http.RetrofitUtil;
 import com.desktop.telephone.telephonedesktop.util.CallUtil;
 import com.desktop.telephone.telephonedesktop.util.DaoUtil;
 import com.desktop.telephone.telephonedesktop.util.DensityUtil;
-import com.desktop.telephone.telephonedesktop.util.SPUtil;
 import com.desktop.telephone.telephonedesktop.util.Utils;
-import com.desktop.telephone.telephonedesktop.util.weather.GetLocationUtils;
 import com.desktop.telephone.telephonedesktop.util.weather.ParaseJsonUtils;
 import com.desktop.telephone.telephonedesktop.view.MyGridLayoutManager;
 import com.google.gson.JsonObject;
@@ -72,7 +71,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -93,6 +96,8 @@ public class NewMainActivity extends BaseActivity {
     private static PowerManager.WakeLock wakeLock;
     @BindView(R.id.viewpager)
     ViewPager viewpager;
+//    @BindView(R.id.btn_update)
+//    Button btnUpdate;
     private int line = 4;//行
     private int row = 3;//列
     private int pageCount = line * row;//分页数量
@@ -117,14 +122,85 @@ public class NewMainActivity extends BaseActivity {
         CallUtil.showCallerIds(this, 1);
         registerHomeKeyReceiver(this);
         initLocationOption();
+//        btnUpdate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/newnew.apk";
+//                installSilently(path);
+//            }
+//        });
     }
 
+
+    /**
+     * The install command installs a package to the system. Options:
+     *
+     * @command -l: install the package with FORWARD_LOCK.
+     * @command -r: reinstall an existing app, keeping its data.
+     * @command -t: allow test .apks to be installed.
+     * @command -i: specify the installer package name.
+     * @command -s: install package on sdcard.
+     * @command -f: install package on internal flash.
+     */
+    /**
+     * The uninstall command removes a package from the system. Options:
+     *
+     * @command -k: keep the data and cache directories around. after the
+     * package removal.
+     */
+    private String installSilently(String path) {
+
+        // 通过命令行来安装APK
+        String[] args = {"pm", "install", "-r", path};
+        String result = "";
+        // 创建一个操作系统进程并执行命令行操作
+        ProcessBuilder processBuilder = new ProcessBuilder(args);
+        Process process = null;
+        InputStream errIs = null;
+        InputStream inIs = null;
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            int read = -1;
+            process = processBuilder.start();
+            errIs = process.getErrorStream();
+            while ((read = errIs.read()) != -1) {
+                baos.write(read);
+            }
+            baos.write('\n');
+            inIs = process.getInputStream();
+            while ((read = inIs.read()) != -1) {
+                baos.write(read);
+            }
+            byte[] data = baos.toByteArray();
+            result = new String(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (errIs != null) {
+                    errIs.close();
+                }
+                if (inIs != null) {
+                    inIs.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (process != null) {
+                process.destroy();
+            }
+        }
+        return result;
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         viewpager.setCurrentItem(0);
     }
+
 
     /**
      * 初始化定位参数配置

@@ -1,19 +1,24 @@
 package com.desktop.telephone.telephonedesktop.base;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.desktop.telephone.telephonedesktop.MainActivity;
 import com.desktop.telephone.telephonedesktop.R;
@@ -32,6 +37,11 @@ import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import okhttp3.internal.Util;
 import retrofit2.Call;
@@ -160,6 +170,7 @@ public class BaseActivity extends AppCompatActivity {
 //            }
 //        });
 //    }
+
     /**
      * 主要的方法，重写dispatchTouchEvent
      *
@@ -171,7 +182,7 @@ public class BaseActivity extends AppCompatActivity {
         switch (ev.getAction()) {
             //获取触摸动作，如果ACTION_UP，计时开始。
             case MotionEvent.ACTION_UP:
-                boolean isOpenBanner = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_OPEN_BANNER,true);
+                boolean isOpenBanner = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_OPEN_BANNER, true);
                 boolean isBannerRunning = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_BANNER_RUNING, false);
                 if (!isBannerRunning && isOpenBanner && isShowBanner) {
                     timeStart();
@@ -179,7 +190,7 @@ public class BaseActivity extends AppCompatActivity {
                 break;
             //否则其他动作计时取消
             default:
-                if(countTimerView != null ) {
+                if (countTimerView != null) {
                     countTimerView.cancel();
                 }
                 break;
@@ -190,7 +201,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(countTimerView != null) {
+        if (countTimerView != null) {
             countTimerView.cancel();
         }
     }
@@ -198,23 +209,58 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        boolean isOpenBanner = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_OPEN_BANNER,true);
+        boolean isOpenBanner = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_OPEN_BANNER, true);
         boolean isBannerRunning = SPUtil.getInstance().getBoolean(SPUtil.KEY_IS_BANNER_RUNING, false);
         if (!isBannerRunning && isOpenBanner && isShowBanner) {
             timeStart();
         }
 
-        if(!(this instanceof CotrolActivity)) {
-            Call<JsonObject> call = RetrofitUtil.create().control("1");
+        if (!(this instanceof CotrolActivity)) {
+            Call<JsonObject> call = RetrofitUtil.create().control(Utils.getPackageCode(this));
             call.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     try {
                         JSONObject object = new JSONObject(String.valueOf(response.body()));
                         int code = object.optInt("code");
-                        if(code == 999) {
+                        if (code == 999) {
                             startActivity(CotrolActivity.class);
                         }
+
+//                        else if (code == 0) {
+//                            String versionUrl = object.optString("versionUrl");//下载地址
+//                            int versionStatus = object.optInt("versionStatus");//0为强制升级,1为正常升级
+//                            if (versionStatus == 0) {//强制升级
+//
+//                            } else if (versionStatus == 1) {//正常升级
+//                                long last_millis = SPUtil.getInstance().getLong(SPUtil.KEY_LAST_NOTICE_TIME, 0);
+//                                if (last_millis != 0 && (System.currentTimeMillis() - last_millis) < 24 * 60 * 60 * 1000) {//提示过且时间没到一天,不提示
+//                                    return;
+//                                }
+//                                new AlertDialog.Builder(App.getContext(), R.style.Theme_AppCompat_Dialog)
+//                                        .setTitle("系统升级")
+//                                        .setMessage("有新版本系统需要升级")
+//                                        .setPositiveButton("升级", new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialog, int which) {
+//                                                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/app-release.apk";
+//                                                installSilently(path);
+//                                                Toast.makeText(App.getContext(), "升级中,请稍后...", Toast.LENGTH_SHORT).show();
+//                                            }
+//                                        })
+//                                        .setNegativeButton("暂不升级", new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialog, int which) {
+//                                                SPUtil.getInstance().saveLong(SPUtil.KEY_LAST_NOTICE_TIME, System.currentTimeMillis());//保存上次提示时间
+//                                            }
+//                                        })
+//                                        .setCancelable(false)
+//                                        .create().show();
+//                            }
+//                        }
+
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -229,15 +275,79 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
+     * The install command installs a package to the system. Options:
+     *
+     * @command -l: install the package with FORWARD_LOCK.
+     * @command -r: reinstall an existing app, keeping its data.
+     * @command -t: allow test .apks to be installed.
+     * @command -i: specify the installer package name.
+     * @command -s: install package on sdcard.
+     * @command -f: install package on internal flash.
+     */
+    /**
+     * The uninstall command removes a package from the system. Options:
+     * 静默安装
+     *
+     * @command -k: keep the data and cache directories around. after the
+     * package removal.
+     */
+    private String installSilently(String path) {
+
+        // 通过命令行来安装APK
+        String[] args = {"pm", "install", "-r", path};
+        String result = "";
+        // 创建一个操作系统进程并执行命令行操作
+        ProcessBuilder processBuilder = new ProcessBuilder(args);
+        Process process = null;
+        InputStream errIs = null;
+        InputStream inIs = null;
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            int read = -1;
+            process = processBuilder.start();
+            errIs = process.getErrorStream();
+            while ((read = errIs.read()) != -1) {
+                baos.write(read);
+            }
+            baos.write('\n');
+            inIs = process.getInputStream();
+            while ((read = inIs.read()) != -1) {
+                baos.write(read);
+            }
+            byte[] data = baos.toByteArray();
+            result = new String(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (errIs != null) {
+                    errIs.close();
+                }
+                if (inIs != null) {
+                    inIs.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (process != null) {
+                process.destroy();
+            }
+        }
+        return result;
+    }
+
+    /**
      * 跳轉廣告
      */
     public void timeStart() {
 
-        if(countTimerView != null) {
+        if (countTimerView != null) {
             countTimerView.cancel();
         }
         long startBeginTime = SPUtil.getInstance().getLong(SPUtil.KEY_BANNER_START_TIME, 1000 * 60 * 5);
-        countTimerView = new CountTimer(startBeginTime,1000,this);
+        countTimerView = new CountTimer(startBeginTime, 1000, this);
         countTimerView.start();
     }
 
