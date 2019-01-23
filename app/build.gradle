@@ -32,6 +32,22 @@ android {
             jni.srcDirs = []    //disable automatic ndk-build
         }
     }
+
+
+    signingConfigs {
+        release {
+            storeFile file("/telephone_desktop.jks")
+            storePassword 'telephone'
+            keyAlias 'telephone'
+            keyPassword 'telephone'
+        }
+        debug {
+            storeFile file("/telephone_desktop.jks")
+            storePassword 'telephone'
+            keyAlias 'telephone'
+            keyPassword 'telephone'
+        }
+    }
 }
 
 
