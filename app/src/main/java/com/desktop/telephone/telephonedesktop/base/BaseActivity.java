@@ -1,10 +1,14 @@
 package com.desktop.telephone.telephonedesktop.base;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -40,9 +44,14 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
+import okhttp3.ResponseBody;
 import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -336,6 +345,101 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
         return result;
+    }
+    /**
+     * 在SD卡的指定目录上创建文件
+     *
+     * @param fileName
+     */
+    public File createFile(String fileName) {
+        File file = new File(fileName);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
+    public void downLoadByNet(String url, final String dirName, final String filename) {
+//        final String url = "https://www.vpfinance.cn/app/android/vpjr.apk";
+//        final String dirname = Environment.getExternalStorageDirectory().getAbsolutePath();
+//        final String filename = "vpjr.apk";
+        Call<ResponseBody> call = RetrofitUtil.create().downLoadApk(url);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                File file = createFile(dirName + "/" + filename);
+                try {
+                    InputStream inputStream = response.body().byteStream();
+                    OutputStream outputStream = new FileOutputStream(file);
+                    //读取大文件
+                    byte[] buffer = new byte[1024];
+                    while (true) {
+                        int read = inputStream.read(buffer);
+                        if (read == -1) {
+                            break;
+                        }
+                        outputStream.write(buffer,0,read);
+                    }
+                    Toast.makeText(App.getContext(),"下载完成了",Toast.LENGTH_SHORT).show();
+                    outputStream.flush();
+                    inputStream.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void downLoadByNotice(String url, final String dirName, final String filename) {
+//        final String url = "https://www.vpfinance.cn/app/android/vpjr.apk";
+//        final String dirname = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
+//        final String filename = "vpjr.apk";
+        //通知栏下载
+        Uri uri = Uri.parse(url);
+        DownloadManager.Request req = new DownloadManager.Request(uri);
+        //设置WIFI下和流量都可以进行更新
+        req.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        //下载中和下载完后都显示通知栏
+        req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+        //使用系统默认的下载路径 此处为应用内 /android/data/packages ,所以兼容7.0
+        req.setDestinationInExternalFilesDir(this, dirName, filename);
+        //通知栏标题
+        req.setTitle("系统更新下载");
+        //通知栏描述信息
+        req.setDescription("正在下载,请稍后...");
+        //设置类型为.apk
+        req.setMimeType("application/vnd.android.package-archive");
+
+        //获取下载任务ID
+        DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+        long id = downloadManager.enqueue(req);
+        registerDownLoadReceiver(this, id);//注册下载监听广播
+    }
+
+    //注册广播监听下载进度
+    private void registerDownLoadReceiver(Context context, final long id) {
+        final IntentFilter inflater = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+        BroadcastReceiver apkInstallReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1) == id) {//下载id一致
+                    if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {//下载完成
+//                        installApk(context, id, authority);
+                        Toast.makeText(App.getContext(), "下载完成!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        };
+        context.registerReceiver(apkInstallReceiver, inflater);
     }
 
     /**

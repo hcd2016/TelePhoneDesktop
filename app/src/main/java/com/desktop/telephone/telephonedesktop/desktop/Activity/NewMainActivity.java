@@ -71,6 +71,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -96,7 +97,7 @@ public class NewMainActivity extends BaseActivity {
     private static PowerManager.WakeLock wakeLock;
     @BindView(R.id.viewpager)
     ViewPager viewpager;
-//    @BindView(R.id.btn_update)
+    //    @BindView(R.id.btn_update)
 //    Button btnUpdate;
     private int line = 4;//行
     private int row = 3;//列
@@ -193,6 +194,69 @@ public class NewMainActivity extends BaseActivity {
             }
         }
         return result;
+    }
+
+    String command = "pm install -r -i 包名 --user 0 apk路径";
+    public static final String COMMAND_EXIT = "exit\n";
+    public static final String COMMAND_LINE_END = "\n";
+
+    public static void execInstallCommand(String[] commands) {
+        Process process = null;
+        BufferedReader successResult = null;
+        BufferedReader errorResult = null;
+
+        DataOutputStream os = null;
+        try {
+
+            process = Runtime.getRuntime().exec("su");
+            os = new DataOutputStream(process.getOutputStream());
+            for (String command : commands) {
+                if (command == null) {
+                    continue;
+                }
+                // donnot use os.writeBytes(commmand), avoid chinese charset error
+                os.write(command.getBytes());
+                os.writeBytes(COMMAND_LINE_END);
+                os.flush();
+            }
+            os.writeBytes(COMMAND_EXIT);
+            os.flush();
+            process.waitFor();
+        } catch (IOException e) {
+        } catch (Exception e) {
+        } finally {
+            try {
+                if (os != null) {
+                    os.close();
+                }
+                if (successResult != null) {
+                    successResult.close();
+                }
+                if (errorResult != null) {
+                    errorResult.close();
+                }
+            } catch (IOException e) {
+            }
+
+            if (process != null) {
+                process.destroy();
+            }
+        }
+    }
+
+    private void install(String apk_path) {
+        String command = "pm install -r" + apk_path;
+        Process process = null;
+        DataOutputStream os = null;
+        try {
+            process = Runtime.getRuntime().exec("su");
+            os = new DataOutputStream(process.getOutputStream());
+            os.writeBytes(command + "\n");
+            os.writeBytes("exit\n");
+            os.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -1184,6 +1248,7 @@ public class NewMainActivity extends BaseActivity {
                 }
             });
         }
+
     }
 
     public int getStatusBarHeight() {
